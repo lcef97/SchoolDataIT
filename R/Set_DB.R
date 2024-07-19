@@ -191,7 +191,7 @@ Set_DB <- function( Year = 2023,
         Year = ifelse(any(year.patternA(Year) %in% c(
           year.patternA(2016), year.patternA(2018))), Year, YearMinus1),
         date = ifelse(any(year.patternA(Year) %in%c(
-          year.patternA(2016), year.patternA(2018))), "01_01", "06_30"), autoAbort = autoAbort)
+          year.patternA(2016), year.patternA(2018))), "01_01", "09_01"), autoAbort = autoAbort)
       if(is.null(input_AdmUnNames)){
         if(!autoAbort){
           holdOn <- ""

@@ -4,7 +4,8 @@
 #'
 #' @param Year Numeric or character value. Last available is 2024.
 #' For coherence with school data, it is also in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}. \code{2023} by default.
-#' @param date Character. The reference date, in format \code{"mm_dd"}, either \code{"01_01"} or \code{"06_30"}. \code{"01_01"} by default.
+#' @param date Character. The reference date, in format \code{"mm_dd"}, either \code{"01_01"} \code{"06_30"},
+#' or \code{"09_01"} (close to the beginning of the school year). \code{"01_01"} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #'
 #' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}, including: NUTS-3 code, NUTS-3 abbreviation,
@@ -27,12 +28,17 @@ Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
   if(!Check_connection(autoAbort = autoAbort)) return(NULL)
 
   pattern0 <- "https://raw.githubusercontent.com/lcef97/ISTAT_AdmUnNames/main/ISTAT_AdmUnNames"
+
+  while(!date %in% c("01_01", "06_30", "09_01")) {
+    message("Please, choose either '01_01', '06_30' or '09_01' as date")
+    date <- readline(prompt = "  > ")
+  }
+  while(!as.numeric(Year) %in% c(2015:2024)){
+    message("Please, choose a year between 2015 and 2023")
+    year <- readline(prompt = "  > ")
+  }
   Year <- 2000 + as.numeric(year.patternA(Year))%%100
   pattern1<- paste0(Year, "_", date, ".CSV")
-  if(!date %in% c("01_01", "06_30") || !as.numeric(Year) %in% c(2015:2024)) {
-    message("Please, choose either 01_01 or 06_30 as date and a year between 2015 and 2024")
-    return(NULL)
-  }
 
   url <- paste0(pattern0, "/", Year, "/", pattern1)
 
