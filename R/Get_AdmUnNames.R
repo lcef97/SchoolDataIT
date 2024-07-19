@@ -58,7 +58,7 @@ Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
                   "Municipality_description", "Cadastral_code")
 
   res$Province_code <- as.numeric(res$Province_code)
-  res$Province_initials[which(res$Province_code) == 63] <- "NA"
+  res$Province_initials[which(res$Province_code == 63)] <- "NA"
 
   return(res)
 }
