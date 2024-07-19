@@ -12,12 +12,10 @@
 #'
 #' @examples
 #'
+#' Get_AdmUnNames(2024, autoAbort = TRUE)
 #'
-#' \donttest{
-#'   Get_AdmUnNames(2024, autoAbort = TRUE)
-#' }
 #'
-#' @source <https://www.istat.it/it/archivio/6789>
+#' @source <https://situas.istat.it/web/#/territorio>
 #'
 #' @export
 
@@ -29,6 +27,7 @@ Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
   if(!Check_connection(autoAbort = autoAbort)) return(NULL)
 
   pattern0 <- "https://raw.githubusercontent.com/lcef97/ISTAT_AdmUnNames/main/ISTAT_AdmUnNames"
+  Year <- 2000 + as.numeric(year.patternA(Year))%%100
   pattern1<- paste0(Year, "_", date, ".CSV")
   if(!date %in% c("01_01", "06_30") || !as.numeric(Year) %in% c(2015:2024)) {
     message("Please, choose either 01_01 or 06_30 as date and a year between 2015 and 2024")
@@ -59,6 +58,7 @@ Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
                   "Municipality_description", "Cadastral_code")
 
   res$Province_code <- as.numeric(res$Province_code)
+  res$Province_initials[which(res$Province_code) == 63] <- "NA"
 
   return(res)
 }
