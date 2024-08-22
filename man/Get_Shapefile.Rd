@@ -2,15 +2,21 @@
 % Please edit documentation in R/Get_Shapefile.R
 \name{Get_Shapefile}
 \alias{Get_Shapefile}
-\title{Download the boundaries of NUTS-3 (Provinces) and LAU (Municipalities) Italian administrative units from the ISTAT website}
+\title{Download the boundaries or the centroids of NUTS-3 (Provinces) and LAU (Municipalities) Italian administrative units from the ISTAT website}
 \source{
 <https://www.istat.it/it/archivio/222527>
 }
 \usage{
-Get_Shapefile(Year, level = "LAU", lightShp = TRUE, autoAbort = FALSE)
+Get_Shapefile(
+  Year,
+  level = "LAU",
+  lightShp = TRUE,
+  autoAbort = FALSE,
+  centroids = FALSE
+)
 }
 \arguments{
-\item{Year}{Numeric value. Reference year for the administrative units.}
+\item{Year}{Numeric. Reference year for the administrative units.}
 
 \item{level}{Character. Either \code{"NUTS-3"}, \code{"Province"}, \code{"LAU"}, \code{"Municipality"}. \code{"LAU"} by default}
 
@@ -18,6 +24,8 @@ Get_Shapefile(Year, level = "LAU", lightShp = TRUE, autoAbort = FALSE)
 \code{TRUE} by default.}
 
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
+
+\item{centroids}{Logical. Whether to switch from polygon geometry to point geometry. In the latter case, the point is located at the centroid of the relevant area. \code{FALSE} by default.}
 }
 \value{
 A spatial data frame of class \code{data.frame} and \code{sf}.
