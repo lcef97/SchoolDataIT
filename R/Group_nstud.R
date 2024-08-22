@@ -194,7 +194,7 @@ Group_nstud <- function(data = NULL, Year = 2023,
 
   nstud.check <- NULL
   if(check){
-    if(verbose) cat("Checking whether schools are included in school registries \n")
+    if(verbose) cat("Checking whether registered schools are included \n")
     nstud.check <-
         Util_Check_nstud_availability(nstud.byclass, Year = Year,cutout = c("IC", "IS", "NR"),
                                       ggplot = check_ggplot,

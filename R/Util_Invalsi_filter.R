@@ -105,7 +105,7 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
     WLE <- TRUE
   }
 
-  if (level %in% c("LAU","Municipality")){
+  if (toupper(level) %in% c("LAU", "NUTS-4", "MUNICIPALITY", "MUN")){
 
     doub <- which(duplicated(dplyr::select(Invalsi_IS, .data$Municipality_code, .data$Year,
                                            .data$Subject, .data$Grade)))
@@ -156,7 +156,7 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
                          names_from = .data$Grade,
                          values_from = values_from)
 
-  } else if (level %in% c("Province", "NUTS-3") ) {
+  } else if (toupper(level) %in% c("PROVINCE", "PROV", "NUTS-3") ) {
 
     # The abbreviation for the province of Naples is confused with "Not Available"
     Invalsi_IS$Province_initials <-
@@ -200,7 +200,8 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
                          values_from = values_from)
 
   } else {
-    stop("Please, select either Municipality/LAU or Province/NUTS-3 as administrative level")
+    message("Please, select either Municipality/LAU or Province/NUTS-3 as administrative level")
+    return(NULL)
   }
 
   if(nrow(DB.Invalsi)==0){
@@ -208,7 +209,7 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
   }
 
   DB.Invalsi <- DB.Invalsi[, which(!unlist(lapply(DB.Invalsi, function(x) all(is.na(x)))))]
-  DB.Invalsi <- DB.Invalsi[,c(1,2, 2 + c(order(as.numeric(stringr::str_extract(names(DB.Invalsi)[-c(1,2)], "\\d+$")))))]
+  DB.Invalsi <- DB.Invalsi[,c(1, 2, 2 + c(order(as.numeric(stringr::str_extract(names(DB.Invalsi)[-c(1,2)], "\\d+$")))))]
   endtime <- Sys.time()
 
   if(verbose) {

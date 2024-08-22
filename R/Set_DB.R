@@ -504,9 +504,12 @@ Set_DB <- function( Year = 2023,
 
   if(!is.null(input_Invalsi_IS)){
 
-    Invalsi_IS <- Util_Invalsi_filter(data = input_Invalsi_IS,
-                                      Year = Year, subj = Invalsi_subj, grade = Invalsi_grade, level = level,
-                                      WLE = Invalsi_WLE, verbose = verbose)
+    if(!any(grepl("_\\d+$", names(input_Invalsi_IS)))){
+      Invalsi_IS <- Util_Invalsi_filter(
+        data = input_Invalsi_IS, Year = Year, subj = Invalsi_subj,
+        grade = Invalsi_grade, level = level,
+        WLE = Invalsi_WLE, verbose = verbose)
+    } else Invalsi_IS <- input_Invalsi_IS
 
     SchoolOrder <- c(ifelse(any(Invalsi_grade < 6), "Primary", NA),
                      ifelse(8 %in% Invalsi_grade, "Middle", NA),
@@ -571,7 +574,7 @@ Set_DB <- function( Year = 2023,
                        "teachers4student", "nteachers")
   datasets <- Filter(Negate(is.null), datasets)
 
-  if(level %in% c("LAU", "Municipality")){
+  if(toupper(level) %in% c("LAU", "NUTS-4", "MUN", "MUNICIPALITY")){
 
     if(!is.null(datasets[["Invalsi_IS"]])){
       datasets[["Invalsi_IS"]] <- datasets[["Invalsi_IS"]] %>%

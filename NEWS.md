@@ -1,3 +1,8 @@
+# SchoolDataIT 0.2.1
+
+* Minor changes: function 'Get_Shapefile' can now provide either the boundaries or the centroids of NUTS-3 and LAU administrative units.
+
+
 # SchoolDataIT 0.2.0
 
 * Removed 'Get_RiskMap' because the input dataset does not appear to be currently available.

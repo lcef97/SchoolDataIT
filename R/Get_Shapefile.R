@@ -1,12 +1,14 @@
-#' Download the boundaries of NUTS-3 (Provinces) and LAU (Municipalities) Italian administrative units from the ISTAT website
+#' Download the boundaries or the centroids of NUTS-3 (Provinces) and LAU (Municipalities) Italian administrative units from the ISTAT website
 #'
 #' @description '
 #'
-#' @param Year Numeric value. Reference year for the administrative units.
+#' @param Year Numeric. Reference year for the administrative units.
 #' @param level Character. Either \code{"NUTS-3"}, \code{"Province"}, \code{"LAU"}, \code{"Municipality"}. \code{"LAU"} by default
 #' @param lightShp Logical. If \code{TRUE}, the function downloads a generalised, i.e.less detailed, and lighter version of the shapefiles.
 #' \code{TRUE} by default.
+#' @param centroids Logical. Whether to switch from polygon geometry to point geometry. In the latter case, the point is located at the centroid of the relevant area. \code{FALSE} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
+#'
 #'
 #' @return A spatial data frame of class \code{data.frame} and \code{sf}.
 #'
@@ -27,7 +29,8 @@
 #' @export
 
 
-Get_Shapefile <- function(Year, level = "LAU", lightShp = TRUE, autoAbort = FALSE){
+Get_Shapefile <- function(Year, level = "LAU", lightShp = TRUE,
+                          autoAbort = FALSE, centroids = FALSE){
 
   while(Year < 2001 & Year != 1991){
     message(paste("Year", Year, "not available. Please choose another year between 2001 and the current year"))
@@ -88,15 +91,20 @@ Get_Shapefile <- function(Year, level = "LAU", lightShp = TRUE, autoAbort = FALS
   utils::unzip(zipfile = temp1, exdir = temp2)
   files.int <- list.files(list.files(list.files(temp2, full.names = TRUE), full.names = TRUE), full.names = TRUE)
 
-  pattern <- dplyr::case_when(level %in% c("LAU", "Municipality") ~ "Com",
-                              level %in% c("NUTS-3", "Province") ~ "Prov",
-                              level %in% c("NUTS-2", "Region") ~ "Reg")
+  pattern <- dplyr::case_when(
+    toupper(level) %in% c("LAU", "NUTS-4", "MUNICIPALITY", "MUN") ~ "Com",
+    toupper(level) %in% c("NUTS-3", "PROVINCE", "PROV") ~ "Prov",
+    toupper(level) %in% c("NUTS-2", "REGION", "REG") ~ "Reg")
 
 
   filename.int <- grep(pattern, files.int, value = TRUE)
   filename.int <- filename.int[which(substr(filename.int, nchar(filename.int)-2, nchar(filename.int)) == "shp")]
 
   res <- sf::read_sf( filename.int)
+  if(centroids) {
+    sf::st_agr(res) <- "constant"
+    res <- sf::st_point_on_surface(res)
+  }
 
   unlink(temp1, recursive = TRUE, force = TRUE)
   unlink(temp2, recursive = TRUE, force = TRUE)
