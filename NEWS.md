@@ -1,6 +1,6 @@
 # SchoolDataIT 0.2.1
 
-* Minor changes: function 'Get_Shapefile' can now provide either the boundaries or the centroids of NUTS-3 and LAU administrative units.
+* Minor changes: function 'Get_Shapefile' can now provide either the boundaries or the centroids of NUTS-3 and LAU administrative units; fixed warning message in 'Group_nstud'.
 
 
 # SchoolDataIT 0.2.0

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Get_Shapefile.R
 \name{Get_Shapefile}
 \alias{Get_Shapefile}
-\title{Download the boundaries or the centroids of NUTS-3 (Provinces) and LAU (Municipalities) Italian administrative units from the ISTAT website}
+\title{Download the shapefiles of Italian NUTS-3 and LAU administrative units}
 \source{
 <https://www.istat.it/it/archivio/222527>
 }
@@ -31,7 +31,8 @@ Get_Shapefile(
 A spatial data frame of class \code{data.frame} and \code{sf}.
 }
 \description{
-'
+Downloads either the boundaries or the centroids of the relevant administrative units,
+either provinces or municipalities, from the ISTAT website. Geometries are expressed in meters.
 }
 \examples{
 

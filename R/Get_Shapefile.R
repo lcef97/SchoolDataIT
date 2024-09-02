@@ -1,6 +1,9 @@
-#' Download the boundaries or the centroids of NUTS-3 (Provinces) and LAU (Municipalities) Italian administrative units from the ISTAT website
+#' Download the shapefiles of Italian NUTS-3 and LAU administrative units
 #'
-#' @description '
+#' @description Downloads either the boundaries or the centroids of the relevant administrative units,
+#' either provinces or municipalities, from the ISTAT website. Geometries are expressed in meters.
+#'
+#'
 #'
 #' @param Year Numeric. Reference year for the administrative units.
 #' @param level Character. Either \code{"NUTS-3"}, \code{"Province"}, \code{"LAU"}, \code{"Municipality"}. \code{"LAU"} by default

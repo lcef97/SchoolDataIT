@@ -61,7 +61,8 @@
 #'
 #' nstud23_aggr <- Group_nstud(data = example_input_nstud23, Year = Year,
 #'                            input_Registry = example_input_Registry23,
-#'                            InnerAreas = FALSE,  input_School2mun = example_School2mun23)
+#'                            InnerAreas = FALSE,
+#'                            input_School2mun = example_School2mun23)
 #'
 #' summary(nstud23_aggr$Municipality_data[,c(46,47,48)])
 #'
@@ -204,57 +205,57 @@ Group_nstud <- function(data = NULL, Year = 2023,
                                       input_InnerAreas = input_InnerAreas,
                                       input_Prov_shp = input_Prov_shp, input_School2mun = input_School2mun,
                                       autoAbort = autoAbort)
-  }
-  if(is.null(nstud.check)){
-    message("Error occurred during the students count availability check")
-  } else {
-    check_mun <- nstud.check$Municipality_data[[check_registry]]
-    if(InnerAreas){
-      if(ord_InnerAreas){
-        check_mun <- check_mun %>% dplyr::select(.data$Order, .data$Municipality_code, .data$Availability, .data$Inner_area,
-                                                 .data$A_mun, .data$B_mun, .data$C_mun, .data$D_mun, .data$E_mun, .data$F_mun)
-      } else {
-        check_mun <- check_mun %>% dplyr::select(.data$Order, .data$Municipality_code, .data$Availability, .data$Inner_area)
-      }
+    if(is.null(nstud.check)){
+      message("Error occurred during the students count availability check")
     } else {
-      check_mun <- check_mun %>% dplyr::select(.data$Order, .data$Municipality_code, .data$Availability)
-    }
-    check_mun <- check_mun %>%
-      tidyr::unite("ID", c(.data$Municipality_code, .data$Order), sep = "___") %>%
-      dplyr::mutate(ID = gsub(" ", "_", .data$ID))
+      check_mun <- nstud.check$Municipality_data[[check_registry]]
+      if(InnerAreas){
+        if(ord_InnerAreas){
+          check_mun <- check_mun %>% dplyr::select(.data$Order, .data$Municipality_code, .data$Availability, .data$Inner_area,
+                                                   .data$A_mun, .data$B_mun, .data$C_mun, .data$D_mun, .data$E_mun, .data$F_mun)
+        } else {
+          check_mun <- check_mun %>% dplyr::select(.data$Order, .data$Municipality_code, .data$Availability, .data$Inner_area)
+        }
+      } else {
+        check_mun <- check_mun %>% dplyr::select(.data$Order, .data$Municipality_code, .data$Availability)
+      }
+      check_mun <- check_mun %>%
+        tidyr::unite("ID", c(.data$Municipality_code, .data$Order), sep = "___") %>%
+        dplyr::mutate(ID = gsub(" ", "_", .data$ID))
 
-    nstud.byclass_Mun <- nstud.byclass_Mun %>%
-      tidyr::unite("ID", c(.data$Municipality_code, .data$Order), sep = "___") %>%
-      dplyr::mutate(ID = gsub(" ", "_", .data$ID)) %>%
-      dplyr::left_join(check_mun, by = "ID") %>%
-      tidyr::separate(.data$ID, into = c("Municipality_code", "Order"), sep = "___") %>%
-      dplyr::mutate(Order = gsub("_", " ", .data$Order))
+      nstud.byclass_Mun <- nstud.byclass_Mun %>%
+        tidyr::unite("ID", c(.data$Municipality_code, .data$Order), sep = "___") %>%
+        dplyr::mutate(ID = gsub(" ", "_", .data$ID)) %>%
+        dplyr::left_join(check_mun, by = "ID") %>%
+        tidyr::separate(.data$ID, into = c("Municipality_code", "Order"), sep = "___") %>%
+        dplyr::mutate(Order = gsub("_", " ", .data$Order))
 
-    check_prov <- nstud.check$Province_data[[check_registry]]
-    if(InnerAreas){
-      if(ord_InnerAreas){
-        check_prov <- check_prov %>%
-          dplyr::select(.data$Order, .data$Province_code, .data$Availability, .data$Inner_area,
-                        .data$A_mun, .data$B_mun, .data$C_mun, .data$D_mun, .data$E_mun, .data$F_mun)
+      check_prov <- nstud.check$Province_data[[check_registry]]
+      if(InnerAreas){
+        if(ord_InnerAreas){
+          check_prov <- check_prov %>%
+            dplyr::select(.data$Order, .data$Province_code, .data$Availability, .data$Inner_area,
+                          .data$A_mun, .data$B_mun, .data$C_mun, .data$D_mun, .data$E_mun, .data$F_mun)
+        } else {
+          check_prov <- check_prov %>%
+            dplyr::select(.data$Order, .data$Province_code, .data$Availability, .data$Inner_area)
+        }
       } else {
         check_prov <- check_prov %>%
-          dplyr::select(.data$Order, .data$Province_code, .data$Availability, .data$Inner_area)
+          dplyr::select(.data$Order, .data$Province_code, .data$Availability)
       }
-    } else {
-      check_prov <- check_prov %>%
-        dplyr::select(.data$Order, .data$Province_code, .data$Availability)
-    }
-    check_prov  <- check_prov %>%
-      tidyr::unite("ID", c(.data$Province_code, .data$Order), sep = "___") %>%
-      dplyr::mutate(ID = gsub(" ", "_", .data$ID))
+      check_prov  <- check_prov %>%
+        tidyr::unite("ID", c(.data$Province_code, .data$Order), sep = "___") %>%
+        dplyr::mutate(ID = gsub(" ", "_", .data$ID))
 
-    nstud.byclass_Prov <- nstud.byclass_Prov %>%
-      tidyr::unite("ID", c(.data$Province_code, .data$Order), sep = "___") %>%
-      dplyr::mutate(ID = gsub(" ", "_", .data$ID)) %>%
-      dplyr::left_join(check_prov, by = "ID") %>%
-      tidyr::separate(.data$ID, into = c("Province_code", "Order"), sep = "___") %>%
-      dplyr::mutate(Order = gsub("_", " ", .data$Order)) %>%
-      dplyr::mutate(Province_code = as.numeric(.data$Province_code))
+      nstud.byclass_Prov <- nstud.byclass_Prov %>%
+        tidyr::unite("ID", c(.data$Province_code, .data$Order), sep = "___") %>%
+        dplyr::mutate(ID = gsub(" ", "_", .data$ID)) %>%
+        dplyr::left_join(check_prov, by = "ID") %>%
+        tidyr::separate(.data$ID, into = c("Province_code", "Order"), sep = "___") %>%
+        dplyr::mutate(Order = gsub("_", " ", .data$Order)) %>%
+        dplyr::mutate(Province_code = as.numeric(.data$Province_code))
+    }
   }
 
   endtime <- Sys.time()
