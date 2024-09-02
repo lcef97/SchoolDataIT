@@ -7,6 +7,10 @@
 #'   \item Static map (ggplot), which can be easily exported in \code{.pdf} objects.
 #' }
 #'
+#' @param data Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
+#' The raw Invalsi survey data that has to be filtered, obtained as output of the \code{\link{Get_Invalsi_IS}} function.
+#' If \code{NULL}, it will be downloaded automatically, but not saved in the global environment.
+#' \code{NULL} by default
 #'
 #' @param Year Numeric or character value. Reference school year for the data (last available is 2022/23).
 #' Available in the formats: \code{2022}, \code{"2021/2022"}, \code{202122}, \code{20212022}. \code{2022} by default
@@ -29,10 +33,6 @@
 #' @param col_rev Logical. Whether the scale of the colour palette should be reverted or not, if the \code{mapview} mode is chosen. \code{FALSE} by default
 #' @param popup_height Numeric. The height of the popup table in terms of pixels if the \code{"mapview"} mode is chosen. \code{200} by default.
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.
-#' @param data Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
-#' The raw Invalsi survey data that has to be filtered, obtained as output of the \code{\link{Get_Invalsi_IS}} function.
-#' If \code{NULL}, it will be downloaded automatically, but not saved in the global environment.
-#' \code{NULL} by default
 #' @param input_shp Object of class \code{sf}, \code{tbl_df}, \code{tbl}, \code{data.frame}. The relevant shapefiles of Italian administrative boudaries,
 #' at the selected level of detail (LAU or NUTS-3). If \code{NULL}, it is downloaded automatically but not saved in the global environment. \code{NULL} by default.
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
