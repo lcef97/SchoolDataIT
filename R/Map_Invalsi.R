@@ -59,7 +59,7 @@
 #'
 #' @export
 
-Map_Invalsi <- function(Year = 2023, data = NULL, subj_toplot = "ITA", grade = 8, level = "LAU",
+Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8, level = "LAU",
                         main = "", main_pos = "top", region_code = c(1:20), plot="mapview", pal = "Blues",
                         WLE = FALSE, col_rev = FALSE, popup_height = 200, verbose = TRUE,
                         input_shp = NULL, autoAbort = FALSE){
