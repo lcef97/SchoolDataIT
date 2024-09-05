@@ -155,12 +155,38 @@ Map_DB <- function(
   }
 
   data <- data %>% dplyr::filter(.data$Order == order)
-  if(level %in% c("LAU", "Municipality")){
+
+
+  if(level %in% c("LAU", "Municipality", "NUTS-4")){
     res <- input_shp %>% dplyr::select(.data$COD_REG, .data$PRO_COM_T) %>%
       rename_by_idx(c(1,2), into = c("Region_code", "Municipality_code")) %>%
       dplyr::left_join(data, by= "Municipality_code") %>%
       dplyr::filter(.data$Region_code %in% region_code)
   } else {
+
+    if("Municipality_code" %in% names(data)){
+      startgroup <- min(
+        which(
+          unlist(
+            lapply(dplyr::select(data, -.data$Province_code),
+                   function(x) any(is.numeric(x)))))) + 1
+      data <- data %>% Group_Count(
+        groupcol = c("Province_code", "Province_initials", "Order"), FUN =MeanOrMode,
+        startgroup = startgroup, countname = "nmun")
+      if("nbuildings" %in% names(data)){
+        data <- data %>% dplyr::mutate(nmun = .data$nmun * .data$nbuildings) %>%
+          dplyr::select(-.data$nbuildings) %>%
+          dplyr::rename(nbuildings = .data$nmun)
+      }
+      else if("nschools" %in% names(data)){
+        data <- data %>% dplyr::mutate(nmun = .data$nmun * .data$nschools) %>%
+          dplyr::select(-.data$nschools) %>%
+          dplyr::rename(nschools = .data$nmun)
+      } else {
+        data <- data %>% dplyr::select(-.data$nmun)
+      }
+    }
+
     res <- input_shp %>% dplyr::select(.data$COD_REG, .data$COD_PROV) %>%
       rename_by_idx(c(1,2), into = c("Region_code", "Province_code")) %>%
       dplyr::left_join(data,by = "Province_code") %>%
