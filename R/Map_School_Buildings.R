@@ -150,7 +150,7 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
 
   if(verbose) cat("Setting target variables... \n")
 
-  if (level %in% c("LAU", "Municipality") ){
+  if (level %in% c("LAU", "Municipality", "NUTS-4") ){
     dat.R <- DB %>% dplyr::filter(.data$Order != "NR")
 
     # formerly across(all_of(c(3:ncol(.)-4)))
@@ -177,6 +177,24 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
       dplyr::left_join(dat.R, by = "Municipality_code")
 
   } else {
+
+    if("Municipality_code" %in% names(DB)){
+      startgroup <- min(
+        which(
+          unlist(
+            lapply(dplyr::select(DB, -.data$Province_code),
+                   function(x) any(is.numeric(x)))))) + 1
+      DB <- DB %>% Group_Count(
+        groupcol = c("Province_code", "Province_initials", "Order"), FUN =MeanOrMode,
+        startgroup = startgroup, countname = "nmun")
+      if("nbuildings" %in% names(DB)){
+        DB <- DB %>% dplyr::mutate(nmun = .data$nmun * .data$nbuildings) %>%
+          dplyr::select(-.data$nbuildings) %>%
+          dplyr::rename(nbuildings = .data$nmun)
+      } else {
+        DB <- DB %>% dplyr::select(-.data$nmun)
+      }
+    }
 
     dat.R <- DB %>% dplyr::filter(.data$Order != "NR")
 

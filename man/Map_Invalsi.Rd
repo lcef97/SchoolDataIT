@@ -5,8 +5,8 @@
 \title{Display a map of Invalsi scores}
 \usage{
 Map_Invalsi(
-  Year = 2023,
   data = NULL,
+  Year = 2023,
   subj_toplot = "ITA",
   grade = 8,
   level = "LAU",
@@ -24,13 +24,13 @@ Map_Invalsi(
 )
 }
 \arguments{
-\item{Year}{Numeric or character value. Reference school year for the data (last available is 2022/23).
-Available in the formats: \code{2022}, \code{"2021/2022"}, \code{202122}, \code{20212022}. \code{2022} by default}
-
 \item{data}{Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 The raw Invalsi survey data that has to be filtered, obtained as output of the \code{\link{Get_Invalsi_IS}} function.
 If \code{NULL}, it will be downloaded automatically, but not saved in the global environment.
 \code{NULL} by default}
+
+\item{Year}{Numeric or character value. Reference school year for the data (last available is 2022/23).
+Available in the formats: \code{2022}, \code{"2021/2022"}, \code{202122}, \code{20212022}. \code{2022} by default}
 
 \item{subj_toplot}{Character. The school subject to display in the map,
 The school subject to include, one among:

@@ -95,7 +95,8 @@ Year <- 2023
 
 nstud23_aggr <- Group_nstud(data = example_input_nstud23, Year = Year,
                            input_Registry = example_input_Registry23,
-                           InnerAreas = FALSE,  input_School2mun = example_School2mun23)
+                           InnerAreas = FALSE,
+                           input_School2mun = example_School2mun23)
 
 summary(nstud23_aggr$Municipality_data[,c(46,47,48)])
 
