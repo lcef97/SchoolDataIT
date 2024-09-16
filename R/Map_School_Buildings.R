@@ -103,7 +103,7 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
 
   if(!is.data.frame(data)){
     if(any(grepl("missing", names(data)))){
-      if(level %in% c("LAU", "Municipality")){
+      if(toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
         DB <- data$Municipality_data %>%
           dplyr::left_join(data$Municipality_missing, by = c("Municipality_code", "Order"))
       } else {
@@ -111,7 +111,7 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
           dplyr::left_join(data$Province_missing, by = c("Province_code", "Order"))
       }
     } else {
-      if(level %in% c("LAU", "Municipality")){
+      if(toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
         DB <- data$Municipality_data
       } else DB <- data$Province_data
     }
@@ -142,15 +142,9 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
     }
   }
 
-#  if(level %in% c ("LAU", "Municipality")){
-#    Mun_shp <- input_shp
-#  } else if(level %in% c("NUTS-3", "Province") ) Prov_shp <- input_shp else {
-#    stop("Please, choose either 'LAU'('Municipality') or 'NUTS-3' ('Province') as level")
-#  }
-
   if(verbose) cat("Setting target variables... \n")
 
-  if (level %in% c("LAU", "Municipality", "NUTS-4") ){
+  if (toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
     dat.R <- DB %>% dplyr::filter(.data$Order != "NR")
 
     # formerly across(all_of(c(3:ncol(.)-4)))

@@ -25,7 +25,7 @@
 #' If \code{NULL}, it will be downloaded automatically, but not saved in the global environment.
 #' \code{NULL} by default
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
-#' @param ... Additional arguments to the function \code{Util_DB_MIUR_num} in case no data are provided or data.
+#' @param ... Additional arguments to the function \code{\link{Util_DB_MIUR_num}} in case no data are provided or data.
 #'
 #'
 #' @return An object of class \code{list} including:
