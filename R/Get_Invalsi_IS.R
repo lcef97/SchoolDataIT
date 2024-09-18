@@ -47,7 +47,7 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
     nCol <- 11
     if (verbose) cat("Retrieving Invalsi census data for provinces")
     url.invalsi <- "https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/"
-    name_pattern <- "matrice_medie_provinciali.csv"
+    name_pattern <- "matrice_medie_provinciali"
   }
 
   homepage <- NULL
@@ -63,9 +63,9 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
   status <- 0
   attempt <- 0
   while(status != 200 && attempt <= 10){
-    link <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href")
-    link <- grep(name_pattern, grep(link, ".csv", value = TRUE),
-                 value = TRUE) %>% unique()
+    links <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href")
+    link <- unique(links[grepl(paste0(
+      "(?=.*", name_pattern, ")(?=.*\\.csv$)(?!.*", "livelli", ")"), links, perl = TRUE)])
     response <- tryCatch({
       httr::GET(link)
     }, error = function(e) {
