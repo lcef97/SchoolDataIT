@@ -25,7 +25,7 @@ example_AdmUnNames20220630
 \description{
 This table includes the administrative codes of the municipalities from four regions: Molise, Campania, Apulia and Basilicata,
 as of June 30th 2022; some strings in field \code{Municipality_description} including accents have been forced to ASCII.
-The whole dataset can be retrieved with the command \code{Get_AdmUnNames(Year = 2022, date = "30_06_")}
+The whole dataset can be retrieved with the command \code{Get_AdmUnNames(Year = 2022, date = "06_30")}
 }
 \seealso{
 \code{\link{Get_AdmUnNames}}
