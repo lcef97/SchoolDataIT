@@ -131,7 +131,7 @@ Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8
     fieldname <- "M_Mathematics"
   }
 
-  if (level %in% c("Municipality", "LAU") ){
+  if (toupper(level) %in% c("MUNICIPALITY", "LAU", "NUTS-4") ){
     shp <- input_shp %>% dplyr::select(.data$COD_REG, .data$COD_PROV, .data$PRO_COM_T) %>%
       rename_by_idx(c(1,2,3), into=c("Region_code", "Province_code", "Municipality_code"))
   } else {

@@ -157,7 +157,7 @@ Map_DB <- function(
   data <- data %>% dplyr::filter(.data$Order == order)
 
 
-  if(level %in% c("LAU", "Municipality", "NUTS-4")){
+  if(toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
     res <- input_shp %>% dplyr::select(.data$COD_REG, .data$PRO_COM_T) %>%
       rename_by_idx(c(1,2), into = c("Region_code", "Municipality_code")) %>%
       dplyr::left_join(data, by= "Municipality_code") %>%

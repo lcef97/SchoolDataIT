@@ -17,7 +17,7 @@
 #' @param Year Numeric or Character. The relevant school year. Available in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}.
 #' Important: if input datasets are plugged in, please select the same \code{Year} argument used to download the input data. \code{2023} by default.
 #' @param level Character. The administrative level of detail at which data must be aggregated.
-#' Either \code{"LAU"}/\code{"Municipality"} or \code{"NUTS-3"}/\code{"Province"}. \code{"LAU"} by default.
+#' Either \code{"LAU"}/\code{"Municipality"/\code{"NUTS-4"}} or \code{"NUTS-3"}/\code{"Province"}. \code{"LAU"} by default.
 #' @param conservative Logical. If \code{FALSE}, only the schools included in all the datasets are taken as input. \code{TRUE} by default.
 #' @param Invalsi Logical. Whether the Invalsi census data must be included (see \code{\link{Get_Invalsi_IS}}. \code{TRUE} by default.
 #' @param SchoolBuildings Logical. Whether the school buildings dataset must be included (see \code{link{Get_DB_MIUR}}, \code{\link{Util_DB_MIUR_num}}. \code{TRUE} by default.
@@ -418,7 +418,7 @@ Set_DB <- function( Year = 2023,
                     count_missing = SchoolBuildings_count_missing,
                     InnerAreas = InnerAreas, ord_InnerAreas = ord_InnerAreas,
                     input_InnerAreas = input_InnerAreas)
-    if(level %in% c("LAU", "Municipality")){
+    if(toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
       DB_SchoolBuildings <- DB_SchoolBuildings$Municipality_data
     } else DB_SchoolBuildings <- DB_SchoolBuildings$Province_data
     DB_SchoolBuildings <- DB_SchoolBuildings %>%
@@ -440,7 +440,7 @@ Set_DB <- function( Year = 2023,
                   input_Registry = input_Registry, input_InnerAreas = input_InnerAreas,
                   input_School2mun = input_School2mun, input_AdmUnNames = input_AdmUnNames)
     if(!is.data.frame(nstud_aggr)){
-      if(level %in% c("LAU", "Municipality")){
+      if(toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
         datasets[["nstud"]] <- nstud_aggr$Municipality_data
       } else datasets[["nstud"]] <- nstud_aggr$Province_data
     } else datasets[["nstud"]] <- nstud_aggr
