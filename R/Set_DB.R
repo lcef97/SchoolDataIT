@@ -29,6 +29,7 @@
 #' @param Invalsi_subj Character. If \code{Invalsi == TRUE}, the school subject(s) to include, among \code{"Englis_listening"}/\code{"ELI"}, \code{"English_reading"}/\code{"ERE"}, \code{"Italian"}/\code{"Ita"} and \code{"Mathematics"}/\code{"MAT"}. All four by default.
 #' @param Invalsi_grade Numeric. If \code{Invalsi == TRUE}, the educational grade to choose. Either \code{2} (2nd year of primary school), \code{5} (last year of primary school), \code{8} (last year of middle shcool), \code{10} (2nd year of high school) or \code{13} (last year of school). All by default.
 #' @param Invalsi_WLE Logical. Whether to express Invalsi scores as averagev WLE score rather that the percentage of sufficient tests, if both are Invalsi_grade is either or \code{2} \code{5}. \code{FALSE} by default
+#' @param SchoolBuildings_certifications Logical. If the school buldings database has to be downloaded, whether to include safety certifications.  Only relevant from schol year 2020/21 onwards (see \code{\link{Get_DB_MIUR}}). \code{FALSE} by default
 #' @param SchoolBuildings_include_numerics Logical. Whether to include strictly numeric variables alongside with Boolean ones in the school buildings database (see \code{\link{Util_DB_MIUR_num}}). \code{TRUE} by default.
 #' @param SchoolBuildings_include_qualitatives Logical. Whether to include qualitative variables alongside with Boolean ones in the school buildings database (see \code{\link{Util_DB_MIUR_num}}). \code{FALSE} by default.
 #' @param SchoolBuildings_row_cutout Logical. Whether to filter out rows including missing fields in the school buildings database (see \code{\link{Util_DB_MIUR_num}}). \code{FALSE} by default.
@@ -128,6 +129,7 @@ Set_DB <- function( Year = 2023,
                     Invalsi_subj = c("ELI", "ERE", "ITA", "MAT"),
                     Invalsi_grade = c(2,5,8,10,13),
                     Invalsi_WLE = FALSE,
+                    SchoolBuildings_certifications = FALSE,
                     SchoolBuildings_include_numerics = TRUE,
                     SchoolBuildings_include_qualitatives = FALSE,
                     SchoolBuildings_row_cutout = FALSE,
@@ -256,7 +258,7 @@ Set_DB <- function( Year = 2023,
     input_SchoolBuildings <-
       Get_DB_MIUR(Year = Year, verbose = verbose, show_col_types = show_col_types,
                   input_Registry = input_Registry, input_AdmUnNames = input_AdmUnNames,
-                  autoAbort = autoAbort)
+                  certifications = SchoolBuildings_certifications, autoAbort = autoAbort)
 
     if(is.null(input_SchoolBuildings)){
       if(!autoAbort){
@@ -405,6 +407,9 @@ Set_DB <- function( Year = 2023,
   }
 
   if(!is.null(input_SchoolBuildings)){
+    if(SchoolBuildings_certifications){
+      SchoolBuildings_include_numerics <- TRUE
+    }
     DB_SchoolBuildings_num <- input_SchoolBuildings %>% Util_DB_MIUR_num(
       include_numerics = SchoolBuildings_include_numerics,
       include_qualitatives = SchoolBuildings_include_qualitatives,

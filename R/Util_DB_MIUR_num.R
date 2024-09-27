@@ -79,8 +79,11 @@ Util_DB_MIUR_num <- function(data = NULL, include_numerics = TRUE, include_quali
     if(na.rm){
       c <- c[which(!is.na(c))]
     }
-    c <- stringr::str_remove_all(c, "\\.")
-    c <- stringr::str_replace_all(c, ",", ".")
+    if(is.character(c)){
+      c <- stringr::str_remove_all(c, "\\.")
+      c <- stringr::str_replace_all(c, ",", ".")
+    }
+    return(c)
   }
   nc <- ncol(data)
   #init.cutout = c("Address_type","Address_name","Civic_number", "Building_status")
@@ -106,7 +109,7 @@ Util_DB_MIUR_num <- function(data = NULL, include_numerics = TRUE, include_quali
     C <- unlist(unique(data[which(! data[,j][[1]] %in% pattern.out),j]))
     if(all(toupper(C[which(!is.na(C))]) %in% c ("SI", "NO", "ESISTE", "NON ESISTE"))){
       booleans <- c(booleans,j)
-    } else if(all(is.na(suppressWarnings(as.numeric(uncomma(C)))))){
+    } else if(any(is.na(suppressWarnings(as.numeric(uncomma(C, na.rm = TRUE)))))){
       qualitatives <- c(qualitatives, j)
     } else {
       numerics <- c(numerics, j)

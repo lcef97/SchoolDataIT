@@ -18,6 +18,7 @@ Set_DB(
   Invalsi_subj = c("ELI", "ERE", "ITA", "MAT"),
   Invalsi_grade = c(2, 5, 8, 10, 13),
   Invalsi_WLE = FALSE,
+  SchoolBuildings_certifications = FALSE,
   SchoolBuildings_include_numerics = TRUE,
   SchoolBuildings_include_qualitatives = FALSE,
   SchoolBuildings_row_cutout = FALSE,
@@ -76,6 +77,8 @@ Either \code{"LAU"}/\code{"Municipality"/"NUTS-4"} or \code{"NUTS-3"}/\code{"Pro
 \item{Invalsi_grade}{Numeric. If \code{Invalsi == TRUE}, the educational grade to choose. Either \code{2} (2nd year of primary school), \code{5} (last year of primary school), \code{8} (last year of middle shcool), \code{10} (2nd year of high school) or \code{13} (last year of school). All by default.}
 
 \item{Invalsi_WLE}{Logical. Whether to express Invalsi scores as averagev WLE score rather that the percentage of sufficient tests, if both are Invalsi_grade is either or \code{2} \code{5}. \code{FALSE} by default}
+
+\item{SchoolBuildings_certifications}{Logical. If the school buldings database has to be downloaded, whether to include safety certifications.  Only relevant from schol year 2020/21 onwards (see \code{\link{Get_DB_MIUR}}). \code{FALSE} by default}
 
 \item{SchoolBuildings_include_numerics}{Logical. Whether to include strictly numeric variables alongside with Boolean ones in the school buildings database (see \code{\link{Util_DB_MIUR_num}}). \code{TRUE} by default.}
 

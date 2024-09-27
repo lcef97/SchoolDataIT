@@ -13,6 +13,7 @@ Get_DB_MIUR(
   input_Registry = NULL,
   input_AdmUnNames = NULL,
   show_col_types = FALSE,
+  certifications = FALSE,
   autoAbort = FALSE
 )
 }
@@ -34,10 +35,13 @@ If \code{NULL} and required, it will be downloaded automatically but not saved i
 
 \item{show_col_types}{Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.}
 
+\item{certifications}{Logical. From year 2021/22 onwards, whether to include some safety certifications in the database.
+Given the particular level of definition of this file, it requires extra computational time (other than the downloading time). \code{FALSE} by default.}
+
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
 }
 \value{
-An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. All variables are characters.
+An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 }
 \description{
 This function downloads the School Buildings Open Database provided by the Italian Ministry of Education, University and Research.
@@ -47,7 +51,10 @@ It is one of the main sources of information regarding the infrastructure system
 For a given year, all available data are downloaded (except for the structural units section, which has a different level of detail) and gathered into a unique dataframe.
 }
 \details{
-This function downloads the raw data; missing observations are not edited; all variables are characters. To edit the output of this function and convert the relevant variables to numeric or Boolean, please \code{\link{Util_DB_MIUR_num}}.
+This function downloads the raw data; missing observations are not edited; all variables are characters except the number of floors, surfaces and volumes, and certifications if included.
+Specifically, since certifications are defined at the level of structural units of the single buildings, here
+the fields read as the percentage of structural units in a building having a given certificate.
+To edit the output of this function and convert the relevant variables to numeric or Boolean, please \code{\link{Util_DB_MIUR_num}}.
 Schools different from primary, middle or high schools are classified as \code{"NR"}. In the example, the data for school year 2022/23 are retrieved.
 }
 \examples{

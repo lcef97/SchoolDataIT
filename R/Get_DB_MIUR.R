@@ -12,6 +12,8 @@
 #' The school registry corresonding to the year in scope, obtained as output of the  function \code{\link{Get_Registry}}.
 #' If \code{NULL}, it will be downloaded automatically, but not saved in the global environment.
 #' \code{NULL} by default.
+#' @param certifications Logical. From year 2021/22 onwards, whether to include some safety certifications in the database.
+#' Given the particular level of definition of this file, it requires extra computational time (other than the downloading time). \code{FALSE} by default.
 #' @param input_AdmUnNames Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 #' The ISTAT file including all the codes and all the names of the administrative units for the year in scope, obtained as output of the function \code{\link{Get_AdmUnNames}}.
 #' Only  necessary for school years 2015/16, 2017/18 and 2018/19.
@@ -24,10 +26,14 @@
 #' @source  \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica}{Homepage}
 #'
 #' @details
-#' This function downloads the raw data; missing observations are not edited; all variables are characters. To edit the output of this function and convert the relevant variables to numeric or Boolean, please \code{\link{Util_DB_MIUR_num}}.
+#' This function downloads the raw data; missing observations are not edited; all variables are characters except the certifications if included.
+#' Specifically, since certifications are defined at the level of structural units of the single buildings, here
+#' the fields read as the percentage of structural units in a building having a given certificate.
+#' To edit the output of this function and convert the relevant variables to numeric or Boolean, please \code{\link{Util_DB_MIUR_num}}.
 #' Schools different from primary, middle or high schools are classified as \code{"NR"}. In the example, the data for school year 2022/23 are retrieved.
 #'
-#' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. All variables are characters.
+#'
+#' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 #'
 #' @examples
 #'
@@ -43,7 +49,8 @@
 
 
 Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
-                        input_AdmUnNames = NULL, show_col_types = FALSE, autoAbort = FALSE){
+                        input_AdmUnNames = NULL, show_col_types = FALSE,
+                        certifications = FALSE, autoAbort = FALSE){
 
   start.zero <- Sys.time()
 
@@ -66,6 +73,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
   if(is.null(homepage)) return(NULL)
   name_pattern <- "([0-9]+)\\.(csv)$"
   pattern <- year.patternB(Year)
+  patternA <- year.patternA(Year)
   links <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href") %>% unique()
   links <- links[which(!is.na(links))]
   if (!any(str_detect.general(links, pattern))){
@@ -77,14 +85,17 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
   for (string in links[grep(".csv", links)] ) {
     num_numeric_digits <- sum(unlist(gregexpr("[0-9]", string) ) > 0)
     nchar_min <- min(nchar(pattern))
+    nchar_minA <- nchar(patternA)
     nchar_max <- max(nchar(pattern))
-    if (num_numeric_digits >= nchar_min ){
+    if (num_numeric_digits >= nchar_min && !grepl("EDIUNITASTRUTSTA", string)){
       first_nchar_min <- stringr::str_extract(string, paste0("[0-9]{", nchar_min, "}"))
       first_nchar_max <- stringr::str_extract(string, paste0("[0-9]{", nchar_max, "}"))
       if (!is.na(first_nchar_min) & !is.na(first_nchar_max) & any(pattern %in% c(first_nchar_min, first_nchar_max)) &
           ! string %in% files_to_download) {
         files_to_download <- append(files_to_download, string)
       }
+    } else if(stringr::str_extract(string, paste0("[0-9]{", nchar_minA, "}")) == patternA && grepl("EDIUNITASTRUTSTA", string)){
+      if(certifications) files_to_download <- append(files_to_download, string)
     }
   }
 
@@ -118,12 +129,18 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
       } else {
         suppressMessages(dat <- readr::read_csv(rawToChar(response$content)))
       }
+      if(grepl("UNITASTRUTSTA", link)){
+        dat <- dat %>%
+          gsub.bool(startcol = 5) %>%
+          Group_Count(groupcol = c("ANNOSCOLASTICO", "CODICESCUOLA", "CODICEEDIFICIO"),
+                      startgroup = 5, count = FALSE, FUN = MeanOrMode) %>%
+          dplyr::mutate(CODICEEDIFICIO = as.character(.data$CODICEEDIFICIO))
+      }
       input_MIUR[[link]] <- dat
       input_MIUR[[link]] <- input_MIUR[[link]] %>% dplyr::select(-.data$ANNOSCOLASTICO)
       input_MIUR[[link]] <- input_MIUR[[link]][!duplicated(input_MIUR[[link]]),]
       #input_MIUR[[link]] <- input_MIUR[[link]] %>% tidyr::unite(ID, .data$CODICESCUOLA, .data$CODICEEDIFICIO)
-
-    } else {
+     } else {
       if(verbose){
         message(paste("Wrong file type:", httr::http_type(response)) )
         message("Failed to download and process:", link)
