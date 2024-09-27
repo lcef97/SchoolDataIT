@@ -19,14 +19,14 @@ Util_nstud_wide(
 \item{data}{Object of class \code{list}, including two objects of class \code{tbl_df},  \code{tbl} and \code{data.frame}, obtainded as output of the \code{\link{Get_nstud}} function with the default \code{filename} parameter.
 If \code{NULL}, the function will download it automatically but it will not be saved in the global environment. \code{NULL} by default.}
 
-\item{missing_to_1}{Logical. Whether the number of classes should be imputed to 1 when it is missing and the number of students is below a threshold (argument \code{nstud_imputation_thresh}). \code{TRUE} by default.}
+\item{missing_to_1}{Logical. If focus is on class size, whether the number of classes should be imputed to 1 when it is missing and the number of students is below a threshold (argument \code{nstud_imputation_thresh}). \code{TRUE} by default.}
 
-\item{nstud_imputation_thresh}{Numeric. The minimum threshold below which the number of classes is imputed to 1 if missing, if \code{missing_to_1 == TRUE}.
+\item{nstud_imputation_thresh}{Numeric. If focus is on class size, the minimum threshold below which the number of classes is imputed to 1 if missing, if \code{missing_to_1 == TRUE}.
 E.g. if the threshold is 19, for all the schools in which there are 19 or less students in a given grade but the number of classes for that grade is missing, the number of classes is imputated to 1. \code{19} by default.}
 
-\item{UB_nstud_byclass}{Numeric. The upper limit of the acceptable school-level average of the number of students by class. If a school has, on average, a higher number of students by class, the record is considered an outlier and filtered out. \code{99} by default, i.e. no restriction is made. Please notice that boundaries are included in the acceptance interval.}
+\item{UB_nstud_byclass}{Numeric. If focus is on class size, the upper limit of the acceptable school-level average of the number of students by class. If a school has, on average, a higher number of students by class, the record is considered an outlier and filtered out. \code{99} by default, i.e. no restriction is made. Please notice that boundaries are included in the acceptance interval.}
 
-\item{LB_nstud_byclass}{Numeric. The lower limit of the acceptable school-level average of the number of students by class. If a school has, on average, a smaller number of students by class, the record is considered an outlier and filtered out. \code{1} by default. Please notice that boundaries are included in the acceptance interval.}
+\item{LB_nstud_byclass}{Numeric. If focus is on class size, the lower limit of the acceptable school-level average of the number of students by class. If a school has, on average, a smaller number of students by class, the record is considered an outlier and filtered out. \code{1} by default. Please notice that boundaries are included in the acceptance interval.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
 
@@ -38,8 +38,11 @@ E.g. if the threshold is 19, for all the schools in which there are 19 or less s
 An object of class  \code{tbl_df}, \code{tbl} and \code{data.frame}
 }
 \description{
-This function firstly cleans the output of the \code{\link{Get_nstud}} function from the outliers in terms of average number of students by class at the school level and imputates the number of classes to 1 when missing,
-then it rearranges the data into a wide format, in such a way to represent the number of students, the number of classes and the average number of students by class at each school grade in a unique observation for each school.
+This function rearranges the output of the \code{\link{Get_nstud}} function in such a way to represent the
+counts of students and, if required, either the number of students by class and number of classes, or
+the counts of students per school timetable (running time) in a unique observation per school.
+If the focus is on class size, this function  firstly cleans the data from the outliers in terms of
+average number of students by class at the school level and imputates the number of classes to 1 when missing.
 }
 \details{
 In the example, we compare the dataframe obtained with the default settings

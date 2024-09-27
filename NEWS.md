@@ -1,5 +1,7 @@
 # SchoolDataIT 0.2.1
 
+* Experimental feature: integrated the counts of students by school running time in the 'nstud' workflow
+
 * Minor changes: function 'Get_Shapefile' can now provide either the boundaries or the centroids of NUTS-3 and LAU administrative units; fixed warning message in 'Group_nstud';
 'Map_DB' allows to map municipality data at province level
 

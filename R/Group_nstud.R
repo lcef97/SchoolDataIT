@@ -106,13 +106,13 @@ Group_nstud <- function(data = NULL, Year = 2023,
   }
 
   if(is.data.frame(data)){
-    if(any(grepl("per.*class", names(data), ignore.case = TRUE))){
-      nstud.byclass <- data
+    if(any(grepl("per.*class", names(data), ignore.case = TRUE)) ||
+       any(grepl("full_time", names(data), ignore.case = TRUE))){
+      nstud.wide <- data
     } else {
-      nstud.byclass <- Util_nstud_wide(data = data, missing_to_1 = missing_to_1, ... )
+      nstud.wide <- Util_nstud_wide(data = data, missing_to_1 = missing_to_1, ... )
     }
-  } else nstud.byclass <- Util_nstud_wide(data = data, missing_to_1 = missing_to_1, ... )
-
+  } else nstud.wide <- Util_nstud_wide(data = data, missing_to_1 = missing_to_1, ... )
 
   if(verbose) cat("Linking schools to reference municipalities \n")
   while(is.null(input_School2mun)){
@@ -141,8 +141,8 @@ Group_nstud <- function(data = NULL, Year = 2023,
   if(verbose) cat("Aggregating schools data \n")
 
   suppressWarnings(
-    nstud.byclass_Mun <- dplyr::left_join(
-      nstud.byclass, School2mun.R ,by = "School_code") %>%
+    nstud.wide_Mun <- dplyr::left_join(
+      nstud.wide, School2mun.R ,by = "School_code") %>%
       dplyr::filter(!is.na(.data$Municipality_code)) %>% dplyr::relocate(
         c(.data$Municipality_code, .data$Municipality_description,
           .data$Province_code, .data$Province_initials), .after ="School_code") %>%
@@ -153,8 +153,8 @@ Group_nstud <- function(data = NULL, Year = 2023,
   )
 
   suppressWarnings(
-    nstud.byclass_Prov <- dplyr::left_join(
-      nstud.byclass, School2mun.R, by = "School_code") %>%
+    nstud.wide_Prov <- dplyr::left_join(
+      nstud.wide, School2mun.R, by = "School_code") %>%
       dplyr::filter(!is.na(.data$Municipality_code)) %>% dplyr::relocate(
         c(.data$Municipality_code, .data$Municipality_description,
           .data$Province_code, .data$Province_initials), .after ="School_code") %>%
@@ -163,41 +163,42 @@ Group_nstud <- function(data = NULL, Year = 2023,
         startgroup = 7, FUN = sum, countname = "nschools")
   )
 
+  if(any(grepl("Students_per_class", names(nstud.wide)))){
+    for (i in (1:14)){
+      j <- 2*i + 5
+      nstud.wide_Mun <- nstud.wide_Mun %>%
+        dplyr::mutate(xx = as.numeric(unlist(dplyr::select(.,j)/dplyr::select(.,j+1) ) ) )
+      names(nstud.wide_Mun)[ncol(nstud.wide_Mun)] <- paste("Students_per_class_", ifelse(i<14, i,"Tot"), sep = "")
+    }
+    nstud.wide_Mun[, c(6:ncol(nstud.wide_Mun))][is.na(nstud.wide_Mun[ ,c(6:ncol(nstud.wide_Mun))])] <- 0
 
-  for (i in (1:14)){
-    j <- 2*i + 5
-    nstud.byclass_Mun <- nstud.byclass_Mun %>%
-      dplyr::mutate(xx = as.numeric(unlist(dplyr::select(.,j)/dplyr::select(.,j+1) ) ) )
-    names(nstud.byclass_Mun)[ncol(nstud.byclass_Mun)] <- paste("Students_per_class_", ifelse(i<14, i,"Tot"), sep = "")
-  }
-  nstud.byclass_Mun[, c(6:ncol(nstud.byclass_Mun))][is.na(nstud.byclass_Mun[ ,c(6:ncol(nstud.byclass_Mun))])] <- 0
+    for (i in c(1:13)){
+      j <- i + 34
+      k <- 3*i + 5
+      nstud.wide_Mun <- nstud.wide_Mun %>% dplyr::relocate(j, .after = k)
+    }
 
-  for (i in c(1:13)){
-    j <- i + 34
-    k <- 3*i + 5
-    nstud.byclass_Mun <- nstud.byclass_Mun %>% dplyr::relocate(j, .after = k)
-  }
+    for (i in (1:14)){
+      j <- 2*i + 3
+      nstud.wide_Prov <- nstud.wide_Prov %>%
+        dplyr::mutate(xx = as.numeric(unlist(dplyr::select(.,j)/dplyr::select(.,j+1) ) ) )
+      names(nstud.wide_Prov)[ncol(nstud.wide_Prov)] <- paste("Students_per_class_", ifelse(i<14, i,"Tot"), sep = "")
+    }
+    nstud.wide_Prov[, c(4:ncol(nstud.wide_Prov))][is.na(nstud.wide_Prov[ ,c(4:ncol(nstud.wide_Prov))])] <- 0
 
-  for (i in (1:14)){
-    j <- 2*i + 3
-    nstud.byclass_Prov <- nstud.byclass_Prov %>%
-      dplyr::mutate(xx = as.numeric(unlist(dplyr::select(.,j)/dplyr::select(.,j+1) ) ) )
-    names(nstud.byclass_Prov)[ncol(nstud.byclass_Prov)] <- paste("Students_per_class_", ifelse(i<14, i,"Tot"), sep = "")
-  }
-  nstud.byclass_Prov[, c(4:ncol(nstud.byclass_Prov))][is.na(nstud.byclass_Prov[ ,c(4:ncol(nstud.byclass_Prov))])] <- 0
-
-  for (i in c(1:13)){
-    j <- i + 32
-    k <- 3*i + 3
-    nstud.byclass_Prov <- nstud.byclass_Prov %>%
-      dplyr::relocate(j, .after = k)
+    for (i in c(1:13)){
+      j <- i + 32
+      k <- 3*i + 3
+      nstud.wide_Prov <- nstud.wide_Prov %>%
+        dplyr::relocate(j, .after = k)
+    }
   }
 
   nstud.check <- NULL
   if(check){
     if(verbose) cat("Checking whether registered schools are included \n")
     nstud.check <-
-        Util_Check_nstud_availability(nstud.byclass, Year = Year,cutout = c("IC", "IS", "NR"),
+        Util_Check_nstud_availability(nstud.wide, Year = Year,cutout = c("IC", "IS", "NR"),
                                       ggplot = check_ggplot,
                                       verbose = verbose, InnerAreas = InnerAreas,
                                       ord_InnerAreas = ord_InnerAreas,
@@ -223,7 +224,7 @@ Group_nstud <- function(data = NULL, Year = 2023,
         tidyr::unite("ID", c(.data$Municipality_code, .data$Order), sep = "___") %>%
         dplyr::mutate(ID = gsub(" ", "_", .data$ID))
 
-      nstud.byclass_Mun <- nstud.byclass_Mun %>%
+      nstud.wide_Mun <- nstud.wide_Mun %>%
         tidyr::unite("ID", c(.data$Municipality_code, .data$Order), sep = "___") %>%
         dplyr::mutate(ID = gsub(" ", "_", .data$ID)) %>%
         dplyr::left_join(check_mun, by = "ID") %>%
@@ -248,7 +249,7 @@ Group_nstud <- function(data = NULL, Year = 2023,
         tidyr::unite("ID", c(.data$Province_code, .data$Order), sep = "___") %>%
         dplyr::mutate(ID = gsub(" ", "_", .data$ID))
 
-      nstud.byclass_Prov <- nstud.byclass_Prov %>%
+      nstud.wide_Prov <- nstud.wide_Prov %>%
         tidyr::unite("ID", c(.data$Province_code, .data$Order), sep = "___") %>%
         dplyr::mutate(ID = gsub(" ", "_", .data$ID)) %>%
         dplyr::left_join(check_prov, by = "ID") %>%
@@ -267,5 +268,5 @@ Group_nstud <- function(data = NULL, Year = 2023,
               ":"), difftime(endtime, start.zero, units="secs"), "seconds \n"  )
   }
 
-  return(list(Municipality_data = nstud.byclass_Mun, Province_data = nstud.byclass_Prov))
+  return(list(Municipality_data = nstud.wide_Mun, Province_data = nstud.wide_Prov))
 }

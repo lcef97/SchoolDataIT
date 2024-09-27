@@ -156,6 +156,13 @@ Get_nstud <- function(Year = 2023, filename = c("ALUCORSOETASTA", "ALUCORSOINDCL
           .data$ORDINESCUOLA == "SCUOLA SECONDARIA I GRADO" ~ 5 ,
           .data$ORDINESCUOLA == "SCUOLA SECONDARIA II GRADO" ~ 8 ) )
     }
+    if("TEMPOSCUOLA" %in% names(x)){
+      x <- x %>% dplyr::mutate(TEMPOSCUOLA = dplyr::case_when(
+        .data$TEMPOSCUOLA == "TEMPO NORMALE" ~ "Ordinary",
+        .data$TEMPOSCUOLA == "INDIRIZZO ORDINARIO" ~ "Ordinary",
+        .data$TEMPOSCUOLA == "INDIRIZZO MUSICALE" ~ "Music_oriented",
+        .data$TEMPOSCUOLA == "TEMPO PIENO" ~ "Full_time"))
+    }
     x <- x %>% dplyr::mutate(ORDINESCUOLA = dplyr::case_when(
       .data$ORDINESCUOLA == "SCUOLA PRIMARIA" ~ "Primary",
       .data$ORDINESCUOLA == "SCUOLA SECONDARIA I GRADO" ~ "Middle",
