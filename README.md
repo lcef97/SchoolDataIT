@@ -1,7 +1,5 @@
 # Version 0.2.1
 
-## Testing version, to be loaded on CRAN
-
 ## Package overview
 
 Compiles and displays the available data sets regarding the Italian school system, with a focus on the infrastructural aspects.
