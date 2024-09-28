@@ -79,7 +79,7 @@ Util_DB_MIUR_num <- function(data = NULL, include_numerics = TRUE, include_quali
     if(na.rm){
       c <- c[which(!is.na(c))]
     }
-    if(is.character(c)){
+    if(any(grepl(",", c))){
       c <- stringr::str_remove_all(c, "\\.")
       c <- stringr::str_replace_all(c, ",", ".")
     }

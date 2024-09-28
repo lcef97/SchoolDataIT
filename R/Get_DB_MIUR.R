@@ -26,8 +26,8 @@
 #' @source  \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica}{Homepage}
 #'
 #' @details
-#' This function downloads the raw data; missing observations are not edited; all variables are characters except the certifications if included.
-#' Specifically, since certifications are defined at the level of structural units of the single buildings, here
+#' This function downloads the raw data; missing observations are not edited; all variables are characters.
+#' Since certifications are defined at the level of structural units of the single buildings, here
 #' the fields read as the percentage of structural units in a building having a given certificate.
 #' To edit the output of this function and convert the relevant variables to numeric or Boolean, please \code{\link{Util_DB_MIUR_num}}.
 #' Schools different from primary, middle or high schools are classified as \code{"NR"}. In the example, the data for school year 2022/23 are retrieved.
@@ -134,7 +134,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
           gsub.bool(startcol = 5) %>%
           Group_Count(groupcol = c("ANNOSCOLASTICO", "CODICESCUOLA", "CODICEEDIFICIO"),
                       startgroup = 5, count = FALSE, FUN = MeanOrMode) %>%
-          dplyr::mutate(CODICEEDIFICIO = as.character(.data$CODICEEDIFICIO))
+          dplyr::mutate(dplyr::across(where(is.numeric), as.character))
       }
       input_MIUR[[link]] <- dat
       input_MIUR[[link]] <- input_MIUR[[link]] %>% dplyr::select(-.data$ANNOSCOLASTICO)
