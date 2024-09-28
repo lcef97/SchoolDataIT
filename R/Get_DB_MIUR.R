@@ -130,10 +130,23 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
         suppressMessages(dat <- readr::read_csv(rawToChar(response$content)))
       }
       if(grepl("UNITASTRUTSTA", link)){
+        dat[, -c(1:4)] <- lapply(dat[, -c(1:4)], function(x){
+          gsub(
+            "SI", 1, gsub(
+              "NO", 0, gsub(
+                "Esiste", 1, ignore.case = TRUE, gsub(
+                  "Non Esiste", 0, ignore.case = TRUE, gsub(
+                    "IN PARTE", NA, ignore.case = TRUE, gsub(
+                      "ND", NA, ignore.case = TRUE, gsub(
+                        "Non Definito", NA, ignore.case = TRUE, gsub(
+                          "Non Comunicato", NA, ignore.case = TRUE, gsub(
+                            "Non Richiesto", NA, ignore.case = TRUE, gsub(
+                              "^-$", NA, x))))))))))}) %>%
+          as.data.frame()
         dat <- dat %>%
-          gsub.bool(startcol = 5) %>%
           Group_Count(groupcol = c("ANNOSCOLASTICO", "CODICESCUOLA", "CODICEEDIFICIO"),
                       startgroup = 5, count = FALSE, FUN = MeanOrMode)
+
         dat <- dat %>%
           dplyr::mutate(dplyr::across(names(dat)[unlist(lapply(dat, is.numeric))], as.character))
       }
