@@ -90,7 +90,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
     if (num_numeric_digits >= nchar_min && !grepl("EDIUNITASTRUTSTA", string)){
       first_nchar_min <- stringr::str_extract(string, paste0("[0-9]{", nchar_min, "}"))
       first_nchar_max <- stringr::str_extract(string, paste0("[0-9]{", nchar_max, "}"))
-      if (!is.na(first_nchar_min) & !is.na(first_nchar_max) & any(pattern %in% c(first_nchar_min, first_nchar_max)) &
+      if (!is.na(first_nchar_min) && !is.na(first_nchar_max) && any(pattern %in% c(first_nchar_min, first_nchar_max)) &&
           ! string %in% files_to_download) {
         files_to_download <- append(files_to_download, string)
       }
@@ -134,7 +134,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
           gsub.bool(startcol = 5) %>%
           Group_Count(groupcol = c("ANNOSCOLASTICO", "CODICESCUOLA", "CODICEEDIFICIO"),
                       startgroup = 5, count = FALSE, FUN = MeanOrMode) %>%
-          dplyr::mutate(dplyr::across(where(is.numeric), as.character))
+          dplyr::mutate(dplyr::across(names(dat)[unlist(lapply(dat, is.numeric))], as.character))
       }
       input_MIUR[[link]] <- dat
       input_MIUR[[link]] <- input_MIUR[[link]] %>% dplyr::select(-.data$ANNOSCOLASTICO)

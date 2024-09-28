@@ -51,8 +51,8 @@ It is one of the main sources of information regarding the infrastructure system
 For a given year, all available data are downloaded (except for the structural units section, which has a different level of detail) and gathered into a unique dataframe.
 }
 \details{
-This function downloads the raw data; missing observations are not edited; all variables are characters except the number of floors, surfaces and volumes, and certifications if included.
-Specifically, since certifications are defined at the level of structural units of the single buildings, here
+This function downloads the raw data; missing observations are not edited; all variables are characters.
+Since certifications are defined at the level of structural units of the single buildings, here
 the fields read as the percentage of structural units in a building having a given certificate.
 To edit the output of this function and convert the relevant variables to numeric or Boolean, please \code{\link{Util_DB_MIUR_num}}.
 Schools different from primary, middle or high schools are classified as \code{"NR"}. In the example, the data for school year 2022/23 are retrieved.
