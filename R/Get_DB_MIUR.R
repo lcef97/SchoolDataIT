@@ -133,7 +133,8 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
         dat <- dat %>%
           gsub.bool(startcol = 5) %>%
           Group_Count(groupcol = c("ANNOSCOLASTICO", "CODICESCUOLA", "CODICEEDIFICIO"),
-                      startgroup = 5, count = FALSE, FUN = MeanOrMode) %>%
+                      startgroup = 5, count = FALSE, FUN = MeanOrMode)
+        dat <- dat %>%
           dplyr::mutate(dplyr::across(names(dat)[unlist(lapply(dat, is.numeric))], as.character))
       }
       input_MIUR[[link]] <- dat
