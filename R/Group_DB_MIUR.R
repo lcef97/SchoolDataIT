@@ -106,7 +106,7 @@ Group_DB_MIUR <- function(data = NULL, Year = 2023,
   # To evaluate if data are the raw dataset (if data are the numeric dataset the fields list becomes trivial)
   fields <- lapply(data, is.numeric)
 
-  if(is.data.frame(data) & ! any(unlist(fields[-which(names(fields) %in% c(
+  if(is.data.frame(data) && ! any(unlist(fields[-which(names(fields) %in% c(
     "Province_code", "Year", "Floors_number", "National_seismic_classification"))]))){
     data <- data %>% Util_DB_MIUR_num(track_deleted = track_deleted, ...)
   }

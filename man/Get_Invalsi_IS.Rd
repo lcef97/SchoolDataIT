@@ -4,8 +4,8 @@
 \alias{Get_Invalsi_IS}
 \title{Download the Invalsi census survey data}
 \source{
-\href{https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-comunali-di-popolazione-comune-del-plesso/}{Municipality data};
-                      \href{https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/}{Province data}
+Municipality data: <https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-comunali-di-popolazione-comune-del-plesso/>;
+Province data: <https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/>
 }
 \usage{
 Get_Invalsi_IS(

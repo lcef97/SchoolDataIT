@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.2
+
+* Changed source URL format in Get_Invalsi_IS description
+
 # SchoolDataIT 0.2.1
 
 * Experimental features: integrated the counts of students by school running time in the 'nstud' workflow; the user can now include safety certifications in the school buldings DB (not active by default since it requires extra computational time other than downloading time)

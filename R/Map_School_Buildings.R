@@ -96,8 +96,8 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
     }
   }
 
-  if((is.data.frame(data) & "School_code" %in% names(data)) |
-     (!is.data.frame(data) & "School_code" %in% names(data[[1]]))){
+  if((is.data.frame(data) && "School_code" %in% names(data)) ||
+     (!is.data.frame(data) && "School_code" %in% names(data[[1]]))){
        data <- Group_DB_MIUR(data, ...)
      }
 

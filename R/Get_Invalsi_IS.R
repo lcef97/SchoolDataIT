@@ -19,8 +19,8 @@
 #'
 #' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
 #'
-#' @source  \href{https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-comunali-di-popolazione-comune-del-plesso/}{Municipality data};
-#'                       \href{https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/}{Province data}
+#' @source  Municipality data: <https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-comunali-di-popolazione-comune-del-plesso/>;
+#' Province data: <https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/>
 #'
 #'
 #'
