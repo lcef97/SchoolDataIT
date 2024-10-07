@@ -443,14 +443,32 @@ Set_DB <- function( Year = 2023,
                       input_InnerAreas = input_InnerAreas)
     } else{
       DB_SchoolBuildings <- input_SchoolBuildings
+      if(is.data.frame(DB_SchoolBuildings)) SchoolBuildings_count_missing <- FALSE
     }
 
     if(toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
-      DB_SchoolBuildings <- DB_SchoolBuildings$Municipality_data
-    } else DB_SchoolBuildings <- DB_SchoolBuildings$Province_data
-    DB_SchoolBuildings <- DB_SchoolBuildings %>%
-      dplyr::filter(!.data$Order %in% c("IC", "IS", "NR")) %>%
-      dplyr::select(-.data$Year)
+      if(!SchoolBuildings_count_missing){
+        DB_SchoolBuildings <- DB_SchoolBuildings$Municipality_data
+      } else {
+        DB_SchoolBuildings <- dplyr::left_join(
+          DB_SchoolBuildings$Municipality_data,
+          DB_SchoolBuildings$Municipality_missing,
+          by = c("Municipality_code","Order"))
+      }
+    } else {
+      if(!SchoolBuildings_count_missing){
+        DB_SchoolBuildings <- DB_SchoolBuildings$Province_data
+      } else{
+        DB_SchoolBuildings <- dplyr::left_join(
+          DB_SchoolBuildings$Province_data,
+          DB_SchoolBuildings$Province_missing,
+          by = c("Province_code","Order"))
+      }
+    }
+      DB_SchoolBuildings <- DB_SchoolBuildings %>%
+      dplyr::filter(!.data$Order %in% c("IC", "IS", "NR"))
+      DB_SchoolBuildings <- DB_SchoolBuildings[, -which(
+        names(DB_SchoolBuildings) %in% c("Year", "nbuildings_MP"))]
 
     datasets[["SchoolBuildings"]] <- DB_SchoolBuildings
   }
