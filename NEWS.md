@@ -1,11 +1,12 @@
 # SchoolDataIT 0.2.2
 
+* Possible to plug numeric and grouped school buildings data into 'Set_DB'
+
 * Changed source URL format in Get_Invalsi_IS description
 
 # SchoolDataIT 0.2.1
 
 * Experimental features: integrated the counts of students by school running time in the 'nstud' workflow; the user can now include safety certifications in the school buldings DB (not active by default since it requires extra computational time other than downloading time)
-
 
 * Minor changes: function 'Get_Shapefile' can now provide either the boundaries or the centroids of NUTS-3 and LAU administrative units; fixed warning message in 'Group_nstud';
 'Map_DB' allows to map municipality data at province level
