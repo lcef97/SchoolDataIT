@@ -4,7 +4,7 @@
 #' Additionally, it removes the columns with an excessive number of missing observations (20.000 by default), and if required it may also delete the rows including missing fields.
 #'  In this case, it is possible to keep track of the deleted rows.
 #'
-#' @param data Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. Input data obtaned through the function \code{\link{Get_DB_MIUR}}.
+#' @param data Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. Input data obtained through the function \code{\link{Get_DB_MIUR}}.
 #' If \code{NULL} it will be downloaded automatically with the appropriate arguments, but not saved in the global environment. \code{NULL} by default.
 #' @param include_numerics Logical. Whether to include strictly numeric variables alongside with Boolean ones. \code{TRUE} by default.
 #' @param include_qualitatives Logical. Whether to include qualitative variables alongside with Boolean ones. \code{FALSE} by default.
