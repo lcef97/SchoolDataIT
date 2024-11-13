@@ -1,5 +1,7 @@
 # SchoolDataIT 0.2.2
 
+* Enforced gentle failure
+
 * Changed default palette to 'viridis'
 
 * Possible to plug numeric and grouped school buildings data into 'Set_DB'

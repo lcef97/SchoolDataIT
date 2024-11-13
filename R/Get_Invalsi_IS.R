@@ -72,23 +72,22 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
       message("Error occurred during scraping, attempt repeated ... \n")
       NULL
     })
+    status <- response$status_code
     if(is.null(response)){
       status <- 0
-    }else{
-      status <- response$status_code
-      if(status != 200) {
-        if(!autoAbort){
-          message("Error occurred; connection exited with status ", status, " ; ", 10 - attempt, " attempts left \n",
-                  "To abort the operation, press `A`; to hold on press any key \n")
-          holdOn <- readline(prompt = "    ")
-          if(holdOn == "A") {
-            message("You chose to abort the operation. We apologise for the inconvenience.")
-            return(NULL)
-          }
-        } else return(NULL)
-      }
     }
-    attempt <- attempt + 1
+    if(status != 200) {
+      attempt <- attempt + 1
+      if(!autoAbort){
+        message("Error occurred; connection exited with status ", status, " ; ", 10 - attempt, " attempts left \n",
+                "To abort the operation, press `A`; to hold on press any key \n")
+        holdOn <- readline(prompt = "    ")
+        if(holdOn == "A") {
+          message("You chose to abort the operation. We apologise for the inconvenience.")
+          return(NULL)
+        }
+      } else return(NULL)
+    }
   }
   if(status == 200){
     if(verbose) cat("Encoding raw content in UTF-8 \n")

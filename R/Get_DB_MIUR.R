@@ -106,6 +106,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
   for (link in files_to_download) {
     file.url <- file.path(base.url, link)
     status <- 0
+    attempt <- 0
     while(status != 200){
       response <- tryCatch({
         httr::GET(file.url)
@@ -118,7 +119,13 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
         status <- 0
       }
       if(status != 200){
-        message("Operation exited with status: ", status, "; operation repeated")
+        attempt <- attempt + 1
+        message("Operation exited with status: ", status, "; operation repeated (",
+                10 - attempt, " attempts left)")
+      }
+      if(attempt >= 10) {
+        message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+        return(NULL)
       }
     }
 

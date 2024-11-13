@@ -75,11 +75,23 @@ Get_InnerAreas <- function(verbose = TRUE, autoAbort = FALSE){
 
   status <- 0
   attempt <- 0
-  while(status != 200){
+  while(status != 200 && attempt <= 10){
     base.url <- dirname(home.ISTAT)
     file.url <- xml2::url_absolute(link, base.url)
     response <- httr::GET(file.url, httr::write_disk(tempfile(fileext = ".xlsx")),  httr::config(timeout = 60))
     status <- response$status_code
+    if(is.null(response)){
+      status <- 0
+    }
+    if(status != 200){
+      attempt <- attempt + 1
+      message("Operation exited with status: ", status, "; operation repeated (",
+              10 - attempt, " attempts left)")
+    }
+    if(attempt >= 10) {
+      message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+      return(NULL)
+    }
   }
 
   excel <- response$request$output$path

@@ -90,6 +90,7 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
   for (link in files_to_download) {
 
     status <- 0
+    attempt <- 0
     while(status != 200){
       file.url <- file.path(base.url, link)
       response <- tryCatch({
@@ -99,14 +100,17 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
         NULL
       })
       status <- response$status_code
-      if(status != 200){
-        message("Operation exited with status: ", status, "; operation repeated \n")
-      }
       if(is.null(response)){
         status <- 0
       }
       if(status != 200){
-        message("Operation exited with status: ", status, "; operation repeated")
+        attempt <- attempt + 1
+        message("Operation exited with status: ", status, "; operation repeated (",
+                10 - attempt, " attempts left)")
+      }
+      if(attempt >= 10) {
+        message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+        return(NULL)
       }
     }
 
