@@ -14,10 +14,11 @@ Map_Invalsi(
   main_pos = "top",
   region_code = c(1:20),
   plot = "mapview",
-  pal = "Blues",
+  pal = "viridis",
   WLE = FALSE,
   col_rev = FALSE,
   popup_height = 200,
+  only_observed = FALSE,
   verbose = TRUE,
   input_shp = NULL,
   autoAbort = FALSE
@@ -60,6 +61,8 @@ By default, \code{c(1,3,5:20)}, i.e. all Italian regions except the provinces of
 \item{col_rev}{Logical. Whether the scale of the colour palette should be reverted or not, if the \code{mapview} mode is chosen. \code{FALSE} by default}
 
 \item{popup_height}{Numeric. The height of the popup table in terms of pixels if the \code{"mapview"} mode is chosen. \code{200} by default.}
+
+\item{only_observed}{Logical. Whether to remove unobserved areas from the plot. \code{FALSE} by default.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
 

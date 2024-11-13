@@ -1,5 +1,7 @@
 # SchoolDataIT 0.2.2
 
+* Changed default palette to 'viridis'
+
 * Possible to plug numeric and grouped school buildings data into 'Set_DB'
 
 * Changed source URL format in Get_Invalsi_IS description

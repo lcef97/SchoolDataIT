@@ -29,6 +29,7 @@
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.s
 #' @param input_shp Object of class \code{sf}, \code{tbl_df}, \code{tbl}, \code{data.frame}. The relevant shapefiles of Italian administrative boudaries,
 #' at the selected level of detail (LAU or NUTS-3). If \code{NULL} it is downloaded automatically but not saved in the global environment. \code{NULL} by default.
+#' @param only_observed Logical. Whether to remove unobserved areas from the plot. \code{FALSE} by default.
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #' @param ... If \code{data} is not provided, the arguments to \code{\link{Group_DB_MIUR}}.
 #'
@@ -70,10 +71,10 @@
 
 
 Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LAU",
-                                  region_code = c(1:20), plot = "mapview", pal = "Blues",
+                                  region_code = c(1:20), plot = "mapview", pal = "viridis",
                                   col_rev = FALSE, popup_height = 200,
-                                  main_pos = "top", main = "", verbose = TRUE,
-                                  input_shp = NULL, autoAbort = FALSE, ... ) {
+                                  main_pos = "top", main = "", only_observed = FALSE,
+                                  verbose = TRUE, input_shp = NULL, autoAbort = FALSE, ... ) {
   options(dplyr.summarise.inform = FALSE)
 
   while(is.null(data)){
@@ -218,6 +219,10 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
   fieldname <- ifelse(is.numeric(field), names(res)[field], field)
   nfield <- ifelse(is.numeric(field), field, match(field, names(res)))
 
+  if(only_observed){
+    res <- res[which(!is.na(res[, nfield])),]
+  }
+
   while(! fieldname %in% names(res)){
     message(paste("The variable", field, "does not seem to belong to the current database.
                   Please insert another one (do not use quotes in the prompt)"))
@@ -234,22 +239,18 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
 
   if(plot == "ggplot"){
 
-    if(col_rev == FALSE){
-      fill.low = "#132B43"
-      fill.high = "#56B1F7"
-    } else {
-      fill.low = "#56B1F7"
-      fill.high = "#132B43"
-    }
-
     if(main_pos == "top"){
       ggplot2::ggplot() + ggplot2::geom_sf(data = res, ggplot2::aes(fill = !!rlang::sym(fieldname))) +
         ggplot2::labs(fill = "") + ggplot2::ggtitle(layername) +
-        ggplot2::scale_fill_gradient(high = fill.high, low = fill.low)
+        ggplot2::scale_fill_viridis_c(na.value = "white",
+                                      direction = 2*(1/2 - as.numeric(col_rev))) +
+        ggplot2::theme_minimal()
     } else {
       ggplot2::ggplot() + ggplot2::geom_sf(data = res, ggplot2::aes(fill = !!rlang::sym(fieldname))) +
         ggplot2::labs(fill = fieldname) +
-        ggplot2::scale_fill_gradient(high = fill.high, low = fill.low)
+        ggplot2::scale_fill_viridis_c(na.value = "white",
+                                      direction = 2*(1/2 - as.numeric(col_rev))) +
+        ggplot2::theme_minimal()
     }
   } else {
 

@@ -12,13 +12,14 @@ Map_DB(
   plot = "mapview",
   popup_height = 200,
   col_rev = FALSE,
-  pal = "Blues",
+  pal = "viridis",
   input_shp = NULL,
   region_code = c(1:20),
   main_pos = "top",
   main = "",
   order = NULL,
   autoAbort = FALSE,
+  only_observed = FALSE,
   ...
 )
 }
@@ -56,6 +57,8 @@ The header is located on the top if \code{"top"} is given as input, and above th
 If the data include the Invalsi census survey, please select a level consistent with the chosen educational grade. \code{"Media"} by default.}
 
 \item{autoAbort}{Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
+
+\item{only_observed}{Logical. Whether to remove unobserved areas from the plot. \code{FALSE} by default.}
 
 \item{...}{Additional arguments for the input database, if not provided; see \code{\link{Set_DB}}}
 }

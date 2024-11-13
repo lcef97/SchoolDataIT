@@ -32,6 +32,7 @@
 #' @param WLE Logical. Whether the variable to chose should be the average WLE score rather that the percentage of sufficient tests, if both are available. \code{FALSE} by default
 #' @param col_rev Logical. Whether the scale of the colour palette should be reverted or not, if the \code{mapview} mode is chosen. \code{FALSE} by default
 #' @param popup_height Numeric. The height of the popup table in terms of pixels if the \code{"mapview"} mode is chosen. \code{200} by default.
+#' @param only_observed Logical. Whether to remove unobserved areas from the plot. \code{FALSE} by default.
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.
 #' @param input_shp Object of class \code{sf}, \code{tbl_df}, \code{tbl}, \code{data.frame}. The relevant shapefiles of Italian administrative boudaries,
 #' at the selected level of detail (LAU or NUTS-3). If \code{NULL}, it is downloaded automatically but not saved in the global environment. \code{NULL} by default.
@@ -60,12 +61,14 @@
 #' @export
 
 Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8, level = "LAU",
-                        main = "", main_pos = "top", region_code = c(1:20), plot="mapview", pal = "Blues",
-                        WLE = FALSE, col_rev = FALSE, popup_height = 200, verbose = TRUE,
+                        main = "", main_pos = "top", region_code = c(1:20), plot="mapview", pal = "viridis",
+                        WLE = FALSE, col_rev = FALSE, popup_height = 200,
+                        only_observed = FALSE, verbose = TRUE,
                         input_shp = NULL, autoAbort = FALSE){
 
   if (length(subj_toplot) > 1){
     warning("Only one subject can be selected for mapping. The first one will be plotted")
+    subj_toplot <- subj_toplot[1L]
   }
 
   region_code <- as.numeric(region_code)
@@ -144,6 +147,9 @@ Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8
   fieldnum <- grep(fieldname, names(res))
 
   names(res)[fieldnum] <- "X"
+  if(only_observed == TRUE){
+    res <- res %>% dplyr::filter(!is.na(.data$X))
+  }
 
   if (plot =="mapview"){
 
@@ -155,8 +161,8 @@ Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8
     }
 
 
-    names(res)[fieldnum] = fieldname
-    pop = leafpop::popupTable(res)
+    names(res)[fieldnum] <- fieldname
+    pop <- leafpop::popupTable(res)
 
 
     mapview::mapview(res, zcol=fieldname, col.regions = brew,
@@ -169,12 +175,16 @@ Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8
     if (main_pos == "top"){
       ggplot2::ggplot() +
         ggplot2::geom_sf(data = res, ggplot2::aes(fill = .data$X)) +
-        ggplot2::labs(fill = "") + ggplot2::ggtitle(ifelse(main == "", paste0(
-          fieldname, ", ", "Year: ", Year, ", ", "School grade: ", grade), main))
+        ggplot2::labs(fill = "") +
+        ggplot2::ggtitle(ifelse(main == "", paste0(
+          fieldname, ", ", "Year: ", Year, ", ", "School grade: ", grade), main)) +
+        ggplot2::scale_fill_viridis_c(na.value = "white") + ggplot2::theme_minimal()
     } else {
-      ggplot2::ggplot() + ggplot2::geom_sf(data = res, ggplot2::aes(fill = .data$X)) +
+      ggplot2::ggplot() +
+        ggplot2::geom_sf(data = res, ggplot2::aes(fill = .data$X)) +
         ggplot2::labs(fill = ifelse(main == "",paste0(
-          fieldname, ", ", "Year: ", Year, ", ", "School grade: ", grade), main))
+          fieldname, ", ", "Year: ", Year, ", ", "School grade: ", grade), main))+
+        ggplot2::scale_fill_viridis_c(na.value = "white") + ggplot2::theme_minimal()
     }
   }
 }

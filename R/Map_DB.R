@@ -34,6 +34,7 @@
 #  @param Invalsi Logical. whether the data to map include the Invalsi survey. \code{TRUE} by default.
 #  @param Invalsi.subj Character. If \code{Invalsi == TRUE}, the school subject(s) to include, among \code{"English_listening"}/\code{"ELI"}, \code{"English_reading"}/\code{"ERE"}, \code{"Italian"}/\code{"Ita"} and \code{"Mathematics"}/\code{"MAT"}. All four by default.
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
+#' @param only_observed Logical. Whether to remove unobserved areas from the plot. \code{FALSE} by default.
 #' @param ... Additional arguments for the input database, if not provided; see \code{\link{Set_DB}}
 #'
 #'
@@ -77,13 +78,14 @@ Map_DB <- function(
     plot = "mapview",
     popup_height = 200,
     col_rev = FALSE,
-    pal = "Blues",
+    pal = "viridis",
     input_shp = NULL,
     region_code = c(1:20),
     main_pos = "top",
     main = "",
     order = NULL,
     autoAbort = FALSE,
+    only_observed = FALSE,
     ...){
 
   #rlang::check_installed("sf", reason = "Package \"sf\" must be installed to manage geometries in shapefiles.")
@@ -195,6 +197,10 @@ Map_DB <- function(
 
   nfield <- which(names(res) == field)
 
+  if(only_observed){
+    res <- res[which(!is.na(res[,nfield])),]
+  }
+
   if(main == ""){
     layername <- paste0(field, ", year: ", Year, ", ", order, " schools")
   } else layername <- main
@@ -202,26 +208,22 @@ Map_DB <- function(
 
   if(plot == "ggplot"){
 
-    if(col_rev == FALSE){
-      fill.low = "#132B43"
-      fill.high = "#56B1F7"
-    } else {
-      fill.low = "#56B1F7"
-      fill.high = "#132B43"
-    }
-
     #res.nospatial <- sf::st_drop_geometry(res)
 
     if(main_pos == "top"){
       ggplot2::ggplot() + ggplot2::geom_sf(data = res, ggplot2::aes(
         fill = !!rlang::sym(field))) +
-        ggplot2::labs(fill = "") + ggplot2::ggtitle(layername)  +
-        ggplot2::scale_fill_gradient(high = fill.high, low = fill.low)
+        ggplot2::labs(fill = "") + ggplot2::ggtitle(layername) +
+        ggplot2::scale_fill_viridis_c(na.value = "white",
+                                      direction = 2*(1/2 - as.numeric(col_rev))) +
+        ggplot2::theme_minimal()
     } else {
       ggplot2::ggplot() + ggplot2::geom_sf(data = res, ggplot2::aes(
         fill = !!rlang::sym(field))) +
         ggplot2::labs(fill = field)  +
-        ggplot2::scale_fill_gradient(high = fill.high, low = fill.low)
+        ggplot2::scale_fill_viridis_c(na.value = "white",
+                                      direction = 2*(1/2 - as.numeric(col_rev))) +
+        ggplot2::theme_minimal()
     }
 
   } else {
