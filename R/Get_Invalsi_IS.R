@@ -128,7 +128,7 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
     stringr::str_replace_all("Italiano", "Italian") %>%
     stringr::str_replace_all("Inglese", "English")
 
-  if(level %in% c ("LAU","Municipality")){
+  if (toupper(level) %in% c("MUNICIPALITY", "LAU", "NUTS-4")){
     Invalsi_IS <- Invalsi_IS %>%
       dplyr::mutate(Municipality_code = sprintf("%06d", .data$Municipality_code)) %>%
       dplyr::mutate(Municipality_description = stringr::str_to_title(.data$Municipality_description))

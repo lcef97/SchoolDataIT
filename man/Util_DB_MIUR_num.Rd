@@ -18,7 +18,7 @@ Util_DB_MIUR_num(
 )
 }
 \arguments{
-\item{data}{Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. Input data obtaned through the function \code{\link{Get_DB_MIUR}}.
+\item{data}{Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. Input data obtained through the function \code{\link{Get_DB_MIUR}}.
 If \code{NULL} it will be downloaded automatically with the appropriate arguments, but not saved in the global environment. \code{NULL} by default.}
 
 \item{include_numerics}{Logical. Whether to include strictly numeric variables alongside with Boolean ones. \code{TRUE} by default.}
