@@ -11,7 +11,7 @@
 #'
 #' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. The variables \code{BB_Activation_date} and \code{BB_Activation_staus} indicate the activation date and activation status of the broadband connection at the selected date.
 #'
-#' @source \href{https://bandaultralarga.italia.it/scuole-voucher/dashboard-scuole/}{Broadband dashboard}
+#' @source  Broadband dashboard: <https://bandaultralarga.italia.it/scuole-voucher/dashboard-scuole/>
 #'
 #'
 #' @details Ultra - Broadband is defined as everlasting internet connection with a

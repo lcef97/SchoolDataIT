@@ -4,7 +4,7 @@
 \alias{Get_BroadBand}
 \title{Download the data regarding the broad band connection activation in Italian schools}
 \source{
-\href{https://bandaultralarga.italia.it/scuole-voucher/dashboard-scuole/}{Broadband dashboard}
+Broadband dashboard: <https://bandaultralarga.italia.it/scuole-voucher/dashboard-scuole/>
 }
 \usage{
 Get_BroadBand(
