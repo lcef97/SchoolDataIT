@@ -54,7 +54,7 @@ Set_DB(
 Important: if input datasets are plugged in, please select the same \code{Year} argument used to download the input data. \code{2023} by default.}
 
 \item{level}{Character. The administrative level of detail at which data must be aggregated.
-Either \code{"LAU"}/\code{"Municipality"/"NUTS-4"} or \code{"NUTS-3"}/\code{"Province"}. \code{"LAU"} by default.}
+Either \code{"LAU"}/\code{"Municipality"} or \code{"NUTS-3"}/\code{"Province"}. \code{"LAU"} by default.}
 
 \item{conservative}{Logical. If \code{FALSE}, only the schools included in all the datasets are taken as input. \code{TRUE} by default.}
 

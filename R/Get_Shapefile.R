@@ -6,7 +6,7 @@
 #'
 #'
 #' @param Year Numeric. Reference year for the administrative units.
-#' @param level Character. Either  \code{"NUTS-4"/"LAU"/"Municipality"}, \code{"NUTS-3"/"Province"},  \code{"NUTS-2"/"Region"}, . \code{"LAU"} by default
+#' @param level Character. Either  \code{"LAU"/"Municipality"}, \code{"NUTS-3"/"Province"},  \code{"NUTS-2"/"Region"}, . \code{"LAU"} by default
 #' @param lightShp Logical. If \code{TRUE}, the function downloads a generalised, i.e.less detailed, and lighter version of the shapefiles.
 #' \code{TRUE} by default.
 #' @param centroids Logical. Whether to switch from polygon geometry to point geometry. In the latter case, the point is located at the centroid of the relevant area. \code{FALSE} by default.

@@ -18,7 +18,7 @@ Get_Shapefile(
 \arguments{
 \item{Year}{Numeric. Reference year for the administrative units.}
 
-\item{level}{Character. Either  \code{"NUTS-4"/"LAU"/"Municipality"}, \code{"NUTS-3"/"Province"},  \code{"NUTS-2"/"Region"}, . \code{"LAU"} by default}
+\item{level}{Character. Either  \code{"LAU"/"Municipality"}, \code{"NUTS-3"/"Province"},  \code{"NUTS-2"/"Region"}, . \code{"LAU"} by default}
 
 \item{lightShp}{Logical. If \code{TRUE}, the function downloads a generalised, i.e.less detailed, and lighter version of the shapefiles.
 \code{TRUE} by default.}
