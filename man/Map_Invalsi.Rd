@@ -54,7 +54,7 @@ By default, \code{c(1,3,5:20)}, i.e. all Italian regions except the provinces of
 
 \item{plot}{Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.}
 
-\item{pal}{Character. The palette to use if the \code{"mapview"} mode is chose. \code{"Blues"} by default.}
+\item{pal}{Character. The palette to use if the \code{"mapview"} mode is chose. \code{"viridis"} by default.}
 
 \item{WLE}{Logical. Whether the variable to chose should be the average WLE score rather that the percentage of sufficient tests, if both are available. \code{FALSE} by default}
 

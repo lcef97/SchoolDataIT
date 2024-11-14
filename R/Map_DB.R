@@ -21,7 +21,7 @@
 #' The header is located on the top if \code{"top"} is given as input, and above the legend scale otherwise. \code{"top"} by default.
 #' @param main Character. The title to display in the \code{"ggplot"} rendering options.
 #' @param col_rev Logical. Whether the scale of the colour palette should be reverted or not. \code{FALSE} by default.
-#' @param pal Character. The palette to use if the \code{"mapview"} mode is chose. \code{"Blues"} by default.
+#' @param pal Character. The palette to use if the \code{"mapview"} mode is chose. \code{"viridis"} by default.
 #' @param Year Numeric or Character. The reference school year, needed if either \code{data} or \code{input_shp} are not provided.
 #' Available in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}.  \code{2023} by default.
 #' @param input_shp Object of class \code{sf}, \code{tbl.df}, \code{tbl} and \code{data.frame}. The relevant shapefiles of Italian administrative boundaries,

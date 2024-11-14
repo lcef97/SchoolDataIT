@@ -39,7 +39,7 @@ Available in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{
 
 \item{col_rev}{Logical. Whether the scale of the colour palette should be reverted or not. \code{FALSE} by default.}
 
-\item{pal}{Character. The palette to use if the \code{"mapview"} mode is chose. \code{"Blues"} by default.}
+\item{pal}{Character. The palette to use if the \code{"mapview"} mode is chose. \code{"viridis"} by default.}
 
 \item{input_shp}{Object of class \code{sf}, \code{tbl.df}, \code{tbl} and \code{data.frame}. The relevant shapefiles of Italian administrative boundaries,
 at the selected level of detail (LAU or NUTS-3). If \code{NULL}, it is downloaded automatically but not saved in the global environment. \code{NULL} by default.}

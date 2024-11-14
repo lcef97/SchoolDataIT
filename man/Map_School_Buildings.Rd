@@ -41,7 +41,7 @@ By default, \code{c(1:20)}, i.e. all Italian regions.}
 
 \item{plot}{Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.}
 
-\item{pal}{Character. The palette to use if the \code{"mapview"} mode is chose. \code{"Blues"} by default.}
+\item{pal}{Character. The palette to use if the \code{"mapview"} mode is chose. \code{"viridis"} by default.}
 
 \item{col_rev}{Logical. Whether the scale of the colour palette should be reverted or not, if the \code{"mapview"} mode is chosen. \code{FALSE} by default}
 
