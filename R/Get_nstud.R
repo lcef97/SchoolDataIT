@@ -102,7 +102,7 @@ Get_nstud <- function(Year = 2023, filename = c("ALUCORSOETASTA", "ALUCORSOINDCL
 
   starttime <- Sys.time()
   for (link in files_to_download) {
-
+    attempt <- 0
     status <- 0
     while(status != 200){
       base.url <- dirname(home.url)

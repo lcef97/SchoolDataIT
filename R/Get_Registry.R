@@ -56,7 +56,10 @@ Get_Registry <- function(Year = 2023, filename = c("SCUANAGRAFESTAT", "SCUANAAUT
     })
     attempt <- attempt + 1
   }
-  if(is.null(homepage)) return(NULL)
+  if(is.null(homepage)) {
+    message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+    return(NULL)
+  }
   name_pattern2 <- "([0-9]+)\\.(csv)$"
   links <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href") %>% unique()
 
@@ -93,7 +96,7 @@ Get_Registry <- function(Year = 2023, filename = c("SCUANAGRAFESTAT", "SCUANAAUT
       message("Schools registry not available for this year. We apologise for the inconvenience.")
       return(NULL)
     }
-
+    attempt <- 0
     status <- 0
     while(status != 200){
       base.url <- dirname(home.url)

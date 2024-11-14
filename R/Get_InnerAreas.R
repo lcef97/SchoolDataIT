@@ -62,7 +62,10 @@ Get_InnerAreas <- function(verbose = TRUE, autoAbort = FALSE){
     })
     attempt <- attempt + 1
   }
-  if(is.null(homepage)) return(NULL)
+  if(is.null(homepage)) {
+    message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+    return(NULL)
+  }
 
   name_pattern <- "Elenco_Comuni_Classi_di_Aree_Interne"
   link <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href") %>% unique()

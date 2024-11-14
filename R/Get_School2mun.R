@@ -84,7 +84,8 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
       message("Cannot read the html. If the problem persists, please contact the mantainer.\n")
       return(NULL)
     })
-    if(status != 200){
+
+    if(is.null(homepage)){
       attempt <- attempt + 1
       message("Operation exited with status: ", status, "; operation repeated (",
               10 - attempt, " attempts left)")
@@ -94,7 +95,7 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
       return(NULL)
     }
   }
-  if(is.null(homepage)) return(NULL)
+  #if(is.null(homepage)) return(NULL)
   name_pattern <- "([0-9]+)\\.(csv)$"
   links <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href") %>%
     unique()
@@ -119,6 +120,7 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
   file.url <- file.path(base.url, file_to_download)
 
   status <- 0
+  attempt <- 0
   while(status != 200){
     response <- tryCatch({
       httr::GET(file.url)
@@ -130,8 +132,18 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
     if(is.null(response)){
       status <- 0
     }
+    status <- response$status_code
+    if(is.null(response)){
+      status <- 0
+    }
     if(status != 200){
-      message("Operation exited with status: ", status, "; operation repeated")
+      attempt <- attempt + 1
+      message("Operation exited with status: ", status, "; operation repeated (",
+              10 - attempt, " attempts left)")
+    }
+    if(attempt >= 10) {
+      message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+      return(NULL)
     }
   }
 
