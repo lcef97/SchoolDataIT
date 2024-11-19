@@ -119,10 +119,14 @@ Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8
     }
   }
 
-  dat <- Util_Invalsi_filter(data = data, Year = Year,
-                             subj = c("ELI", "ERE", "ITA", "MAT"),
-                             grade = grade, level = level, WLE=WLE,
-                             verbose = verbose)
+  if("Year" %in% names(data)){
+    dd <- Util_Invalsi_filter(data = data, Year = Year,
+                               subj = c("ELI", "ERE", "ITA", "MAT"),
+                               grade = grade, level = level, WLE=WLE,
+                               verbose = verbose)
+  } else dd <- data
+
+
 
   if(toupper(subj_toplot) %in% c("ELI", "ENGLISH L", "ENGLISH_L", "INGLESE L", "INGLESE_L", "ENGLISH LISTENING", "ENGLISH_LISTENING")){
     fieldname <-  "M_English_L"
@@ -141,7 +145,7 @@ Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8
     shp <- input_shp %>% dplyr::select(.data$COD_REG, .data$COD_PROV) %>%
       rename_by_idx(c(1,2), into = c("Region_code", "Province_code"))
   }
-  res <- dplyr::left_join(shp, dat, by = names(shp)[ncol(shp)-1]) %>%
+  res <- dplyr::left_join(shp, dd, by = names(shp)[ncol(shp)-1]) %>%
     #dplyr::select(-.data$geometry) %>%
     dplyr::filter(.data$Region_code %in% region_code)
   fieldnum <- grep(fieldname, names(res))

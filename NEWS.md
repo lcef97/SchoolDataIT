@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.3
+
+* 'Map_Invalsi' can now work with input data from 'Util_Invalsi_filter'
+
 # SchoolDataIT 0.2.2
 
 * Enforced gentle failure
