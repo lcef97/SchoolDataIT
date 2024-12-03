@@ -102,6 +102,7 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
   links <- grep("EDIANAGRAFESTA", links, value = TRUE)
   links <- grep(".csv", links, value = TRUE)
 
+  files_to_download <- NULL
   for (string in links) {
     num_numeric_digits <- sum(unlist(gregexpr("[0-9]", string) ) > 0)
     nchar_min <- min(nchar(pattern))
@@ -114,6 +115,12 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
         file_to_download <-  string
       }
     }
+  }
+
+  if(is.null(files_to_download)){
+    message("Unable to find buildings registry for year ",
+            Year, "; we apologise for the inconvenience")
+    return(NULL)
   }
 
   base.url <- dirname(home.url)
