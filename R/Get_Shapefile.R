@@ -50,7 +50,7 @@ Get_Shapefile <- function(Year, level = "LAU", lightShp = TRUE,
       xml2::read_html(home.ISTAT.Shp)
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
-              " attempts left. If the problem persists, please contact the mantainer.\n")
+              " attempts left. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
     attempt <- attempt + 1

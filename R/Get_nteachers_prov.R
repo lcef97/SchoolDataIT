@@ -51,7 +51,7 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
       xml2::read_html(home.url)
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
-              " attempts left. If the problem persists, please contact the mantainer.\n")
+              " attempts left. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
     attempt <- attempt + 1

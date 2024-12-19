@@ -65,7 +65,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
       xml2::read_html(home.url)
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
-              " attempts left. If the problem persists, please contact the mantainer.\n")
+              " attempts left. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
     attempt <- attempt + 1

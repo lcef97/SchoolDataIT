@@ -67,7 +67,7 @@ Get_nstud <- function(Year = 2023, filename = c("ALUCORSOETASTA", "ALUCORSOINDCL
       xml2::read_html(home.url)
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
-              " attempts left. If the problem persists, please contact the mantainer.\n")
+              " attempts left. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
     attempt <- attempt + 1

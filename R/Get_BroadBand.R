@@ -51,7 +51,7 @@ Get_BroadBand <- function(Date = Sys.Date(), verbose=TRUE,  show_col_types = FAL
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
               " attempts left. If the problem persists, please check if the provider's website is working
-              or contact the package mantainer.\n")
+              or contact the package maintainer.\n")
       return(NULL)
     })
     attempt <- attempt + 1

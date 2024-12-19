@@ -81,7 +81,7 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
     homepage <- tryCatch({
       xml2::read_html(home.url)
     }, error = function(e){
-      message("Cannot read the html. If the problem persists, please contact the mantainer.\n")
+      message("Cannot read the html. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
 

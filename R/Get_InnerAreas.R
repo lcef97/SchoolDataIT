@@ -44,7 +44,7 @@
 Get_InnerAreas <- function(verbose = TRUE, autoAbort = FALSE){
 
   # This version does not require readxl to reduce the number of dependencies.
-  # For a faster version requiring it, please ask the mantainer.
+  # For a faster version requiring it, please ask the maintainer.
   if(!Check_connection(autoAbort)) return(NULL)
 
   starttime <- Sys.time()
@@ -57,7 +57,7 @@ Get_InnerAreas <- function(verbose = TRUE, autoAbort = FALSE){
       xml2::read_html(home.ISTAT)
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
-              " attempts left. If the problem persists, please contact the mantainer.\n")
+              " attempts left. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
     attempt <- attempt + 1
