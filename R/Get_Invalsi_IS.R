@@ -51,12 +51,18 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
   }
 
   homepage <- NULL
+  prelim_attempt <- 0
   while(is.null(homepage)){
     homepage <- tryCatch({
       xml2::read_html(url.invalsi)
     }, error = function(e){
       NULL
     })
+    prelim_attempt <- prelim_attempt + 1
+    if(prelim_attempt >1) {
+      message("Invalsi webpage not found. We apologise for the inconvenience. If the problem persists, please contact the maintainer.")
+      return(NULL)
+    }
   }
 
   Invalsi_IS <- NULL

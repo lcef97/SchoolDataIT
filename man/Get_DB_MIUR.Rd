@@ -24,7 +24,7 @@ Available in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
 
 \item{input_Registry}{Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
-The school registry corresonding to the year in scope, obtained as output of the  function \code{\link{Get_Registry}}.
+The school registry corresponding to the year in scope, obtained as output of the  function \code{\link{Get_Registry}}.
 If \code{NULL}, it will be downloaded automatically, but not saved in the global environment.
 \code{NULL} by default.}
 
