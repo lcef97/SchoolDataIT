@@ -79,7 +79,7 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
 
   while(is.null(data)){
     if(verbose) cat("Loading input data: \n")
-    data <- Group_DB_MIUR(autoAbort = autoAbort, ...)
+    data <- Group_DB_MIUR(autoAbort = autoAbort, verbose = verbose, ...)
     if(is.null(data)){
       if(!autoAbort){
         holdOn <- ""
@@ -99,7 +99,7 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
 
   if((is.data.frame(data) && "School_code" %in% names(data)) ||
      (!is.data.frame(data) && "School_code" %in% names(data[[1]]))){
-       data <- Group_DB_MIUR(data, ...)
+       data <- Group_DB_MIUR(data, verbose = verbose, ...)
      }
 
   if(!is.data.frame(data)){

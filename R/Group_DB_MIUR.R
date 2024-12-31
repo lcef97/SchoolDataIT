@@ -108,7 +108,7 @@ Group_DB_MIUR <- function(data = NULL, Year = 2023,
 
   if(is.data.frame(data) && ! any(unlist(fields[-which(names(fields) %in% c(
     "Province_code", "Year", "Floors_number", "National_seismic_classification"))]))){
-    data <- data %>% Util_DB_MIUR_num(track_deleted = track_deleted, ...)
+    data <- data %>% Util_DB_MIUR_num(track_deleted = track_deleted, verbose = verbose, ...)
   }
 
   if(is.data.frame(data)){
