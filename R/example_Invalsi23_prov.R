@@ -20,7 +20,7 @@
 #'   \item \code{Std_dev_WLE_score} Numeric; the standard deviation of WLE scores.
 #'   \item \code{Students_coverage} Numeric; the percentage of students for which the Invalsi tests are reported.
 #' }
-#' @source \href{https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/}{Source page}
+#' @source \href{https://serviziostatistico.invalsi.it/en/archivio-dati/?_sft_invalsi_ss_data_collective=open-data}{Home page}
 #'
 #'
 #'

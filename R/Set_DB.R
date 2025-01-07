@@ -236,7 +236,8 @@ Set_DB <- function( Year = 2023,
 
   while(Invalsi && is.null(input_Invalsi_IS)){
     input_Invalsi_IS <- Get_Invalsi_IS(level = level, verbose = verbose,
-                                       show_col_types = show_col_types, autoAbort = autoAbort)
+                                       show_col_types = show_col_types,
+                                       multiple_out = FALSE, autoAbort = autoAbort)
     if(is.null(input_Invalsi_IS)){
       if(!autoAbort){
         holdOn <- ""
@@ -548,6 +549,14 @@ Set_DB <- function( Year = 2023,
   }
 
   if(!is.null(input_Invalsi_IS)){
+
+    if(!is.data.frame(input_Invalsi_IS) && is.list(input_Invalsi_IS)){
+      if (toupper(level) %in% c("LAU", "NUTS-4", "MUNICIPALITY", "MUN")){
+        input_Invalsi_IS <- input_Invalsi_IS$Municipality_data
+      } else{
+        input_Invalsi_IS <- input_Invalsi_IS$Province_data
+      }
+    }
 
     if(!any(grepl("_\\d+$", names(input_Invalsi_IS)))){
       Invalsi_IS <- Util_Invalsi_filter(

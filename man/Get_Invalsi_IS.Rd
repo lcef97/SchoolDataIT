@@ -4,14 +4,14 @@
 \alias{Get_Invalsi_IS}
 \title{Download the Invalsi census survey data}
 \source{
-Municipality data: <https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-comunali-di-popolazione-comune-del-plesso/>;
-Province data: <https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/>
+<https://serviziostatistico.invalsi.it/en/archivio-dati/?_sft_invalsi_ss_data_collective=open-data>
 }
 \usage{
 Get_Invalsi_IS(
   level = "LAU",
   verbose = TRUE,
   show_col_types = FALSE,
+  multiple_out = FALSE,
   autoAbort = FALSE
 )
 }
@@ -22,10 +22,15 @@ Get_Invalsi_IS(
 
 \item{show_col_types}{Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.}
 
+\item{multiple_out}{Logical. If the massive DB is downloaded, wheter keeping
+both LAU-level and NUTS-3-level dataframes as outputs (thus overriding the \code{level} argument) or not.
+\code{FALSE} by default.}
+
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
 }
 \value{
-An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+Unless \code{multiple_out == TRUE}, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
+Otherwise, a list including objects of the aforementioned classes
 }
 \description{
 Downloads the full database of the Invalsi scores, detailed either at the municipality or province level.

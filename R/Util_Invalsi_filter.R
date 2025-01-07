@@ -55,7 +55,8 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
   starttime <- Sys.time()
 
   while(is.null(data)){
-    data <- Get_Invalsi_IS(level = level, verbose = verbose, autoAbort = autoAbort)
+    data <- Get_Invalsi_IS(level = level, verbose = verbose,
+                           multiple_out = FALSE, autoAbort = autoAbort)
     if(is.null(data)){
       if(!autoAbort){
         holdOn <- ""
@@ -70,6 +71,18 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
           cat("You chose to retry \n")
         }
       } else return(NULL)
+    }
+  }
+
+  if(!is.data.frame(data) && is.list(data)){
+    if (toupper(level) %in% c("LAU", "NUTS-4", "MUNICIPALITY", "MUN")){
+      data <- data$Municipality_data
+    } else{
+      data <- data$Province_data
+    }
+    if(is.null(data)){
+      message("No data provided at the ", level, " level")
+      return(NULL)
     }
   }
 

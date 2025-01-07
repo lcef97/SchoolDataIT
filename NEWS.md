@@ -1,5 +1,7 @@
 # SchoolDataIT 0.2.3
 
+* Adapted 'Get_Invalsi_IS' to the new format of the input DB (experimental)
+
 * 'Map_Invalsi' can now work with input data from 'Util_Invalsi_filter'
 
 # SchoolDataIT 0.2.2
