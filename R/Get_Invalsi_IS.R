@@ -10,7 +10,7 @@
 #' @param show_col_types Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #' @param multiple_out Logical. Wheter keeping
-#' both LAU-level and NUTS-3-level dataframes as outputs (thus overriding the \code{level} argument) or not.
+#' multiple dataframes as outputs (thus overriding the \code{level} argument) or not.
 #' \code{FALSE} by default.
 #'
 #' @return Unless \code{multiple_out == TRUE}, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
