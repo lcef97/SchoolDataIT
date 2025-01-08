@@ -1,3 +1,8 @@
+# SchoolDataIT 0.2.4
+
+* Minor changes: fixed some urls in .Rd files
+
+
 # SchoolDataIT 0.2.3
 
 * Adapted 'Get_Invalsi_IS' to the new format of the input DB (experimental)

@@ -22,7 +22,7 @@ A data frame with 240 rows and 11 columns:
 }
 }
 \source{
-\href{https://serviziostatistico.invalsi.it/en/archivio-dati/?_sft_invalsi_ss_data_collective=open-data}{Home page}
+<https://serviziostatistico.invalsi.it/en/archivio-dati/?_sft_invalsi_ss_data_collective=open-data>
 }
 \usage{
 example_Invalsi23_prov
