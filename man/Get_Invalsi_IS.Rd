@@ -23,7 +23,7 @@ Get_Invalsi_IS(
 \item{show_col_types}{Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.}
 
 \item{multiple_out}{Logical. Wheter keeping
-both LAU-level and NUTS-3-level dataframes as outputs (thus overriding the \code{level} argument) or not.
+multiple dataframes as outputs (thus overriding the \code{level} argument) or not.
 \code{FALSE} by default.}
 
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
@@ -61,7 +61,7 @@ If \code{multiple_out == TRUE}, provides the following datasets:
   (Sistemi Locali del Lavoro; see \href{https://www.istat.it/statistiche-per-temi/focus/informazioni-territoriali-e-cartografiche/statistiche-sul-territorio/sistemi-locali-del-lavoro-e-distretti-industriali/}{ISTAT webpage} for details)
   \item \code{Inner_Areas_2021_data} aggregated data for inner areas according to the 2020 taxonomy
   \item \code{Inner_Areas_2014_data} aggregated data for inner areas according to the former 2014 taxonomy
-  \item \code{Macroarea_data} data aggregated for North-West, North-East, Centre, South and Islands
+  \item \code{Macroarea_data} data aggregated for North-West, North-East, Center, South and Islands
 }
 }
 \examples{
