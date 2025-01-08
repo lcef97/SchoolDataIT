@@ -1,14 +1,7 @@
 #' Download the Invalsi census survey data
 #'
 #' @description  Downloads the full database of the Invalsi scores, detailed either at the municipality or province level.
-#' The format is intermediate between long and short, since the numeric variables are:
-#' \itemize{
-#'   \item \code{Average_percentage_score} Average direct score (percentage of sufficient tests)
-#'   \item \code{Std_dev_percentage_score} Standard deviation of the direct score
-#'   \item \code{WLE_average_score} Average WLE score. The WLE score is calculated through the Rasch's psychometric model and is suitable for middle and high schools in that it is cleaned from the effect of cheating  (which would affect both the average score and the score variability). By construction it has a mean around 200 points.
-#'   \item \code{Std_dev_WLE_score} Standard deviation of the WLE score. By construction it ranges around 40 points at the school level.
-#'   \item \code{Students_coverage} Students coverage percentage
-#' }
+#'
 #'
 #'
 #'
@@ -16,7 +9,7 @@
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.
 #' @param show_col_types Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
-#' @param multiple_out Logical. If the massive DB is downloaded, wheter keeping
+#' @param multiple_out Logical. Wheter keeping
 #' both LAU-level and NUTS-3-level dataframes as outputs (thus overriding the \code{level} argument) or not.
 #' \code{FALSE} by default.
 #'
@@ -25,11 +18,38 @@
 #'
 #' @source  <https://serviziostatistico.invalsi.it/en/archivio-dati/?_sft_invalsi_ss_data_collective=open-data>
 #'
+#' @details
+#' Numeric variables provided are:
+#' \itemize{
+#'   \item \code{Average_percentage_score} Average direct score (percentage of sufficient tests)
+#'   \item \code{Std_dev_percentage_score} Standard deviation of the direct score
+#'   \item \code{WLE_average_score} Average WLE score. The WLE score is calculated through the Rasch's psychometric model and is suitable for middle and high schools in that it is cleaned from the effect of cheating  (which would affect both the average score and the score variability). By construction it has a mean around 200 points.
+#'   \item \code{Std_dev_WLE_score} Standard deviation of the WLE score. By construction it ranges around 40 points at the school level.
+#'   \item \code{Students_coverage} Students coverage percentage
+#' }
+#' Additional numeric variables, not always available for all observational units, are:
+#' \itemize{
+#'   \item Mean and SD of ESCS indicator
+#'   \item \code{First-Fifth_Level}: Distribution of the proficiency level of students
+#'   \item \code{Targets_percentage}: Percentage of students reaching targets
+#' }
+#' Numeric codes \code{888} and \code{999} denote not applicable and not available fields respectively.
 #'
+#' If \code{multiple_out == TRUE}, provides the following datasets:
+#' \itemize{
+#'   \item \code{Municipality_data}: LAU-level data
+#'   \item \code{Province_data}: NUTS-3-level data
+#'   \item \code{Region_data}: NUTS-2-level data
+#'   \item \code{LLS_data}: data at the level of local labour systems
+#'   (Sistemi Locali del Lavoro; see \href{https://www.istat.it/statistiche-per-temi/focus/informazioni-territoriali-e-cartografiche/statistiche-sul-territorio/sistemi-locali-del-lavoro-e-distretti-industriali/}{ISTAT webpage} for details)
+#'   \item \code{Inner_Areas_2021_data} aggregated data for inner areas according to the 2020 taxonomy
+#'   \item \code{Inner_Areas_2014_data} aggregated data for inner areas according to the former 2014 taxonomy
+#'   \item \code{Macroarea_data} data aggregated for North-West, North-East, Center, South and Islands
+#' }
 #'
 #' @examples
 #' \donttest{
-#' Get_Invalsi_IS(level = "NUTS-3", autoAbort = TRUE)
+#' Get_Invalsi_IS(level = "NUTS-3", autoAbort = TRUE, verbose = FALSE)
 #' }
 #'
 #'
@@ -62,7 +82,6 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
     NULL
   })
   if(is.null(homepage)){
-    cat("Level - specific Invalsi data not found. Let us try with the massive DB ...\n")
     url.invalsi <- "https://serviziostatistico.invalsi.it/en/invalsi_ss_data/punteggi-e-percentuale-di-studenti-nei-livelli-di-competenza-per-ripartizioni-territoriali-e-caratteristiche-di-contesto/"
     homepage <- tryCatch({
       xml2::read_html(url.invalsi)
@@ -89,14 +108,23 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
     } else {
       link <- unique(links[grepl(paste0(
         "^(?!.*tracciato)(?=.*", name_pattern, ")(?=.*\\.csv)"), links, perl = TRUE)])
-
     }
-    response <- tryCatch({
-      httr::GET(link, httr::progress())
-    }, error = function(e) {
-      message("Error occurred during scraping, attempt repeated ... \n")
-      NULL
-    })
+    if(verbose){
+      response <- tryCatch({
+        httr::GET(link, httr::progress())
+      }, error = function(e) {
+        message("Error occurred during scraping, attempt repeated ... \n")
+        NULL
+      })
+    } else {
+      response <- tryCatch({
+        httr::GET(link)
+      }, error = function(e) {
+        message("Error occurred during scraping, attempt repeated ... \n")
+        NULL
+      })
+    }
+
     status <- response$status_code
     if(is.null(response)){
       status <- 0
@@ -198,9 +226,9 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
       dplyr::rename(Region_code = .data$ID) %>%
       dplyr::rename(Region_description = .data$Description) %>%
       dplyr::select(-.data$Territorial_aggregate)
-    dd_LWS <- Invalsi_IS %>% dplyr::filter(.data$Territorial_aggregate == "Sistemi locali del lavoro (SLL)") %>%
-      dplyr::rename(LWS_code = .data$ID) %>%
-      dplyr::rename(LWS_description = .data$Description) %>%
+    dd_LLS <- Invalsi_IS %>% dplyr::filter(.data$Territorial_aggregate == "Sistemi locali del lavoro (SLL)") %>%
+      dplyr::rename(LLS_code = .data$ID) %>%
+      dplyr::rename(LLS_description = .data$Description) %>%
       dplyr::select(-.data$Territorial_aggregate)
     dd_InnerAreas2014 <- Invalsi_IS %>% dplyr::filter(.data$Territorial_aggregate == "Aree interne SNAI 2014") %>%
       dplyr::rename(Inner_area_code = .data$ID) %>%
@@ -213,11 +241,18 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
     dd_macroarea <- Invalsi_IS %>% dplyr::filter(.data$Territorial_aggregate == "Area geografica") %>%
       dplyr::rename(Macroarea_code = .data$ID) %>%
       dplyr::rename(Macroarea_description = .data$Description) %>%
-      dplyr::select(-.data$Territorial_aggregate)
+      dplyr::select(-.data$Territorial_aggregate) %>%
+      dplyr::mutate(dplyr::across(
+        .data$Macroarea_description, ~ stringr::str_replace_all(.x, c(
+          "Nord Ovest" = "North-West",
+          "Nord Est" = "North-East",
+          "Centro" = "Center",
+          "Sud E Isole" = "South and Islands",
+          "Sud" = "South"))))
 
     if(multiple_out){
       Invalsi_IS <- list(Municipality_data = dd_mun, Province_data = dd_prov,
-                         Region_data = dd_reg, LWS_data = dd_LWS, Inner_Areas_2014_data = dd_InnerAreas2014,
+                         Region_data = dd_reg, LLS_data = dd_LLS, Inner_Areas_2014_data = dd_InnerAreas2014,
                          Inner_Areas_2021_data = dd_InnerAreas2021, Macroarea_data = dd_macroarea)
     } else{
       if (toupper(level) %in% c("MUNICIPALITY", "MUN", "LAU", "NUTS-4")){
@@ -236,9 +271,10 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
                                       "INNER_AREAS2014", "INNER_AREAS14", "INNERAREAS_2014", "INNERAREAS_14",
                                       "INNER_AREAS_2014", "INNER_AREAS_14")){
         Invalsi_IS <- dd_InnerAreas2014
-      } else if(toupper(level) %in% c("LWS", "LOCAL WORKING SYSTEM", "LOCAL LABOUR SYSTEM", "LOCAL LABOR SYSTEM",
+      } else if(toupper(level) %in% c("LWS", "LOCAL WORKING SYSTEM", "LOCAL WORK SYSTEM", "LOCAL LABOUR SYSTEM",
+                                      "LOCAL LABOR SYSTEM",
                                       "LLS", "SISTEMA LOCALE DEL LAVORO")){
-        Invalsi_IS <- dd_LWS
+        Invalsi_IS <- dd_LLS
       } else if(toupper(level) %in% c("MACROAREA", "NUTS-1", "NCS", "NORTHCENTERSOUTH", "NORTHCENTRESOUTH")){
         Invalsi_IS <- dd_macroarea
       } else{

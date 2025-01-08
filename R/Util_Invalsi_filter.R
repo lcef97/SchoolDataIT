@@ -171,31 +171,37 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
 
   } else if (toupper(level) %in% c("PROVINCE", "PROV", "NUTS-3") ) {
 
-    # The abbreviation for the province of Naples is confused with "Not Available"
-    Invalsi_IS$Province_initials <-
-      Invalsi_IS$Province_initials %>% stringr::str_replace_na("NA")
+    if("Province_initials" %in% names(Invalsi_IS)){
+      # The abbreviation for the province of Naples is confused with "Not Available"
+      #Invalsi_IS$Province_initials <-
+        #Invalsi_IS$Province_initials %>% stringr::str_replace_na("NA")
 
-    doub <- which(duplicated(dplyr::select(Invalsi_IS, .data$Province_initials,
+      Invalsi_IS <- Invalsi_IS %>%
+        dplyr::select(-.data$Province_initials)
+
+    }
+    doub <- which(duplicated(dplyr::select(Invalsi_IS, .data$Province_description,
                                            .data$Year, .data$Subject, .data$Grade)))
+
     if(length(doub) > 0) Invalsi_IS <- Invalsi_IS[-doub,]
 
     if (!WLE){
       DB.Invalsi <- Invalsi_IS %>%
         dplyr::select(.data$Year, .data$Grade, .data$Subject, .data$Province_code,
-                      .data$Province_initials, .data$Average_percentage_score, .data$Std_dev_percentage_score, .data$Students_coverage)
+                      .data$Province_description, .data$Average_percentage_score, .data$Std_dev_percentage_score, .data$Students_coverage)
     } else {
       DB.Invalsi <- Invalsi_IS %>%
         dplyr::select(.data$Year, .data$Grade, .data$Subject, .data$Province_code,
-                      .data$Province_initials, .data$WLE_average_score, .data$Std_dev_WLE_score, .data$Students_coverage)
+                      .data$Province_description, .data$WLE_average_score, .data$Std_dev_WLE_score, .data$Students_coverage)
     }
     names(DB.Invalsi)[c(6,7,8)] <- c("Mean", "StDev", "Coverage")
 
     DB.Invalsi <- DB.Invalsi %>% dplyr::filter(.data$Mean != 999 & .data$StDev != 999)
     DB.Invalsi.m <- DB.Invalsi %>% dplyr::select(-.data$StDev, -.data$Coverage) %>%
       tidyr::spread(key = .data$Subject, value=.data$Mean)
-    DB.Invalsi.s <- DB.Invalsi %>% dplyr::select(-.data$Mean, -.data$Province_initials, -.data$Coverage) %>%
+    DB.Invalsi.s <- DB.Invalsi %>% dplyr::select(-.data$Mean, -.data$Province_description, -.data$Coverage) %>%
       tidyr::spread(key = .data$Subject, value=.data$StDev)
-    DB.Invalsi.c <- DB.Invalsi %>% dplyr::select(-.data$Mean, -.data$Province_initials, -.data$StDev) %>%
+    DB.Invalsi.c <- DB.Invalsi %>% dplyr::select(-.data$Mean, -.data$Province_description, -.data$StDev) %>%
       tidyr::spread(key = .data$Subject, value = .data$Coverage)
 
     names(DB.Invalsi.m)[c(5:8)] <- paste ("M",names(DB.Invalsi.m)[c(5:8)],sep="_")
@@ -208,7 +214,7 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
       dplyr::select(-.data$Year)
     values_from <- names(DB.Invalsi)[4:ncol(DB.Invalsi)]
     DB.Invalsi <- DB.Invalsi %>%
-      tidyr::pivot_wider(id_cols = c(.data$Province_code, .data$Province_initials),
+      tidyr::pivot_wider(id_cols = c(.data$Province_code, .data$Province_description),
                          names_from = .data$Grade,
                          values_from = values_from)
 
