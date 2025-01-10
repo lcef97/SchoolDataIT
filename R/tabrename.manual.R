@@ -88,7 +88,7 @@ tabrename.manual <- function(){
     Readable = c("School_year", "External_access_ramps", "Layby_access", "Outside_access_ramps",
                  "Energy_saving_devices", "Architectural_barriers_overcoming_devices", "Seismic_adaptation",
                  "Other_specific_criticalities", "Other_devices", "Other_devices", "Other_consumption_reduction_devices",
-                 "Other_uses", "Other", "Other_heating_system", "Other_specfy", "Other_insulation_type",
+                 "Other_uses", "Other", "Other_heating_system", "Other_specify", "Other_insulation_type",
                  "Adaptation_year", "Building_year", "Area_other_motivations", "Large_traffic",
                  "Abandoned_industries", "Risky_industries_proximity", "Unenclosed_area",
                  "Secure_area", "Railway_traffic", "Decayed_urban_area", "Disabled_people_elevator",
