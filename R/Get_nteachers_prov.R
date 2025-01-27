@@ -117,7 +117,8 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
     if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
       dat <- readr::read_csv(rawToChar(response$content), show_col_types = show_col_types)
       if(verbose) cat("CSV file downloaded:", link, " ... ")
-      element.name <- substr(link,1, regexpr("[0-9]", link)-1)
+      link.1 <- gsub("AS1516", "", link)
+      element.name <- substr(link.1, 1, regexpr("[0-9]", link.1)-1)
       input[[element.name]] <- dat
       input[[element.name]] <- input[[element.name]][!duplicated(input[[element.name]]),]
 

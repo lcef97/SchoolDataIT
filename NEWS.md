@@ -1,6 +1,7 @@
 # SchoolDataIT 0.2.4
 
 * Minor changes: fixed some urls in .Rd files
+* Fixed 'Get_nteachers_prov' to correctly download 2015/16 data
 
 
 # SchoolDataIT 0.2.3
