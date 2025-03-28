@@ -10,6 +10,9 @@ Util_nstud_wide(
   nstud_imputation_thresh = 19,
   UB_nstud_byclass = 99,
   LB_nstud_byclass = 1,
+  filter_by_grade = FALSE,
+  UB_nstud_byclass_grade = NULL,
+  LB_nstud_byclass_grade = NULL,
   verbose = TRUE,
   autoAbort = FALSE,
   ...
@@ -24,9 +27,23 @@ If \code{NULL}, the function will download it automatically but it will not be s
 \item{nstud_imputation_thresh}{Numeric. If focus is on class size, the minimum threshold below which the number of classes is imputed to 1 if missing, if \code{missing_to_1 == TRUE}.
 E.g. if the threshold is 19, for all the schools in which there are 19 or less students in a given grade but the number of classes for that grade is missing, the number of classes is imputated to 1. \code{19} by default.}
 
-\item{UB_nstud_byclass}{Numeric. If focus is on class size, the upper limit of the acceptable school-level average of the number of students by class. If a school has, on average, a higher number of students by class, the record is considered an outlier and filtered out. \code{99} by default, i.e. no restriction is made. Please notice that boundaries are included in the acceptance interval.}
+\item{UB_nstud_byclass}{Numeric. Either a unique value for all school orders, or a vector of three order-specific values in the order: primary, middle, high.
+If focus is on class size, the upper limit of the acceptable school-level (if \code{filter_by_grade == FALSE}) or grade-level (otherwise) average of the number of students by class.
+If a whole school or any grade in a school respectively has a higher number of students by class, the record is considered an outlier and filtered out. \code{99} by default, i.e. no restriction is made.
+ Please notice that boundaries are included in the acceptance interval.}
 
-\item{LB_nstud_byclass}{Numeric. If focus is on class size, the lower limit of the acceptable school-level average of the number of students by class. If a school has, on average, a smaller number of students by class, the record is considered an outlier and filtered out. \code{1} by default. Please notice that boundaries are included in the acceptance interval.}
+\item{LB_nstud_byclass}{Numeric. Either a unique value for all school orders, or a vector of three order-specific values in the order: primary, middle, wide.
+If focus is on class size, the lower limit of the acceptable school-level (if \code{filter_by_grade == FALSE}) or grade_level (otherwise) average of the number of students by class.
+ If a whole school or any grade in a school respectively has a smaller number of students by class, the record is considered an outlier and filtered out. \code{1} by default.
+ Please notice that boundaries are included in the acceptance interval.}
+
+\item{filter_by_grade}{Logical. If focus is on class size, whether to remove all school grades with average class size outside of the acceptance boundaries. \code{FALSE} by default.}
+
+\item{UB_nstud_byclass_grade}{Numeric. IF \code{filter_by_grade == TRUE}, the upper limit of the acceptable grade-level average class size.
+If \code{NULL} it is set equal to \code{UB_nstud_byclass}. \code{NULL} by default.}
+
+\item{LB_nstud_byclass_grade}{Numeric. IF \code{filter_by_grade == TRUE}, the lowrer limit of the acceptable grade-level average class size.
+If \code{NULL} it is set equal to \code{LB_nstud_byclass}. \code{NULL} by default.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
 

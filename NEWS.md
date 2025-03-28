@@ -1,5 +1,7 @@
 # SchoolDataIT 0.2.4
 
+* Major changes: allows 'Util_nstud_wide' to both filter schools with class size in an order-specific interval,
+and to filter at the level of school grade rather than at the school level
 * Minor changes: fixed some urls in .Rd files
 * Fixed 'Get_nteachers_prov' to correctly download 2015/16 data
 
