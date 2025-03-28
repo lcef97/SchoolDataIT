@@ -15,8 +15,19 @@
 #' @param missing_to_1 Logical. If focus is on class size, whether the number of classes should be imputed to 1 when it is missing and the number of students is below a threshold (argument \code{nstud_imputation_thresh}). \code{TRUE} by default.
 #' @param nstud_imputation_thresh Numeric. If focus is on class size, the minimum threshold below which the number of classes is imputed to 1 if missing, if \code{missing_to_1 == TRUE}.
 #'  E.g. if the threshold is 19, for all the schools in which there are 19 or less students in a given grade but the number of classes for that grade is missing, the number of classes is imputated to 1. \code{19} by default.
-#' @param UB_nstud_byclass Numeric. If focus is on class size, the upper limit of the acceptable school-level average of the number of students by class. If a school has, on average, a higher number of students by class, the record is considered an outlier and filtered out. \code{99} by default, i.e. no restriction is made. Please notice that boundaries are included in the acceptance interval.
-#' @param LB_nstud_byclass Numeric. If focus is on class size, the lower limit of the acceptable school-level average of the number of students by class. If a school has, on average, a smaller number of students by class, the record is considered an outlier and filtered out. \code{1} by default. Please notice that boundaries are included in the acceptance interval.
+#' @param UB_nstud_byclass Numeric. Either a unique value for all school orders, or a vector of three order-specific values in the order: primary, middle, high.
+#' If focus is on class size, the upper limit of the acceptable school-level (if \code{filter_by_grade == FALSE}) or grade-level (otherwise) average of the number of students by class.
+#' If a whole school or any grade in a school respectively has a higher number of students by class, the record is considered an outlier and filtered out. \code{99} by default, i.e. no restriction is made.
+#'  Please notice that boundaries are included in the acceptance interval.
+#' @param LB_nstud_byclass Numeric. Either a unique value for all school orders, or a vector of three order-specific values in the order: primary, middle, wide.
+#' If focus is on class size, the lower limit of the acceptable school-level (if \code{filter_by_grade == FALSE}) or grade_level (otherwise) average of the number of students by class.
+#'  If a whole school or any grade in a school respectively has a smaller number of students by class, the record is considered an outlier and filtered out. \code{1} by default.
+#'  Please notice that boundaries are included in the acceptance interval.
+#' @param filter_by_grade Logical. If focus is on class size, whether to remove all school grades with average class size outside of the acceptance boundaries. \code{FALSE} by default.
+#' @param UB_nstud_byclass_grade Numeric. IF \code{filter_by_grade == TRUE}, the upper limit of the acceptable grade-level average class size.
+#' If \code{NULL} it is set equal to \code{UB_nstud_byclass}. \code{NULL} by default.
+#' @param LB_nstud_byclass_grade Numeric. IF \code{filter_by_grade == TRUE}, the lowrer limit of the acceptable grade-level average class size.
+#'  If \code{NULL} it is set equal to \code{LB_nstud_byclass}. \code{NULL} by default.
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #' @param ... Arguments to \code{\link{Get_nstud}}, needed if \code{data} is not provided.
@@ -52,6 +63,9 @@
 Util_nstud_wide <- function(data = NULL, missing_to_1 = FALSE,
                             nstud_imputation_thresh = 19,
                             UB_nstud_byclass = 99, LB_nstud_byclass = 1,
+                            filter_by_grade = FALSE,
+                            UB_nstud_byclass_grade = NULL,
+                            LB_nstud_byclass_grade = NULL,
                             verbose = TRUE, autoAbort = FALSE, ...){
 
   options(dplyr.summarise.inform = FALSE)
@@ -131,6 +145,45 @@ Util_nstud_wide <- function(data = NULL, missing_to_1 = FALSE,
   }
 
   if("Classes" %in% names (nstud.wide)){
+
+    if(length(UB_nstud_byclass) != 3L){
+      UB_nstud_byclass <- rep(UB_nstud_byclass[1L], 3)
+    }
+    if(length(LB_nstud_byclass) != 3L){
+      LB_nstud_byclass <- rep(LB_nstud_byclass[1L], 3)
+    }
+
+    if(filter_by_grade){
+      if(is.null(LB_nstud_byclass_grade)) LB_nstud_byclass_grade <- LB_nstud_byclass
+      if(is.null(UB_nstud_byclass_grade)) UB_nstud_byclass_grade <- UB_nstud_byclass
+      nrow.old <- nrow(nstud.wide)
+      nstud.wide <- nstud.wide %>%
+        dplyr::filter(.data$Order == "Primary" &
+                        dplyr::between(.data$Students/.data$Classes,
+                                       LB_nstud_byclass_grade[1L],
+                                       UB_nstud_byclass_grade[1L]) |
+                        .data$Order == "Middle" &
+                        dplyr::between(.data$Students/.data$Classes,
+                                       LB_nstud_byclass_grade[2L],
+                                       UB_nstud_byclass_grade[2L]) |
+                        .data$Order == "High" &
+                        dplyr::between(.data$Students/.data$Classes,
+                                       LB_nstud_byclass_grade[3L],
+                                       UB_nstud_byclass_grade[3L]))
+      nrow.new <- nrow(nstud.wide)
+      if(verbose & nrow.new < nrow.old){
+        message(paste("Filtered out", nrow.old - nrow.new, "schools with either less than",
+                      LB_nstud_byclass_grade[1L], "(primary),",
+                      LB_nstud_byclass_grade[2L], "(middle),",
+                      LB_nstud_byclass_grade[3L], "(high)\n",
+                      "or more than",
+                      UB_nstud_byclass_grade[1L], "(primary),",
+                      UB_nstud_byclass_grade[2L], "(middle),",
+                      UB_nstud_byclass_grade[3L], "(high)",
+                      "students per class in any grade"))
+      }
+    }
+
     nstud.wide <- nstud.wide %>% dplyr::select(-.data$Year) %>%
       dplyr::filter(.data$Order != "Primary" | .data$Grade < 6) %>%
       dplyr::filter(.data$Grade < 14) %>%
@@ -164,11 +217,29 @@ Util_nstud_wide <- function(data = NULL, missing_to_1 = FALSE,
 
     nrow.old <- nrow(nstud.wide)
     nstud.wide <- nstud.wide %>%
-      dplyr::filter(dplyr::between(.data$Students_per_class_Tot, LB_nstud_byclass, UB_nstud_byclass))
+      dplyr::filter(.data$Order == "Primary" &
+                      dplyr::between(.data$Students_per_class_Tot,
+                                     LB_nstud_byclass[1L],
+                                     UB_nstud_byclass[1L]) |
+                      .data$Order == "Middle" &
+                      dplyr::between(.data$Students_per_class_Tot,
+                                     LB_nstud_byclass[2L],
+                                     UB_nstud_byclass[2L]) |
+                      .data$Order == "High" &
+                      dplyr::between(.data$Students_per_class_Tot,
+                                     LB_nstud_byclass[3L],
+                                     UB_nstud_byclass[3L]))
     nrow.new <- nrow(nstud.wide)
     if(verbose & nrow.new < nrow.old){
-      message(paste("Filtered out", nrow.old - nrow.new, "schools with less than", LB_nstud_byclass,
-                    " or more than", UB_nstud_byclass, "students per class"))
+      message(paste("Filtered out", nrow.old - nrow.new, "schools with either less than",
+                    LB_nstud_byclass[1L], "(primary),",
+                    LB_nstud_byclass[2L], "(middle),",
+                    LB_nstud_byclass[3L], "(high)\n",
+                    "or more than",
+                    UB_nstud_byclass[1L], "(primary),",
+                    UB_nstud_byclass[2L], "(middle),",
+                    UB_nstud_byclass[3L], "(high)",
+                    "students per class on average"))
     }
   } else if("Running_time" %in% names(nstud.wide)){
     nstud.wide <- nstud.wide %>% dplyr::select(-.data$Year) %>%

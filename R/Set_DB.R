@@ -41,8 +41,19 @@
 #' @param nstud_missing_to_1 Numeric. If \code{nstud == TRUE}, whether the number of classes should be imputed to 1 when it is missing and the number of students is below a threshold (argument \code{nstud_imputation_thresh}, see \code{\link{Util_nstud_wide}}). \code{FALSE} by default.
 #' @param nstud_imputation_thresh Numeric. If \code{nstud_missing_to_1 == TRUE}, the minimum threshold below which the number of classes is imputed to 1 if missing;
 #' see also \code{\link{Util_nstud_wide}}. \code{19} by default.
-#' @param UB_nstud_byclass Numeric. The upper limit of the acceptable school-level average of the number of students by class if \code{nstud == TRUE}; see also \code{\link{Util_nstud_wide}}.  \code{99} by default, i.e. no restriction is made. Please notice that boundaries are included in the acceptance interval.
-#' @param LB_nstud_byclass Numeric. The lower limit of the acceptable school-level average of the number of students by class if \code{nstud == TRUE}; see also \code{\link{Util_nstud_wide}}. \code{1} by default. Please notice that boundaries are included in the acceptance interval.
+#' @param UB_nstud_byclass Numeric. Either a unique value for all school orders, or a vector of three order-specific values in the order: primary, middle, high.
+#' If focus is on class size, the upper limit of the acceptable school-level (if \code{filter_by_grade == FALSE}) or grade-level (otherwise) average of the number of students by class.
+#' If a whole school or any grade in a school respectively has a higher number of students by class, the record is considered an outlier and filtered out. \code{99} by default, i.e. no restriction is made.
+#'  Please notice that boundaries are included in the acceptance interval.
+#' @param LB_nstud_byclass Numeric. Either a unique value for all school orders, or a vector of three order-specific values in the order: primary, middle, wide.
+#' If focus is on class size, the lower limit of the acceptable school-level (if \code{filter_by_grade == FALSE}) or grade_level (otherwise) average of the number of students by class.
+#'  If a whole school or any grade in a school respectively has a smaller number of students by class, the record is considered an outlier and filtered out. \code{1} by default.
+#'  Please notice that boundaries are included in the acceptance interval.
+#' @param nstud_filter_by_grade Logical. If focus is on class size, whether to remove all school grades with average class size outside of the acceptance boundaries. \code{FALSE} by default.
+#' @param UB_nstud_byclass_grade Numeric. IF \code{filter_by_grade == TRUE}, the upper limit of the acceptable grade-level average class size.
+#' If \code{NULL} it is set equal to \code{UB_nstud_byclass}. \code{NULL} by default.
+#' @param LB_nstud_byclass_grade Numeric. IF \code{filter_by_grade == TRUE}, the lowrer limit of the acceptable grade-level average class size.
+#'  If \code{NULL} it is set equal to \code{LB_nstud_byclass}. \code{NULL} by default.
 #' @param nstud_check Logical. If \code{nstud == TRUE}, whether to check the students number availability across all school included in the school registries (see \code{\link{Util_Check_nstud_availability}}). \code{TRUE} by default.
 #' @param nstud_check_registry Character. If \code{nstud == TRUE} and \code{nstud_check == TRUE}, the school registries whose availability has to be checked. Either \code{"Registry_from_buildings"} (buildings registry), \code{"Registry_from_registry"} (proper registry), \code{"Any"} or \code{"Both"}. \code{"Any"} by default.
 #' @param BroadBand_impute_missing Whether the schools not included in the Broadband dataset must be considered in the total of schools (i.e. the denominator to the Broadband availability indicator). \code{TRUE} by default.
@@ -140,6 +151,9 @@ Set_DB <- function( Year = 2023,
                     nstud_missing_to_1 = FALSE,
                     UB_nstud_byclass = 99,
                     LB_nstud_byclass = 1,
+                    UB_nstud_byclass_grade = NULL,
+                    LB_nstud_byclass_grade = NULL,
+                    nstud_filter_by_grade = FALSE,
                     InnerAreas = TRUE,
                     ord_InnerAreas = FALSE,
                     nstud_check = TRUE,
@@ -480,7 +494,10 @@ Set_DB <- function( Year = 2023,
     nstud_aggr <-
       Group_nstud(data = input_nstud, Year = Year, nstud_imputation_thresh = nstud_imputation_thresh,
                   missing_to_1 = nstud_missing_to_1, UB_nstud_byclass = UB_nstud_byclass,
-                  LB_nstud_byclass = LB_nstud_byclass, check = nstud_check, verbose = verbose,
+                  LB_nstud_byclass = LB_nstud_byclass, nstud_filter_by_grade = nstud_filter_by_grade,
+                  UB_nstud_byclass_grade = UB_nstud_byclass_grade,
+                  LB_nstud_byclass_grade = LB_nstud_byclass_grade,
+                  check = nstud_check, verbose = verbose,
                   check_registry = nstud_check_registry, InnerAreas = nstud_InnerAreas,
                   ord_InnerAreas = nstud_ord_InnerAreas,
                   input_Registry = input_Registry, input_InnerAreas = input_InnerAreas,
