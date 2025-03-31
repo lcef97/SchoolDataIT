@@ -1,3 +1,10 @@
+# SchoolData 0.2.5
+
+* Major changes: fixed error in Set_DB function not allowing to run 'nstud_filter_by_grade', 
+allows to insert grouped 'input_nstud' input in Set_DB
+
+
+
 # SchoolDataIT 0.2.4
 
 * Major changes: allows 'Util_nstud_wide' to both filter schools with class size in an order-specific interval,

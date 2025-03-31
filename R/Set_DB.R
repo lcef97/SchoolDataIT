@@ -377,9 +377,22 @@ Set_DB <- function( Year = 2023,
 
   if(verbose) cat("\n")
 
+  if(!is.null(input_SchoolBuildings)){
+    byschool_SchoolBuildings <-
+      (is.data.frame(input_SchoolBuildings) &&
+         "School_code" %in% names(input_SchoolBuildings)) ||
+      (!is.data.frame(input_SchoolBuildings) &&
+         "School_code" %in% names(input_SchoolBuildings[[1]]))
+  }
+  if(!is.null(input_nstud)){
+    byschool_nstud <- (is.data.frame(input_nstud) &&
+                         "School_code" %in% names(input_nstud))||
+      "School_code" %in% names(input_nstud[[1L]])
+  }
+
   if(! conservative){
-    if(!is.null(input_SchoolBuildings)){
-      if(!is.null(input_nstud)){
+    if(!is.null(input_SchoolBuildings) && byschool_SchoolBuildings){
+      if(!is.null(input_nstud) %% byschool_nstud){
         input_nstud_byclass <- input_nstud$ALUCORSOINDCLASTA
         input_nstud_byclass <- filterCommonRows(input_nstud_byclass, input_SchoolBuildings, verbose)
         input_SchoolBuildings <- filterCommonRows(input_SchoolBuildings, input_nstud_byclass, verbose)
@@ -390,7 +403,8 @@ Set_DB <- function( Year = 2023,
                         !grepl("X", substr(.data$School_code,1,4), ignore.case = TRUE)) %>%
           filterCommonRows(input_SchoolBuildings, verbose)
       }
-    } else if(!is.null(input_nstud) && !is.null(input_BroadBand)){
+    } else if(!is.null(input_nstud) && !is.null(input_BroadBand) &&
+              byschool_nstud){
       input_BroadBand <- input_BroadBand %>%
         dplyr::filter(!grepl("[^A-Z]", substr(.data$School_code,1,4)) &
                       !grepl("X", substr(.data$School_code,1,4), ignore.case = TRUE)) %>%
@@ -399,11 +413,11 @@ Set_DB <- function( Year = 2023,
     if(!is.null(input_nstud)) input_nstud$ALUCORSOINDCLASTA <- input_nstud_byclass
     if(verbose) cat("\n")
   } else {
-    if(!is.null(input_SchoolBuildings)){
+    if(!is.null(input_SchoolBuildings) && byschool_SchoolBuildings){
       input_SchoolBuildings <- input_SchoolBuildings %>%
         dplyr::filter(.data$School_code %in% input_School2mun$Registry_from_registry$School_code)
     }
-    if(!is.null(input_nstud)){
+    if(!is.null(input_nstud) && byschool_nstud){
       if(!is.data.frame(input_nstud)){
         input_nstud <- input_nstud %>% lapply(function(x){
           x <- x %>% dplyr::filter(.data$School_code %in% input_School2mun$Registry_from_registry$School_code)})
@@ -423,10 +437,7 @@ Set_DB <- function( Year = 2023,
 
   if(!is.null(input_SchoolBuildings)){
 
-    if((is.data.frame(input_SchoolBuildings) &&
-        "School_code" %in% names(input_SchoolBuildings)) ||
-       (!is.data.frame(input_SchoolBuildings) &&
-        "School_code" %in% names(input_SchoolBuildings[[1]]))){
+    if(byschool_SchoolBuildings){
       if(SchoolBuildings_certifications){
         SchoolBuildings_include_numerics <- TRUE
       }
@@ -491,17 +502,21 @@ Set_DB <- function( Year = 2023,
   if(!is.null(input_nstud)){
     nstud_InnerAreas <- InnerAreas && length(datasets) == 0
     nstud_ord_InnerAreas <- nstud_InnerAreas && ord_InnerAreas
-    nstud_aggr <-
-      Group_nstud(data = input_nstud, Year = Year, nstud_imputation_thresh = nstud_imputation_thresh,
-                  missing_to_1 = nstud_missing_to_1, UB_nstud_byclass = UB_nstud_byclass,
-                  LB_nstud_byclass = LB_nstud_byclass, nstud_filter_by_grade = nstud_filter_by_grade,
-                  UB_nstud_byclass_grade = UB_nstud_byclass_grade,
-                  LB_nstud_byclass_grade = LB_nstud_byclass_grade,
-                  check = nstud_check, verbose = verbose,
-                  check_registry = nstud_check_registry, InnerAreas = nstud_InnerAreas,
-                  ord_InnerAreas = nstud_ord_InnerAreas,
-                  input_Registry = input_Registry, input_InnerAreas = input_InnerAreas,
-                  input_School2mun = input_School2mun, input_AdmUnNames = input_AdmUnNames)
+
+    if(byschool_nstud){
+      nstud_aggr <-
+        Group_nstud(data = input_nstud, Year = Year, nstud_imputation_thresh = nstud_imputation_thresh,
+                    missing_to_1 = nstud_missing_to_1, UB_nstud_byclass = UB_nstud_byclass,
+                    LB_nstud_byclass = LB_nstud_byclass, filter_by_grade = nstud_filter_by_grade,
+                    UB_nstud_byclass_grade = UB_nstud_byclass_grade,
+                    LB_nstud_byclass_grade = LB_nstud_byclass_grade,
+                    check = nstud_check, verbose = verbose,
+                    check_registry = nstud_check_registry, InnerAreas = nstud_InnerAreas,
+                    ord_InnerAreas = nstud_ord_InnerAreas,
+                    input_Registry = input_Registry, input_InnerAreas = input_InnerAreas,
+                    input_School2mun = input_School2mun, input_AdmUnNames = input_AdmUnNames)
+    } else nstud_aggr <- input_nstud
+
     if(!is.data.frame(nstud_aggr)){
       if(toupper(level) %in% c("LAU", "MUNICIPALITY", "NUTS-4")){
         datasets[["nstud"]] <- nstud_aggr$Municipality_data
