@@ -11,7 +11,8 @@
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #' @param multiple_out Logical. Wheter keeping
 #' multiple dataframes as outputs (thus overriding the \code{level} argument) or not.
-#' \code{FALSE} by default.
+#' \code{TRUE} by default.
+#' @param category Logical. Whether to focus on a specific category of students participating to the census survey. Warning: experimental. \code{FALSE} by default.
 #'
 #' @return Unless \code{multiple_out == TRUE}, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 #' Otherwise, a list including objects of the aforementioned classes
@@ -57,22 +58,25 @@
 
 
 Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE,
-                           multiple_out = FALSE, autoAbort = FALSE){
+                           multiple_out = TRUE, autoAbort = FALSE, category = FALSE){
 
   if(!Check_connection(autoAbort)) return(NULL)
 
   starttime <- Sys.time()
-  if (toupper(level) %in% c("MUNICIPALITY", "LAU", "NUTS-4")){
+  if (verbose)
+    cat("Retrieving Invalsi census data")
+  if (toupper(level) %in% c("MUNICIPALITY", "MUN", "LAU", "NUTS-4")){
     nCol <- 10
-    if (verbose) cat("Retrieving Invalsi census data for municipalities: \n")
+    if(!multiple_out) cat (" for municipalities")
     url.invalsi <- "https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-comunali-di-popolazione-comune-del-plesso/"
     name_pattern <- "report_comuni_plessi"
-  } else if (toupper(level) %in%c("PROVINCE", "NUTS-3") ){
+  } else if (toupper(level) %in%c("PROVINCE", "PROV", "NUTS-3") ){
     nCol <- 11
-    if (verbose) cat("Retrieving Invalsi census data for provinces")
+    if (!multiple_out) cat("for provinces")
     url.invalsi <- "https://serviziostatistico.invalsi.it/invalsi_ss_data/dati-provinciali-di-popolazione/"
     name_pattern <- "matrice_medie_provinciali"
   }
+  if (verbose) cat(" \n")
 
   homepage <- NULL
   massive_DB <- FALSE
@@ -209,9 +213,24 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
       dplyr::mutate(Description = stringr::str_to_title(.data$Description))
 
     # This is a loss in information next package versions shall overcome:
-    Invalsi_IS <- Invalsi_IS %>%
-      dplyr::filter(.data$Misc_level == "Totale") %>%
-      dplyr::select(-.data$Misc_level)
+    if(!category){
+      Invalsi_IS <- Invalsi_IS %>%
+        dplyr::filter(.data$Misc_level == "Totale") %>%
+        dplyr::select(-.data$Misc_level)
+    } else{
+      categories <- unique(Invalsi_IS$Misc_level)
+      categories_mat <- apply(cbind(c(1:length(categories)), categories), 1,
+                              function(X) paste0(X, collapse = ": "))
+      cat("Please, choose one or more numbers \n corresponding to the following categories;
+          \n use the semicolon (;) as separator \n",
+          paste(categories_mat, collapse = "\n"))
+      nn_categories <- as.numeric(unlist(strsplit(readline(prompt = "  > "), split = ";")))
+      categories_in <- categories[nn_categories]
+      Invalsi_IS <- Invalsi_IS %>%
+        dplyr::filter(.data$Misc_level %in% categories_in) %>%
+        dplyr::rename( Category = .data$Misc_level)
+    }
+
 
     dd_mun <- Invalsi_IS %>% dplyr::filter(.data$Territorial_aggregate == "Comune plesso") %>%
       dplyr::rename(Municipality_code = .data$ID) %>%

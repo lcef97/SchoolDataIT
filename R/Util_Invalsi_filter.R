@@ -55,8 +55,8 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
   starttime <- Sys.time()
 
   while(is.null(data)){
-    data <- Get_Invalsi_IS(level = level, verbose = verbose,
-                           multiple_out = FALSE, autoAbort = autoAbort)
+    data <- Get_Invalsi_IS(level = level, verbose = verbose,  multiple_out = FALSE,
+                           autoAbort = autoAbort, category = FALSE)
     if(is.null(data)){
       if(!autoAbort){
         holdOn <- ""
@@ -86,7 +86,8 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
     }
   }
 
-  Y <- year.patternA(Year)
+  Y <- sapply(Year, year.patternA)
+
   for(i in 1:length(subj)){
     if(toupper(subj[i]) %in% c("ELI", "ENGLISH L", "ENGLISH_L", "INGLESE L", "INGLESE_L",
                                "ENGLISH LISTENING", "ENGLISH_LISTENING")){
@@ -104,7 +105,7 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
   Invalsi_IS <- data %>%
     dplyr::mutate(Year =  stringr::str_remove_all(.data$Year, "-")) %>%
     dplyr::mutate(Subject =  stringr::str_replace_all(.data$Subject, " ", "_")) %>%
-    dplyr::filter(.data$Year == Y) %>%
+    dplyr::filter(.data$Year %in% Y) %>%
     dplyr::filter(.data$Grade %in% grade) %>%
     dplyr::filter(.data$Subject %in% subj)
 
@@ -114,7 +115,7 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
     return(NULL)
   }
 
-  if (13 %in% grade | as.numeric(substr(Y, 1, 4)) > 2016 & any(grade >5)){
+  if (13 %in% grade | any(as.numeric(substr(Y, 1, 4)) > 2016) & any(grade >5)){
     WLE <- TRUE
   }
 
@@ -161,11 +162,10 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
 
     DB.Invalsi <- DB.Invalsi.m %>%
       dplyr::left_join(DB.Invalsi.s, by = c("Municipality_code", "Grade", "Year")) %>%
-      dplyr::left_join(DB.Invalsi.c, by = c("Municipality_code", "Grade", "Year")) %>%
-      dplyr::select(-.data$Year)
-    values_from <- names(DB.Invalsi)[4:ncol(DB.Invalsi)]
+      dplyr::left_join(DB.Invalsi.c, by = c("Municipality_code", "Grade", "Year"))
+    values_from <- names(DB.Invalsi)[min(which(grepl("M_", names(DB.Invalsi)))):ncol(DB.Invalsi)]
     DB.Invalsi <- DB.Invalsi %>%
-      tidyr::pivot_wider(id_cols = c(.data$Municipality_code, .data$Municipality_description),
+      tidyr::pivot_wider(id_cols = c(.data$Municipality_code, .data$Municipality_description, .data$Year),
                          names_from = .data$Grade,
                          values_from = values_from)
 
@@ -210,11 +210,10 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
 
     DB.Invalsi <- DB.Invalsi.m %>%
       dplyr::left_join(DB.Invalsi.s, by = c("Province_code", "Grade", "Year")) %>%
-      dplyr::left_join(DB.Invalsi.c, by = c("Province_code", "Grade", "Year")) %>%
-      dplyr::select(-.data$Year)
-    values_from <- names(DB.Invalsi)[4:ncol(DB.Invalsi)]
+      dplyr::left_join(DB.Invalsi.c, by = c("Province_code", "Grade", "Year"))
+    values_from <- names(DB.Invalsi)[min(which(grepl("M_", names(DB.Invalsi)))):ncol(DB.Invalsi)]
     DB.Invalsi <- DB.Invalsi %>%
-      tidyr::pivot_wider(id_cols = c(.data$Province_code, .data$Province_description),
+      tidyr::pivot_wider(id_cols = c(.data$Province_code, .data$Province_description, .data$Year),
                          names_from = .data$Grade,
                          values_from = values_from)
 
@@ -226,9 +225,10 @@ Util_Invalsi_filter <- function(data = NULL, subj=c("ELI", "ERE", "ITA", "MAT"),
   if(nrow(DB.Invalsi)==0){
     stop("No Invalsi data available", .call = TRUE)
   }
+  #if(length(Y)==1L) DB.Invalsi <- dplyr::select(DB.Invalsi, -.data$Year)
 
   DB.Invalsi <- DB.Invalsi[, which(!unlist(lapply(DB.Invalsi, function(x) all(is.na(x)))))]
-  DB.Invalsi <- DB.Invalsi[,c(1, 2, 2 + c(order(as.numeric(stringr::str_extract(names(DB.Invalsi)[-c(1,2)], "\\d+$")))))]
+  DB.Invalsi <- DB.Invalsi[,c(1, 2, 3, 3 + c(order(as.numeric(stringr::str_extract(names(DB.Invalsi)[-c(1,2,3)], "\\d+$")))))]
   endtime <- Sys.time()
 
   if(verbose) {

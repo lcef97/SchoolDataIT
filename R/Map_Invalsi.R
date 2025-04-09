@@ -132,7 +132,7 @@ Map_Invalsi <- function(data = NULL, Year = 2023, subj_toplot = "ITA", grade = 8
     }
   }
 
-  if("Year" %in% names(data)){
+  if("Subject" %in% names(data)){
     dd <- Util_Invalsi_filter(data = data, Year = Year,
                                subj = c("ELI", "ERE", "ITA", "MAT"),
                                grade = grade, level = level, WLE=WLE,

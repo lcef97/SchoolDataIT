@@ -595,7 +595,13 @@ Set_DB <- function( Year = 2023,
         data = input_Invalsi_IS, Year = Year, subj = Invalsi_subj,
         grade = Invalsi_grade, level = level,
         WLE = Invalsi_WLE, verbose = verbose)
-    } else Invalsi_IS <- input_Invalsi_IS
+    } else {
+      Invalsi_IS <- input_Invalsi_IS
+      if("Year" %in% names(Invalsi_IS)) {
+        if(length(unique(Invalsi_IS$Year)>1L)){
+        Invalsi_IS <- Invalsi_IS %>% dplyr::filter(.data$Year == year.patternA(Year))
+      }}
+    }
 
     SchoolOrder <- c(ifelse(any(Invalsi_grade < 6), "Primary", NA),
                      ifelse(8 %in% Invalsi_grade, "Middle", NA),

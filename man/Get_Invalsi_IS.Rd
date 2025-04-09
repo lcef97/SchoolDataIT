@@ -11,8 +11,9 @@ Get_Invalsi_IS(
   level = "LAU",
   verbose = TRUE,
   show_col_types = FALSE,
-  multiple_out = FALSE,
-  autoAbort = FALSE
+  multiple_out = TRUE,
+  autoAbort = FALSE,
+  category = FALSE
 )
 }
 \arguments{
@@ -24,9 +25,11 @@ Get_Invalsi_IS(
 
 \item{multiple_out}{Logical. Wheter keeping
 multiple dataframes as outputs (thus overriding the \code{level} argument) or not.
-\code{FALSE} by default.}
+\code{TRUE} by default.}
 
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
+
+\item{category}{Logical. Whether to focus on a specific category of students participating to the census survey. Warning: experimental. \code{FALSE} by default.}
 }
 \value{
 Unless \code{multiple_out == TRUE}, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
