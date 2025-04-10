@@ -142,7 +142,7 @@ fixMun.manual <- function(data, Year){
         pattern == year.patternB(2019) ~ "078157",
       toupper(.data$Municipality_description) == "FIUMICELLO VILLA VICENTINA" ~ "030190",
       toupper(.data$Municipality_description) %in% c("FIUMICELLO", "VILLA VICENTINA") &
-        pattern == year.patternB(2019)~ "030191",,
+        pattern == year.patternB(2019)~ "030191",
       toupper(.data$Municipality_description) %in% c("BARBARANO VICENTINO", "MOSSANO") &
         pattern == year.patternB(2019)~ "024124",
       toupper(.data$Municipality_description) %in% c("MEGLIADINO SAN FIDENZIO", "SANTA MARGHERITA D'ADIGE", "SALETTO") &
