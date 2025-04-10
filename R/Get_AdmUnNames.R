@@ -2,18 +2,20 @@
 #'
 #' @description This function downloads a file provided by the Italian National Institute of Statistics including all the codes of administrative units in Italy. As of today, it is the easiest way to map directly cadastral codes to municipality codes.
 #'
-#' @param Year Numeric or character value. Last available is 2024.
-#' For coherence with school data, it is also in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}. \code{2023} by default.
-#' @param date Character. The reference date, in format \code{"mm_dd"}, e.g. \code{"01_01"} for January 1st or,
-#'  \code{"09-01"} for the beginning of the school year. \code{"01_01"} by default.
+#' @param Date Character. The date at which administrative unit codes are sought for. Important: must be in the format: "yyyy-mm-dd".
+#'  Current date by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #'
 #' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}, including: NUTS-3 code, NUTS-3 abbreviation,
 #' LAU code, LAU name (description) and cadastral code. All variables are characters except for the NUTS-3 code.
 #'
 #' @examples
+#' \donttest{
+#'   Get_AdmUnNames(2024, autoAbort = TRUE)
 #'
-#' Get_AdmUnNames(2024, autoAbort = TRUE)
+#' }
+#'
+#'
 #'
 #'
 #' @source <https://situas.istat.it/web/#/territorio>
@@ -22,7 +24,7 @@
 
 
 
-Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
+Get_AdmUnNames <- function(Date = Sys.Date(), autoAbort = FALSE){
 
 
   if(!Check_connection(autoAbort = autoAbort)) return(NULL)
@@ -33,8 +35,8 @@ Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
   # message("Please, choose either '01-01', '06-30' or '09-01' as date")
   #date <- readline(prompt = "  > ")
   #}
-  while(!as.numeric(Year) %in% c(2015:2024)){
-    message("Please, choose a year between 2015 and 2024")
+  while(!as.Date(Date) < Sys.Date()){
+    message("Please, choose a date prior to ", Sys.Date())
     Year <- readline(prompt = "  > ")
   }
   Year <- 2000 + as.numeric(year.patternA(Year))%%100

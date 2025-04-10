@@ -1,7 +1,8 @@
 # SchoolData 0.2.5
 
 * Major changes: fixed error in Set_DB function not allowing to run 'nstud_filter_by_grade'; 
-allows to insert grouped 'input_nstud' input in Set_DB; allows 'Util_Invalsi_filter' to filter multiple years
+allows to insert grouped 'input_nstud' input in Set_DB; allows 'Util_Invalsi_filter' to filter multiple years; 
+allows 'Get_AdmUnNames' to work with any generic past or present date (function call input has changed from c(year, "mm_dd") to "yyyy-mm-dd")
 
 
 

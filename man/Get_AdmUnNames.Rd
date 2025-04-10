@@ -7,14 +7,11 @@
 <https://situas.istat.it/web/#/territorio>
 }
 \usage{
-Get_AdmUnNames(Year = 2023, date = "01_01", autoAbort = FALSE)
+Get_AdmUnNames(Date = Sys.Date(), autoAbort = FALSE)
 }
 \arguments{
-\item{Year}{Numeric or character value. Last available is 2024.
-For coherence with school data, it is also in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}. \code{2023} by default.}
-
-\item{date}{Character. The reference date, in format \code{"mm_dd"}, e.g. \code{"01_01"} for January 1st or,
-\code{"09-01"} for the beginning of the school year. \code{"01_01"} by default.}
+\item{Date}{Character. The date at which administrative unit codes are sought for. Important: must be in the format: "yyyy-mm-dd".
+Current date by default.}
 
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
 }
@@ -26,8 +23,12 @@ LAU code, LAU name (description) and cadastral code. All variables are character
 This function downloads a file provided by the Italian National Institute of Statistics including all the codes of administrative units in Italy. As of today, it is the easiest way to map directly cadastral codes to municipality codes.
 }
 \examples{
+\donttest{
+  Get_AdmUnNames(2024, autoAbort = TRUE)
 
-Get_AdmUnNames(2024, autoAbort = TRUE)
+}
+
+
 
 
 }
