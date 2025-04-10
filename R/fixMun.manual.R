@@ -40,8 +40,18 @@ fixMun.manual <- function(data, Year){
       toupper(.data$Municipality_description) == "PECORARA" ~ "PC",
       toupper(.data$Municipality_description) %in% c("CELLIO", "CELLIO (FINO AL 01/01") ~ "VC",
       toupper(.data$Municipality_description) == "NIBBIANO" ~ "PC",
+      toupper(.data$Municipality_description) %in% c("CORIGLIANO CALABRO", "ROSSANO") &
+        pattern == year.patternB(2018) ~ "CS",
       toupper(.data$Municipality_description) == "FIUMICELLO VILLA VICENTINA" ~ "UD",
+      toupper(.data$Municipality_description) %in% c("FIUMICELLO", "VILLA VICENTINA") &
+        pattern == year.patternB(2019)~ "UD",
+      toupper(.data$Municipality_description) %in% c("BARBARANO VICENTINO", "MOSSANO") &
+        pattern == year.patternB(2019)~ "VI",
+      toupper(.data$Municipality_description) %in% c("MEGLIADINO SAN FIDENZIO", "SANTA MARGHERITA D'ADIGE", "SALETTO") &
+        pattern == year.patternB(2019)~ "PD",
       toupper(.data$Municipality_description) == "TREPPO LIGOSULLO" ~ "UD",
+      toupper(.data$Municipality_description) == "TREPPO CARNICO" &
+        pattern == year.patternB(2019)~ "UD",
       toupper(.data$Municipality_description) == "CASSANO SPINOLA" ~ "AL",
       TRUE ~ .data$Province_initials
     )))
@@ -79,8 +89,18 @@ fixMun.manual <- function(data, Year){
       toupper(.data$Municipality_description) == "PECORARA" ~ 33 ,
       toupper(.data$Municipality_description) %in% c("CELLIO", "CELLIO (FINO AL 01/01") ~ 2,
       toupper(.data$Municipality_description) == "NIBBIANO" ~ 33,
+      toupper(.data$Municipality_description) %in% c("CORIGLIANO CALABRO", "ROSSANO") &
+        pattern == year.patternB(2019) ~ 78,
       toupper(.data$Municipality_description) == "FIUMICELLO VILLA VICENTINA" ~ 30,
+      toupper(.data$Municipality_description) %in% c("FIUMICELLO", "VILLA VICENTINA") &
+        pattern == year.patternB(2019)~ 30,
+      toupper(.data$Municipality_description) %in% c("BARBARANO VICENTINO", "MOSSANO") &
+        pattern == year.patternB(2019)~ 24,
+      toupper(.data$Municipality_description) %in% c("MEGLIADINO SAN FIDENZIO", "SANTA MARGHERITA D'ADIGE", "SALETTO") &
+        pattern == year.patternB(2019)~ 28,
       toupper(.data$Municipality_description) == "TREPPO LIGOSULLO" ~ 30,
+      toupper(.data$Municipality_description) == "TREPPO CARNICO" &
+        pattern == year.patternB(2019)~ 30,
       toupper(.data$Municipality_description) == "CASSANO SPINOLA" ~ 6,
       TRUE ~ .data$Province_code
     )))
@@ -118,7 +138,17 @@ fixMun.manual <- function(data, Year){
       toupper(.data$Municipality_description) == "PECORARA" ~ "033031",
       toupper(.data$Municipality_description) %in% c("CELLIO", "CELLIO (FINO AL 01/01") ~ "002038",
       toupper(.data$Municipality_description) == "NIBBIANO" ~ "033029",
+      toupper(.data$Municipality_description) %in% c("CORIGLIANO CALABRO", "ROSSANO") &
+        pattern == year.patternB(2019) ~ "078157",
       toupper(.data$Municipality_description) == "FIUMICELLO VILLA VICENTINA" ~ "030190",
+      toupper(.data$Municipality_description) %in% c("FIUMICELLO", "VILLA VICENTINA") &
+        pattern == year.patternB(2019)~ "030191",,
+      toupper(.data$Municipality_description) %in% c("BARBARANO VICENTINO", "MOSSANO") &
+        pattern == year.patternB(2019)~ "024124",
+      toupper(.data$Municipality_description) %in% c("MEGLIADINO SAN FIDENZIO", "SANTA MARGHERITA D'ADIGE", "SALETTO") &
+        pattern == year.patternB(2019)~ "028107",
+      toupper(.data$Municipality_description) == "TREPPO CARNICO" &
+        pattern == year.patternB(2019)~ "030191",
       toupper(.data$Municipality_description) == "TREPPO LIGOSULLO" ~ "030191",
       TRUE ~ .data$Municipality_code
     )))
