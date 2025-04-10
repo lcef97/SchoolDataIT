@@ -77,7 +77,7 @@ Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
     DB <- tryCatch({
       readr::read_delim(rawToChar(httr::content(response, type = "raw")), delim = ";", show_col_types = FALSE)
     }, error = function(e){
-      message("Cannot read the file; ", 10 - attempt,
+      message("Cannot read the administrative unit names file; ", 10 - attempt,
               " attempts left. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
