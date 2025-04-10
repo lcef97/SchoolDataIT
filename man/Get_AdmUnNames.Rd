@@ -13,8 +13,8 @@ Get_AdmUnNames(Year = 2023, date = "01_01", autoAbort = FALSE)
 \item{Year}{Numeric or character value. Last available is 2024.
 For coherence with school data, it is also in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}. \code{2023} by default.}
 
-\item{date}{Character. The reference date, in format \code{"mm_dd"}, either \code{"01_01"} \code{"06_30"},
-or \code{"09_01"} (close to the beginning of the school year). \code{"01_01"} by default.}
+\item{date}{Character. The reference date, in format \code{"mm_dd"}, e.g. \code{"01_01"} for January 1st or,
+\code{"09-01"} for the beginning of the school year. \code{"01_01"} by default.}
 
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
 }

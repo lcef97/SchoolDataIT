@@ -22,7 +22,7 @@
 
 
 
-Get_AdmUnNames_auto <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
+Get_AdmUnNames <- function(Year = 2023, date = "01_01", autoAbort = FALSE){
 
 
   if(!Check_connection(autoAbort = autoAbort)) return(NULL)
