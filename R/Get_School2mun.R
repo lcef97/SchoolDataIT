@@ -57,8 +57,8 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
   if(is.null(input_AdmUnNames)){
     if(verbose) cat("Mapping cadastral codes to municipality (LAU) codes: \n")
     AdmUnYear <- ifelse(any(pattern %in% c(year.patternB(2016), year.patternB(2018))), YearMinus1+1, YearMinus1)
-    AdmUnDate <- ifelse(any(pattern %in% c(year.patternB(2016), year.patternB(2018))), "01_01", "09_01")
-    input_AdmUnNames <- Get_AdmUnNames( Date = paste0(AdmUnYear, "-", AdmUnDay), autoAbort = autoAbort)
+    AdmUnDate <- ifelse(any(pattern %in% c(year.patternB(2016), year.patternB(2018))), "01-01", "09-01")
+    input_AdmUnNames <- Get_AdmUnNames( Date = paste0(AdmUnYear, "-", AdmUnDate), autoAbort = autoAbort)
   }
   # Case: failure
   if(is.null(input_AdmUnNames)) return(NULL)

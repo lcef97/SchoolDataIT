@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' \donttest{
-#'   Get_AdmUnNames(2024, autoAbort = TRUE)
+#'   Get_AdmUnNames("2025-01-01", autoAbort = TRUE)
 #'
 #' }
 #'
@@ -30,17 +30,17 @@ Get_AdmUnNames <- function(Date = Sys.Date(), autoAbort = FALSE){
   if(!Check_connection(autoAbort = autoAbort)) return(NULL)
 
   pattern0 <- c("https://situas.istat.it/ShibO2Module/api/Report/Spool/", "/61?&pdoctype=CSV")
-  date <- stringr::str_replace(date, "_", "-")
+  #date <- stringr::str_replace(date, "_", "-")
   #while(!date %in% c("01-01", "06-30", "09-01")) {
   # message("Please, choose either '01-01', '06-30' or '09-01' as date")
   #date <- readline(prompt = "  > ")
   #}
-  while(!as.Date(Date) < Sys.Date()){
+  while(!as.Date(Date) <= Sys.Date()){
     message("Please, choose a date prior to ", Sys.Date())
-    Year <- readline(prompt = "  > ")
+    Date <- readline(prompt = "  > ")
   }
-  Year <- 2000 + as.numeric(year.patternA(Year))%%100
-  url<- paste0(pattern0[1], Year, "-", date, pattern0[2])
+  #Year <- 2000 + as.numeric(year.patternA(Year))%%100
+  url<- paste0(pattern0[1], Date, pattern0[2])
   json_body <- "{}"
 
 

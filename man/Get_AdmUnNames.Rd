@@ -24,7 +24,7 @@ This function downloads a file provided by the Italian National Institute of Sta
 }
 \examples{
 \donttest{
-  Get_AdmUnNames(2024, autoAbort = TRUE)
+  Get_AdmUnNames("2025-01-01", autoAbort = TRUE)
 
 }
 

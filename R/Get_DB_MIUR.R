@@ -223,8 +223,8 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
     if(is.null(input_AdmUnNames)) {
       cat("Mapping cadastral codes to municipality (LAU) codes:")
       AdmUnYear <- ifelse(any(pattern %in% c(year.patternB(2016), year.patternB(2018))), YearMinus1+1, YearMinus1)
-      AdmUnDay <- ifelse(any(pattern %in% c(year.patternB(2016), year.patternB(2018))), "01-01", "09-01")
-      input_AdmUnNames <- Get_AdmUnNames(Date = paste0(AdmUnYear, "-", AdmUnDay), autoAbort = autoAbort)
+      AdmUnDate <- ifelse(any(pattern %in% c(year.patternB(2016), year.patternB(2018))), "01-01", "09-01")
+      input_AdmUnNames <- Get_AdmUnNames(Date = paste0(AdmUnYear, "-", AdmUnDate), autoAbort = autoAbort)
     }
     CodMun.R <- input_AdmUnNames %>% dplyr::select(.data$Cadastral_code, .data$Municipality_code)
 

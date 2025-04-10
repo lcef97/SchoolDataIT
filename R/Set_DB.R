@@ -204,8 +204,8 @@ Set_DB <- function( Year = 2023,
   if(SchoolBuildings || nstud || BroadBand){
     while(is.null(input_AdmUnNames)){
       AdmUnYear <- ifelse(any(year.patternA(Year) %in% c( year.patternA(2016), year.patternA(2018))), YearMinus1+1, YearMinus1)
-      AdmUnDate <- ifelse(any(year.patternA(Year) %in%c(year.patternA(2016), year.patternA(2018))), "01_01", "09_01")
-      input_AdmUnNames <- Get_AdmUnNames( Date = paste0(AdmUnYear, "-", AdmUnDay), autoAbort = autoAbort)
+      AdmUnDate <- ifelse(any(year.patternA(Year) %in%c(year.patternA(2016), year.patternA(2018))), "01-01", "09-01")
+      input_AdmUnNames <- Get_AdmUnNames( Date = paste0(AdmUnYear, "-", AdmUnDate), autoAbort = autoAbort)
       if(is.null(input_AdmUnNames)){
         if(!autoAbort){
           holdOn <- ""
