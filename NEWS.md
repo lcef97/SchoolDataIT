@@ -1,4 +1,7 @@
-# SchoolData 0.2.5
+# SchoolDataIT 0.2.6
+* Minor changes: removed an hyper-reference from the documentation
+
+# SchoolDataIT 0.2.5
 
 * Major changes: fixed error in Set_DB function not allowing to run 'nstud_filter_by_grade'; 
 allows to insert grouped 'input_nstud' input in Set_DB; allows 'Util_Invalsi_filter' to filter multiple years; 

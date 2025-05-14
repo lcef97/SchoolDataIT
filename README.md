@@ -1,4 +1,4 @@
-# SchoolDataIT Version 0.2.5
+# SchoolDataIT Version 0.2.6
 
 ## Package overview
 
