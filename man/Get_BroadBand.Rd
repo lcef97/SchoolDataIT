@@ -33,7 +33,8 @@ Retrieves the data regarding the activation date of the broad band connection in
 Ultra - Broadband is defined as everlasting internet connection with a
 maximum speed of 1 gigabit per second, with a minimum guaranteed speed of
 100 megabits/second both on the uploading and downloading operations, until
-the peering point is reached, as declared on the data provider's \href{https://bandaultralarga.italia.it/scuole-voucher/progetto-scuole/}{website}.
+the peering point is reached, as declared on the data provider's website:
+<https://bandaultralarga.italia.it/scuole-voucher/progetto-scuole/>.
 In the example the broadband availability at the beginning of school  year 2022/23 (1st september 2022) is shown.
 }
 \examples{
