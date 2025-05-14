@@ -1,4 +1,4 @@
-# Version 0.2.5
+# SchoolDataIT Version 0.2.5
 
 ## Package overview
 
@@ -14,15 +14,14 @@ The functions are divided in four main modules, namely:
 
 ## Installation from GitHub
 
-Before installing this version, please make sure to have the `devtools` package installed. Otherwise, first run:
-``` r 
-install.packages("devtools") #if necessary
-```
-Then, the command for the installation is:
+Experimental package versions are stacked in GitHub before being submitted to CRAN
+in order to comply with the CRAN policy of waiting about one month from a submission to another.
+
+To install the latest package version, run the code
 ``` r
 devtools::install_github("lcef97/SchoolDataIT")
 ```
-If you want to force R not to upgrade the dependencies, use instead:
+If you want to force R not to upgrade the dependencies, which may take some time, use instead:
 ``` r
 devtools::install_github("lcef97/SchoolDataIT", upgrade = "never")
 ```
