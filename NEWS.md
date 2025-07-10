@@ -1,5 +1,6 @@
 # SchoolDataIT 0.2.7
 
+* Major changes: adapted 'Get_BroadBand' to the new version of the webpage developed by data providers.
 * Minor changes: allows 'Get_School2mun' to work also with latest data, i.e. without downloading also the buildings registry
 
 # SchoolDataIT 0.2.6
