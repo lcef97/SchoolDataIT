@@ -396,6 +396,9 @@ Set_DB <- function( Year = 2023,
         input_SchoolBuildings <- filterCommonRows(input_SchoolBuildings, input_nstud_byclass, verbose)
       }
       if(!is.null(input_BroadBand)){
+        if(!"Municipality_code" %in% names(input_BroadBand)){
+          input_BroadBand <- Util_BroadBand2mun(input_BroadBand, autoAbort = autoAbort)
+        }
         input_BroadBand <- input_BroadBand %>%
           dplyr::filter(!grepl("[^A-Z]", substr(.data$School_code,1,4)) &
                         !grepl("X", substr(.data$School_code,1,4), ignore.case = TRUE)) %>%

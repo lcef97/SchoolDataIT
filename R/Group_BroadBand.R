@@ -1,7 +1,7 @@
 #' @keywords internal
 #'
 
-Group_BroadBand <- function(data = NULL, Date = Sys.Date(), verbose=TRUE,  autoAbort = FALSE){
+Group_BroadBand <- function(data = NULL, Date = Sys.Date(), input_School2mun = NULL, verbose=TRUE,  autoAbort = FALSE){
   if(is.null(data)){
     data <- Get_BroadBand(Date = Date, verbose = verbose, autoAbort = autoAbort)
   }

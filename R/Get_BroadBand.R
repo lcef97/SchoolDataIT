@@ -1,15 +1,23 @@
 #' Download the data regarding the broad band connection activation in Italian schools
 #'
 #' @description
-#' Retrieves the data regarding the activation date of the broad band connection in schools. It also indicates whether the connection was activated or not at a certain date.
+#' Retrieves the data regarding the activation date of the ultra-broadband connection in schools
+#' and indicates whether the connection was activated or not at a certain date.
 #'
 #'
-#' @param Date Object of class \code{Date}. The date at which it is required to determine if the broad band connection has been activated or not. By default it is the current date.
+#' @param Date Object of class \code{Date}. The date at which it is required
+#' to determine if the broad band connection has been activated or not.
+#' By default, the first day of last month, which we assume to be the last update of the dataset.
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.
-#' @param show_col_types Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
-#'
-#' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. The variables \code{BB_Activation_date} and \code{BB_Activation_staus} indicate the activation date and activation status of the broadband connection at the selected date.
+#' @param include_municipality_code Logical. Whether to include municipality codes.
+#'  \code{TRUE} by default.
+#' @param input_School2mun Object of class \code{list} obtained with \code{\link{Get_School2mun}}.
+#' If \code{include_municipality_code == TRUE}, the mapping from school codes to municipality (and province) codes.
+#' If \code{NULL}, it will be downloaded automatically, but not saved in the global environment. \code{NULL} by default.
+#' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
+#'  The variables \code{BB_Activation_date} and \code{BB_Activation_staus} indicate
+#'  the activation date and activation status of the broadband connection at the selected date.
 #'
 #' @source  Broadband dashboard: <https://bandaultralarga.italia.it/scuole-voucher/dashboard-scuole/>
 #'
@@ -37,7 +45,10 @@
 #' @export
 
 
-Get_BroadBand <- function(Date = Sys.Date(), verbose=TRUE,  show_col_types = FALSE, autoAbort = FALSE){
+Get_BroadBand <- function(Date = as.Date(format(as.Date(format(Sys.Date(), "%Y-%m-01"))-1, "%Y-%m-01")),
+                          include_municipality_code = TRUE,
+                          input_School2mun = NULL,
+                          verbose=TRUE, autoAbort = FALSE){
 
   if(!Check_connection(autoAbort)) return(NULL)
 
@@ -60,7 +71,7 @@ Get_BroadBand <- function(Date = Sys.Date(), verbose=TRUE,  show_col_types = FAL
   if(is.null(homepage)) return(NULL)
 
   links <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href") %>% unique()
-  link <- links[grep("downloadCSVScuole", links, ignore.case = TRUE)]
+  link <- links[grep("Report", links, ignore.case = TRUE)]
   base.url <- dirname(home.url)
 
   file.url <- xml2::url_absolute(link, base.url)
@@ -84,165 +95,138 @@ Get_BroadBand <- function(Date = Sys.Date(), verbose=TRUE,  show_col_types = FAL
               10 - attempt, " attempts left)")
     }
     if(attempt >= 10) {
-      #message("Maximum attempts reached. Abort. We apologise for the inconvenience")
-      emergency <- TRUE
-      status <- 200
+      message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+      return(NULL)
     }
   }
-
-  if(!emergency){
-    if(rawToChar(response$content) == ""){
-      message("It seems that Broadband data are not available.
+  if(is.null(response$content)){
+    message("It seems that Broadband data are not available.
             We apologise for the inconvenience")
-      return(NULL)
-    }
-
-    if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
-      if(verbose) cat("Broadband data correctly downloaded \n")
-      broadband <- iconv(rawToChar(httr::content(response)),
-                         from = "ISO-8859-1",  to = "ASCII//TRANSLIT") %>%
-        readr::read_delim(delim = ";", show_col_types = show_col_types)
-    } else {
-      message(paste("Wrong file type:", httr::http_type(response)) )
-      return(NULL)
-    }
-
-    broadband <- broadband %>%  dplyr::mutate(School_code = substr(
-      .data$codice_univoco_infratel,
-      gregexpr("-", .data$codice_univoco_infratel)[[1]][3]+1,
-      gregexpr("-", .data$codice_univoco_infratel)[[1]][3]+10)) %>%
-      #dplyr::filter(!grepl("[^A-Z]", substr(.data$School_code,1,4)) &
-      #!grepl("X", substr(.data$School_code,1,4), ignore.case = TRUE) ) %>%
-      dplyr::mutate(Municipality_code = sprintf("%06d", as.numeric(.data$procom))) %>%
-      dplyr::rename(Province_description = .data$provincia, Municipality_description = .data$comune,
-                    School_name = .data$nomescuola, Tipologia_indirizzo = .data$gradomacro,
-                    Region_code = .data$id_regione, Region_description = .data$regione,
-                    Latitude = .data$latitudine, Longitude = .data$longitudine,
-                    Province_code = .data$id_provincia, Province_description = .data$provincia,
-                    BB_Activation_date = .data$data_attivazione,
-                    Infratel_code = .data$codice_univoco_infratel) %>%
-      School.order() %>%
-      dplyr::mutate(
-        BB_Activation_date =  as.Date(.data$BB_Activation_date, format = "%d/%m/%Y")) %>%
-      dplyr::mutate(
-        Region_description = stringr::str_to_title(.data$Region_description),
-        Province_description = stringr::str_to_title(.data$Province_description),
-        Municipality_description = stringr::str_to_title(.data$Municipality_description))
-
-    broadband$Province_description <- broadband$Province_description %>%
-      stringr::str_replace_all("Massa Carrara", "Massa-Carrara") %>%
-      stringr::str_replace_all("Forli-Cesena", "Forli'-Cesena")
-
-    broadband$Municipality_description <- broadband$Municipality_description %>%
-      stringr::str_replace_all("Forli", "Forli'") %>%
-      stringr::str_replace_all("Doberdo", "Doberdo'") %>%
-      stringr::str_replace_all("Baselga Di Pine", "Baselga di Pine'") %>%
-      stringr::str_replace_all("Citta Di", "Citta' Di") %>%
-      stringr::str_replace_all("Citta Della", "Citta' Della")
-
-    broadband <- broadband %>%
-      dplyr::select(.data$Region_code, .data$Region_description,
-                    .data$Province_code, .data$Province_description,
-                    .data$Municipality_code, .data$Municipality_description, .data$Latitude,
-                    .data$Longitude, .data$School_code, .data$Infratel_code,
-                    .data$School_name, .data$Order, .data$BB_Activation_date)
-
-    Date <- as.Date(Date)
-
-    while(!"Date" %in% class(Date)){
-      message("Please, provide a date in format `yyyy-mm-dd` (do not insert quotes in the prompt)")
-      Date.new <- readline(prompt = "")
-      Date <- as.Date(Date.new)
-    }
-
-    broadband <- broadband %>%  dplyr::mutate(BB_Activation_status = ifelse(
-      !is.na(.data$BB_Activation_date), as.numeric(as.Date(.data$BB_Activation_date) <= Date), 0))
-
-    provs.man <- prov.names() %>% dplyr::select(-.data$Region_code, -.data$Region_description) %>%
-      dplyr::mutate(Province_description = stringr::str_to_title(.data$Province_description))
-
-    broadband$Province_code <-
-      dplyr::left_join(dplyr::select(broadband, .data$Province_description),
-                       provs.man, by = "Province_description") %>%
-      dplyr::select(.data$Province_code) %>% unlist()
-
-    broadband <- broadband %>% dplyr::mutate(
-      dplyr::across(.data$Province_code, ~dplyr::case_when(
-        toupper(.data$Municipality_description) == "SAN TEODORO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "ME", 83, 90),
-        toupper(.data$Municipality_description) == "PEGLIO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "CO", 13, 41),
-        toupper(.data$Municipality_description) == "CASTRO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "LE", 75, 16),
-        toupper(.data$Municipality_description) == "VALVERDE" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "PV", 18, 87),
-        toupper(.data$Municipality_description) == "SAMONE" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "TO", 1, 22),
-        toupper(.data$Municipality_description) == "CALLIANO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "AT", 5, 22),
-        TRUE ~ .data$Province_code)),
-      dplyr::across(.data$Province_description, ~dplyr::case_when(
-        toupper(.data$Municipality_description) == "SAN TEODORO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "ME", "Messina", "Sassari"),
-        toupper(.data$Municipality_description) == "PEGLIO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "CO", "Como", "Pesaro E Urbino"),
-        toupper(.data$Municipality_description) == "CASTRO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "LE", "Lecce", "Bergamo"),
-        toupper(.data$Municipality_description) == "VALVERDE" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "PV", "Pavia", "Catania"),
-        toupper(.data$Municipality_description) == "SAMONE" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "TO", "Torino", "Trento"),
-        toupper(.data$Municipality_description) == "CALLIANO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "AT", "Asti", "Trento"),
-        TRUE ~ .data$Province_description)),
-      dplyr::across(.data$Municipality_code, ~dplyr::case_when(
-        toupper(.data$Municipality_description) == "PESCARA" ~ "068028",
-        toupper(.data$Municipality_description) == "SAN TEODORO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "ME", "083090", "090092"),
-        toupper(.data$Municipality_description) == "PEGLIO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "CO", "013078", "041041"),
-        toupper(.data$Municipality_description) == "CASTRO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "LE", "075096", "016065"),
-        toupper(.data$Municipality_description) == "VALVERDE" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "PV", "018070", "087052"),
-        toupper(.data$Municipality_description) == "SAMONE" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "TO", "001235", "022165"),
-        toupper(.data$Municipality_description) == "CALLIANO" ~ ifelse(
-          substr(.data$School_code, 1, 2) == "AT", "005014", "022035"),
-        TRUE ~ .data$Municipality_code)))
-
-
-  } else{
-
-    link.repo <- "https://raw.githubusercontent.com/lcef97/AMELIA_datasets/refs/heads/main/Other/BB_backup.csv"
-    broadband <- tryCatch(readr::read_csv(link.repo, show_col_types = FALSE),
-                          error = function(e){
-      return(NULL)
-    })
-    if(is.null(broadband)){
-      return (NULL)
-    } else{
-      while(names(broadband)[1] != "Region_code"){
-        broadband <- broadband[,-1]
-      }
-      while(!"Date" %in% class(Date)){
-        message("Please, provide a date in format `yyyy-mm-dd` (do not insert quotes in the prompt)")
-        Date.new <- readline(prompt = "")
-        Date <- as.Date(Date.new)
-      }
-
-      broadband <- broadband %>%  dplyr::mutate(BB_Activation_status = ifelse(
-        !is.na(.data$BB_Activation_date), as.numeric(as.Date(.data$BB_Activation_date) <= Date), 0))
-      }
-
+    return(NULL)
   }
+
+  temp <- tempdir()
+  if(!dir.exists(temp)){
+    dir.create(temp)
+  }
+
+  excel <- paste0(temp, "/tempdata.xlsx")
+  writeBin(as.vector(response$content), excel)
+
+  if(! "readxl" %in% rownames(utils::installed.packages())){
+    if(verbose){
+      cat("Parsing broadband data from the xml file ...\n")
+    }
+    utils::unzip(excel, exdir = temp)
+    templist <- list.files(temp, full.names = TRUE)
+    xl.link <- templist[which(substr(templist, nchar(templist)-1, nchar(templist))=="xl")]
+    ws.link <- grep("worksheets", list.files(xl.link, full.names = TRUE) , value = TRUE)
+    #ws.link <- xl.link %>% list.files(full.names = TRUE) %>% grep("worksheets", ., value = TRUE)
+    xml.link <-  grep(".xml", list.files(ws.link, full.names = TRUE), value = TRUE)
+
+    worksheet1 <- xml2::read_xml(xml.link[1])
+    descr.d1 <- xml2::xml_ns(worksheet1)[["d1"]]
+
+    rows <- xml2::xml_find_all(worksheet1, ".//d1:sheetData/d1:row", namespaces = c(d1 = descr.d1))
+
+    data_list <- lapply(rows, function(X) {
+      cells <- xml2::xml_find_all(X, "./d1:c", ns = c(d1 = descr.d1))
+
+      row.ls <- sapply(cells, function(Y) {
+        attr <- xml2::xml_attr(Y, "t")
+        val_node <- xml2::xml_find_first(Y, ".//d1:v", ns = c(d1 = descr.d1))
+
+        if (!is.na(attr) && attr == "inlineStr") {
+          return(xml2::xml_text(
+            xml2::xml_find_first(Y, ".//d1:t", ns = c(d1 = descr.d1))))
+        } else if (!is.na(val_node)) {
+          return(xml2::xml_text(val_node))
+        } else return(NA)
+      })
+      row.value <- as.vector(unlist(row.ls))
+
+      cell_refs <- xml2::xml_attr(cells, "r")
+      row.idx <- as.numeric(regmatches(cell_refs[1], gregexpr("[0-9]+", cell_refs[1] )))
+      if(!is.na(row.idx)){
+        if(verbose && row.idx%%5000 == 0){
+          cat("Parsed the first ", row.idx, "rows \n")
+        }
+      }
+
+      if(length(row.value)>0){
+        if(!is.na(row.value[1])){
+          return(row.value)
+        } else return (NA)
+      }
+    })
+
+    dd <- as.data.frame(do.call(rbind, data_list[-1]))
+    names(dd) <- data_list[[1]]
+    dd <- dd %>% dplyr::filter(!is.na(.data$Comune)) %>%
+      dplyr::group_by(.data$`Codice univoco Infratel`) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(Latitudine = as.numeric(.data$Latitudine)) %>%
+      dplyr::mutate(Longitudine = as.numeric(.data$Longitudine))
+
+  } else {
+    dd <- readxl::read_xlsx(excel, col_types = "text")
+  }
+
+  while(!"Date" %in% class(Date)){
+    message("Please, provide a date in format `yyyy-mm-dd` (do not insert quotes in the prompt)")
+    Date.new <- readline(prompt = "")
+    Date <- as.Date(Date.new)
+  }
+
+  broadband <- dd %>% dplyr::filter(substr(.data$`Codice Sede`,1,2) != "XX") %>%
+    dplyr::select(.data$Regione, .data$Provincia, .data$Comune, .data$`Codice Sede`,
+                  .data$`Codice univoco Infratel`, .data$Denominazione,
+                  .data$Latitudine, .data$Longitudine,
+                  .data$`Date prevista attivazione`, .data$`Data effettiva attivazione`)%>%
+    dplyr::mutate(`Date prevista attivazione` =
+                    as.numeric(.data$`Date prevista attivazione` )- 25569) %>%
+    dplyr::mutate(`Data effettiva attivazione` =
+                    as.numeric(.data$`Data effettiva attivazione`) - 25569) %>%
+    dplyr::mutate(
+      BB_Activation_date =as.Date(
+        dplyr::coalesce(.data$`Data effettiva attivazione`,
+                        .data$`Date prevista attivazione`))) %>%
+    dplyr::mutate(Provincia = toupper(.data$Provincia)) %>%
+    dplyr::select(-.data$`Data effettiva attivazione`,
+                  -.data$`Date prevista attivazione`) %>%
+    dplyr::rename(Region_description = .data$Regione) %>%
+    dplyr::rename(Province_description = .data$Provincia) %>%
+    dplyr::rename(Municipality_description = .data$Comune) %>%
+    dplyr::rename(School_code = .data$`Codice Sede`) %>%
+    dplyr::rename(School_name = .data$Denominazione) %>%
+    dplyr::rename(Infratel_code = .data$`Codice univoco Infratel`) %>%
+    dplyr::rename(Latitude = .data$Latitudine) %>%
+    dplyr::rename(Longitude = .data$Longitudine) %>%
+    School.order() %>%
+    dplyr::mutate(BB_Activation_status = as.numeric(.data$BB_Activation_date <= Date)) %>%
+    dplyr::mutate(Province_description = ifelse(
+      grepl("-CESENA$", .data$Province_description),
+      "FORLI'-CESENA", .data$Province_description)) %>%
+    dplyr::left_join(prov.names()[,-c(3, 4)], by = "Province_description") %>%
+    dplyr::relocate(.data$Region_code, .before = 1) %>%
+    dplyr::relocate(.data$Province_code, .after = .data$Region_description)
+
+  if(dir.exists(temp)){
+    temp.contents <- list.files(temp, full.names = T)
+    for(i in (1:length(temp.contents))) {
+      unlink(temp.contents[i], recursive = TRUE)
+    }
+  }
+
+  if(include_municipality_code){
+    broadband <- Util_BroadBand2mun(broadband, input_School2mun = input_School2mun,
+                                    autoAbort = autoAbort)
+  }
+
   endtime <- Sys.time()
-
-  if(verbose){
+  if (verbose) {
     cat(paste(round(difftime(endtime, starttime, units="secs") ,2),
-              "seconds required download and process broadband data \n") )}
-
-
+              "seconds required to download ultra-broadband activation data \n") )
+  }
   return(broadband)
 }
-

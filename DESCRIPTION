@@ -1,7 +1,7 @@
 Package: SchoolDataIT
 Type: Package
 Title: Retrieve, Harmonise and Map Open Data Regarding the Italian School System
-Version: 0.2.6
+Version: 0.2.7
 Authors@R: c(person(given = "Leonardo", 
              family = "Cefalo", 
              role = c("aut", "cre"),
@@ -52,6 +52,7 @@ Imports:
     xml2
 Suggests: 
     knitr,
+    readxl,
     rmarkdown,
     testthat (>= 3.0.0),
     tidyverse

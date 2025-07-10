@@ -116,91 +116,91 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
     }
   }
 
-  if(is.null(file_to_download)){
-    message("Unable to find buildings registry for year ",
-            Year, "; we apologise for the inconvenience")
-    return(NULL)
-  }
+  if(!is.null(file_to_download)){
+    base.url <- dirname(home.url)
+    file.url <- file.path(base.url, file_to_download)
 
-  base.url <- dirname(home.url)
-  file.url <- file.path(base.url, file_to_download)
+    status <- 0
+    attempt <- 0
+    while(status != 200){
+      response <- tryCatch({
+        httr::GET(file.url)
+      }, error = function(e) {
+        message("Error occurred during scraping, attempt repeated ... \n")
+        NULL
+      })
+      status <- response$status_code
+      if(is.null(response)){
+        status <- 0
+      }
+      status <- response$status_code
+      if(is.null(response)){
+        status <- 0
+      }
+      if(status != 200){
+        attempt <- attempt + 1
+        message("Operation exited with status: ", status, "; operation repeated (",
+                10 - attempt, " attempts left)")
+      }
+      if(attempt >= 10) {
+        message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+        return(NULL)
+      }
+    }
 
-  status <- 0
-  attempt <- 0
-  while(status != 200){
-    response <- tryCatch({
-      httr::GET(file.url)
-    }, error = function(e) {
-      message("Error occurred during scraping, attempt repeated ... \n")
-      NULL
-    })
-    status <- response$status_code
-    if(is.null(response)){
-      status <- 0
-    }
-    status <- response$status_code
-    if(is.null(response)){
-      status <- 0
-    }
-    if(status != 200){
-      attempt <- attempt + 1
-      message("Operation exited with status: ", status, "; operation repeated (",
-              10 - attempt, " attempts left)")
-    }
-    if(attempt >= 10) {
-      message("Maximum attempts reached. Abort. We apologise for the inconvenience")
+    if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
+      input_Registry1 <- readr::read_csv(rawToChar(response$content), show_col_types = FALSE)
+    } else {
+      message(paste("Wrong file type:", httr::http_type(response)) )
+      message("Failed to download and process:", file_to_download, "\n")
       return(NULL)
     }
-  }
 
-  if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
-    input_Registry1 <- readr::read_csv(rawToChar(response$content), show_col_types = FALSE)
-  } else {
-    message(paste("Wrong file type:", httr::http_type(response)) )
-    message("Failed to download and process:", file_to_download, "\n")
-    return(NULL)
-  }
+    # This is for the province of Naples whose abbreviation is `NA`
+    input_Registry1$SIGLAPROVINCIA <- stringr::str_replace_na(input_Registry1$SIGLAPROVINCIA, "NA")
 
-  # This is for the province of Naples whose abbreviation is `NA`
-  input_Registry1$SIGLAPROVINCIA <- stringr::str_replace_na(input_Registry1$SIGLAPROVINCIA, "NA")
-
-  # This is for the municipality of Bladen/Plodn/Sappada which changed it province in 2018
-  if(!any(pattern %in% year.patternB(2016))){
-    input_Registry1 <-input_Registry1  %>%
-      dplyr::mutate(dplyr::across(.data$SIGLAPROVINCIA, ~ dplyr::case_when(
-        toupper(.data$DESCRIZIONECOMUNE) == "SAPPADA" ~ "UD",
-        TRUE ~ .data$SIGLAPROVINCIA
-    )))
-  }
-
-  tabrename <- tabrename.manual()
-  for (j in (1:ncol(input_Registry1))){
-    if (names(input_Registry1)[j] %in% tabrename$Input){
-      names(input_Registry1)[j] <- tabrename[which(tabrename$Input == names(input_Registry1)[j]),4]
+    # This is for the municipality of Bladen/Plodn/Sappada which changed it province in 2018
+    if(!any(pattern %in% year.patternB(2016))){
+      input_Registry1 <-input_Registry1  %>%
+        dplyr::mutate(dplyr::across(.data$SIGLAPROVINCIA, ~ dplyr::case_when(
+          toupper(.data$DESCRIZIONECOMUNE) == "SAPPADA" ~ "UD",
+          TRUE ~ .data$SIGLAPROVINCIA
+        )))
     }
-  }
 
-  endtime <- Sys.time()
-  if(verbose) {
-    cat(round(difftime(endtime, starttime, units="secs") ,2), "seconds needed for the download \n" )
-  }
+    tabrename <- tabrename.manual()
+    for (j in (1:ncol(input_Registry1))){
+      if (names(input_Registry1)[j] %in% tabrename$Input){
+        names(input_Registry1)[j] <- tabrename[which(tabrename$Input == names(input_Registry1)[j]),4]
+      }
+    }
 
-  if(any(pattern %in% c("201516", "2016", "201718", "201819"))){
-    Registry1 <- input_Registry1 %>%
-      dplyr::rename(Cadastral_code = .data$Municipality_code) %>%
-      dplyr::select(.data$School_code, .data$Province_initials,
-                    .data$Cadastral_code, .data$Municipality_description) %>%
-      dplyr::left_join(temp.R1, by = "Cadastral_code") %>%
-      dplyr::select(-.data$Cadastral_code) %>%
-      fixMun.manual(Year)
+    endtime <- Sys.time()
+    if(verbose) {
+      cat(round(difftime(endtime, starttime, units="secs") ,2), "seconds needed for the download \n" )
+    }
+
+    if(any(pattern %in% c("201516", "2016", "201718", "201819"))){
+      Registry1 <- input_Registry1 %>%
+        dplyr::rename(Cadastral_code = .data$Municipality_code) %>%
+        dplyr::select(.data$School_code, .data$Province_initials,
+                      .data$Cadastral_code, .data$Municipality_description) %>%
+        dplyr::left_join(temp.R1, by = "Cadastral_code") %>%
+        dplyr::select(-.data$Cadastral_code) %>%
+        fixMun.manual(Year)
+    } else {
+      Registry1 <- input_Registry1 %>%
+        dplyr::select(.data$School_code, .data$Province_initials, .data$Municipality_code, .data$Municipality_description)
+    }
+    Registry1 <- Registry1 %>% dplyr::mutate(Province_code = as.numeric(substr(.data$Municipality_code, 1, 3))) %>%
+      dplyr::select(.data$School_code, .data$Province_code, .data$Province_initials,
+                    .data$Municipality_code, .data$Municipality_description) %>%
+      dplyr::mutate(Municipality_description = stringr::str_to_title(.data$Municipality_description)) %>% unique()
   } else {
-    Registry1 <- input_Registry1 %>%
-      dplyr::select(.data$School_code, .data$Province_initials, .data$Municipality_code, .data$Municipality_description)
+    message("Unable to find buildings registry for year ",
+            Year, "; we apologise for the inconvenience")
+    Registry1 <- NULL
   }
-  Registry1 <- Registry1 %>% dplyr::mutate(Province_code = as.numeric(substr(.data$Municipality_code, 1, 3))) %>%
-    dplyr::select(.data$School_code, .data$Province_code, .data$Province_initials,
-                  .data$Municipality_code, .data$Municipality_description) %>%
-    dplyr::mutate(Municipality_description = stringr::str_to_title(.data$Municipality_description)) %>% unique()
 
   if(is.null(input_Registry)){
     if(verbose) cat("Retrieving registry from registry section ... \n ")
@@ -226,8 +226,10 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
   res <- list()
   res[["Registry_from_buildings"]] <- Registry1
   res[["Registry_from_registry"]] <- Registry2
-  res[["Any"]] <- rbind(Registry2, Registry1) %>% unique()
-  res[["Both"]] <- Registry2 %>% dplyr::filter(.data$School_code %in% Registry1$School_code)
+  if(!is.null(Registry1)){
+    res[["Any"]] <- rbind(Registry2, Registry1) %>% unique()
+    res[["Both"]] <- Registry2 %>% dplyr::filter(.data$School_code %in% Registry1$School_code)
+  }
 
   return(res)
 }

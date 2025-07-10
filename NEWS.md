@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.7
+
+* Minor changes: allows 'Get_School2mun' to work also with latest data, i.e. without downloading also the buildings registry
+
 # SchoolDataIT 0.2.6
 * Minor changes: removed an hyper-reference from the documentation
 

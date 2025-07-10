@@ -43,7 +43,6 @@ Get_AdmUnNames <- function(Date = Sys.Date(), autoAbort = FALSE){
   url<- paste0(pattern0[1], Date, pattern0[2])
   json_body <- "{}"
 
-
   status <- 0
   attempt <- 0
   while(status != 200 && attempt <= 10){
@@ -59,9 +58,7 @@ Get_AdmUnNames <- function(Date = Sys.Date(), autoAbort = FALSE){
     }, error = function(e) return(NULL))
 
     status <- response$status_code
-    if(is.null(response)){
-      status <- 0
-    }
+    if(is.null(response)) status <- 0
     if(status != 200){
       attempt <- attempt + 1
       message("Operation exited with status: ", status, "; operation repeated (",

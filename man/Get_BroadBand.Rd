@@ -8,26 +8,37 @@ Broadband dashboard: <https://bandaultralarga.italia.it/scuole-voucher/dashboard
 }
 \usage{
 Get_BroadBand(
-  Date = Sys.Date(),
+  Date = as.Date(format(as.Date(format(Sys.Date(), "\%Y-\%m-01")) - 1, "\%Y-\%m-01")),
+  include_municipality_code = TRUE,
+  input_School2mun = NULL,
   verbose = TRUE,
-  show_col_types = FALSE,
   autoAbort = FALSE
 )
 }
 \arguments{
-\item{Date}{Object of class \code{Date}. The date at which it is required to determine if the broad band connection has been activated or not. By default it is the current date.}
+\item{Date}{Object of class \code{Date}. The date at which it is required
+to determine if the broad band connection has been activated or not.
+By default, the first day of last month, which we assume to be the last update of the dataset.}
+
+\item{include_municipality_code}{Logical. Whether to include municipality codes.
+\code{TRUE} by default.}
+
+\item{input_School2mun}{Object of class \code{list} obtained with \code{\link{Get_School2mun}}.
+If \code{include_municipality_code == TRUE}, the mapping from school codes to municipality (and province) codes.
+If \code{NULL}, it will be downloaded automatically, but not saved in the global environment. \code{NULL} by default.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
-
-\item{show_col_types}{Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.}
 
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
 }
 \value{
-An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. The variables \code{BB_Activation_date} and \code{BB_Activation_staus} indicate the activation date and activation status of the broadband connection at the selected date.
+An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
+ The variables \code{BB_Activation_date} and \code{BB_Activation_staus} indicate
+ the activation date and activation status of the broadband connection at the selected date.
 }
 \description{
-Retrieves the data regarding the activation date of the broad band connection in schools. It also indicates whether the connection was activated or not at a certain date.
+Retrieves the data regarding the activation date of the ultra-broadband connection in schools
+and indicates whether the connection was activated or not at a certain date.
 }
 \details{
 Ultra - Broadband is defined as everlasting internet connection with a
