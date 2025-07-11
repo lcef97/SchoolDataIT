@@ -15,6 +15,11 @@
 #' @param input_School2mun Object of class \code{list} obtained with \code{\link{Get_School2mun}}.
 #' If \code{include_municipality_code == TRUE}, the mapping from school codes to municipality (and province) codes.
 #' If \code{NULL}, it will be downloaded automatically, but not saved in the global environment. \code{NULL} by default.
+#' @param input_Registry If \code{input_School2mun} is required, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+#' corresponding to the national school registry (preferably of the last year, i.e. 2024/2025) obtained with \code{\link{Get_Registry}}. NULL by default.
+#' @param input_AdmUnNames If \code{input_School2mun} is required, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+#' corresponding to the statistical codes of administrative units (preferably referring to the period corresponding to school year 2024/2025)
+#'  obtained with \code{\link{Get_AdmUnNames}}. NULL by default.
 #' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 #'  The variables \code{BB_Activation_date} and \code{BB_Activation_staus} indicate
 #'  the activation date and activation status of the broadband connection at the selected date.
@@ -32,11 +37,13 @@
 #' @examples
 #'
 #' \donttest{
-#' Broadband_220901 <- Get_BroadBand(Date = as.Date("2022-09-01"), autoAbort = TRUE)
 #'
-#' Broadband_220901
+#'   Broadband_220901 <- Get_BroadBand(Date = as.Date("2022-09-01"), autoAbort = TRUE)
 #'
-#' Broadband_220901[, c(9,6,13,14)]
+#'   Broadband_220901
+#'
+#'   Broadband_220901[, c(9,6,13,14)]
+#'
 #' }
 #'
 #'
@@ -48,6 +55,8 @@
 Get_BroadBand <- function(Date = as.Date(format(as.Date(format(Sys.Date(), "%Y-%m-01"))-1, "%Y-%m-01")),
                           include_municipality_code = TRUE,
                           input_School2mun = NULL,
+                          input_Registry = NULL,
+                          input_AdmUnNames = NULL,
                           verbose=TRUE, autoAbort = FALSE){
 
   if(!Check_connection(autoAbort)) return(NULL)
@@ -220,7 +229,8 @@ Get_BroadBand <- function(Date = as.Date(format(as.Date(format(Sys.Date(), "%Y-%
 
   if(include_municipality_code){
     broadband <- Util_BroadBand2mun(broadband, input_School2mun = input_School2mun,
-                                    autoAbort = autoAbort)
+                                    input_Registry = input_Registry, input_AdmUnNames = input_AdmUnNames,
+                                    autoAbort = autoAbort, verbose = FALSE)
   }
 
   endtime <- Sys.time()

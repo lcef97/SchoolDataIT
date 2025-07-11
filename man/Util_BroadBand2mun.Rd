@@ -2,8 +2,11 @@
 % Please edit documentation in R/Util_BroadBand2mun.R
 \name{Util_BroadBand2mun}
 \alias{Util_BroadBand2mun}
-\title{Add ISTAT municipality codes to the Ultra-broadband activation DB
-downloaded with \code{\link{Get_BroadBand}}}
+\title{Map schools included in the ultra-broadband plan to their LAU codes.}
+\source{
+Broadband dashboard: <https://bandaultralarga.italia.it/scuole-voucher/dashboard-scuole/> .
+ISTAT LAU codes: <https://situas.istat.it/web/#/territorio>
+}
 \usage{
 Util_BroadBand2mun(
   data,
@@ -14,8 +17,35 @@ Util_BroadBand2mun(
   autoAbort = FALSE
 )
 }
+\arguments{
+\item{data}{Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+obtained with the function \code{\link{Get_BroadBand}}}
+
+\item{input_School2mun}{Object of class \code{list} obtained with \code{\link{Get_School2mun}},
+including the mapping from school codes to municipality (and province) codes.
+If \code{NULL}, it will be downloaded automatically, but not saved in the global environment. \code{NULL} by default.}
+
+\item{input_Registry}{If \code{input_School2mun} is required, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+corresponding to the national school registry (preferably of the last year, i.e. 2024/2025) obtained with \code{\link{Get_Registry}}. NULL by default.}
+
+\item{input_AdmUnNames}{If \code{input_School2mun} is required, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+corresponding to the statistical codes of administrative units (preferably referring to the period corresponding to school year 2024/2025)
+ obtained with \code{\link{Get_AdmUnNames}}. NULL by default.}
+
+\item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
+
+\item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
+}
+\value{
+An object of class \code{tbl_df}, \code{tbl} and \code{data.frame},
+identical to the output of \code{\link{Get_BroadBand}} with an additional column for LAU codes
+}
 \description{
-Add ISTAT municipality codes to the Ultra-broadband activation DB
-downloaded with \code{\link{Get_BroadBand}}
+Helper function to provide the ultra-broadband dataset obtained with \code{\link{Get_BroadBand}}
+with the statistical codes of the relevant municipalities, obtained with \code{\link{Get_School2mun}},
+in case the ultra-broadband dataset has been downloaded with argument \code{include_municipality_code = FALSE}.
+}
+\details{
+see \code{\link{Get_BroadBand}}
 }
 \keyword{internal}

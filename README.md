@@ -10,15 +10,14 @@ The functions are divided in four main modules, namely:
     'Group', to aggregate data at the municipality or province level
     'Map', to visualize the output datasets.
 
-More information can be found at [CRAN](https://cran.r-project.org/web/packages/SchoolDataIT/index.html).
+More information can be found at [CRAN](https://CRAN.R-project.org/package=SchoolDataIT). 
 
 ## Installation from GitHub
 
 Experimental package versions are stacked in GitHub before being submitted to CRAN
 in order to comply with the CRAN policy of waiting about one month from a submission to another. 
 Here, you will always find the latest developments; 
-[here](https://github.com/lcef97/SchoolDataIT/blob/main/NEWS.md) you can see the whole version history.
-
+[here](https://github.com/lcef97/SchoolDataIT/blob/main/NEWS.md) you can see the whole version history. 
 To install the latest package version, run the code
 ``` r
 devtools::install_github("lcef97/SchoolDataIT")

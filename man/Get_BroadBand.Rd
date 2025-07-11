@@ -11,6 +11,8 @@ Get_BroadBand(
   Date = as.Date(format(as.Date(format(Sys.Date(), "\%Y-\%m-01")) - 1, "\%Y-\%m-01")),
   include_municipality_code = TRUE,
   input_School2mun = NULL,
+  input_Registry = NULL,
+  input_AdmUnNames = NULL,
   verbose = TRUE,
   autoAbort = FALSE
 )
@@ -26,6 +28,13 @@ By default, the first day of last month, which we assume to be the last update o
 \item{input_School2mun}{Object of class \code{list} obtained with \code{\link{Get_School2mun}}.
 If \code{include_municipality_code == TRUE}, the mapping from school codes to municipality (and province) codes.
 If \code{NULL}, it will be downloaded automatically, but not saved in the global environment. \code{NULL} by default.}
+
+\item{input_Registry}{If \code{input_School2mun} is required, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+corresponding to the national school registry (preferably of the last year, i.e. 2024/2025) obtained with \code{\link{Get_Registry}}. NULL by default.}
+
+\item{input_AdmUnNames}{If \code{input_School2mun} is required, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}
+corresponding to the statistical codes of administrative units (preferably referring to the period corresponding to school year 2024/2025)
+ obtained with \code{\link{Get_AdmUnNames}}. NULL by default.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
 
@@ -51,11 +60,13 @@ In the example the broadband availability at the beginning of school  year 2022/
 \examples{
 
 \donttest{
-Broadband_220901 <- Get_BroadBand(Date = as.Date("2022-09-01"), autoAbort = TRUE)
 
-Broadband_220901
+  Broadband_220901 <- Get_BroadBand(Date = as.Date("2022-09-01"), autoAbort = TRUE)
 
-Broadband_220901[, c(9,6,13,14)]
+  Broadband_220901
+
+  Broadband_220901[, c(9,6,13,14)]
+
 }
 
 
