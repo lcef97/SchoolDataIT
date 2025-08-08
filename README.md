@@ -10,7 +10,10 @@ The functions are divided in four main modules, namely:
     'Group', to aggregate data at the municipality or province level
     'Map', to visualize the output datasets.
 
-More information can be found at [CRAN](https://CRAN.R-project.org/package=SchoolDataIT). 
+More information can be found at [CRAN](https://CRAN.R-project.org/package=SchoolDataIT).
+
+Additionally, the use of this package is described extensively in [this paper](https://link.springer.com/article/10.1007/s10260-025-00805-0) 
+
 
 ## Installation from GitHub
 
