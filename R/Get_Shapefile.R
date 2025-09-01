@@ -92,7 +92,11 @@ Get_Shapefile <- function(Year, level = "LAU", lightShp = TRUE,
     return(NULL)
   }
   utils::unzip(zipfile = temp1, exdir = temp2)
-  files.int <- list.files(list.files(list.files(temp2, full.names = TRUE), full.names = TRUE), full.names = TRUE)
+
+  files.int <- list.files(list.files(temp2, full.names = TRUE), full.names = TRUE)
+  if(!any(grepl(".shp$", files.int))){
+    files.int <- list.files(files.int, full.names=TRUE)
+  }
 
   pattern <- dplyr::case_when(
     toupper(level) %in% c("LAU", "NUTS-4", "MUNICIPALITY", "MUN") ~ "Com",

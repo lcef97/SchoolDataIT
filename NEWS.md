@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.8
+
+* Minor changes: fixed 'Get_Shapefile' for 2025 data
+
 # SchoolDataIT 0.2.7
 
 * Major changes: adapted 'Get_BroadBand' to the new version of the webpage developed by data providers.

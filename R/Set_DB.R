@@ -706,7 +706,7 @@ Set_DB <- function( Year = 2023,
             dplyr::left_join(datasets[[i]],by = c("Municipality_code", "Order"))
           notfound <- which(apply(res[-c(1:ncol.old)], MARGIN = 1, function(x) all(is.na(x))))
           if(length(notfound)>0){
-            if(verbose){
+            if(is.null(NA_autoRM)){
               cat(paste(length(notfound)), " units in ",
                   names(datasets[i-1]), ifelse(i>2, " and in previous datasets", ""),
                   " are missing in ", names(datasets[i]), "\n")
@@ -761,7 +761,7 @@ Set_DB <- function( Year = 2023,
           res <- res %>% dplyr::left_join(datasets[[i]], by = "Province_code")
         }
         if(sum(is.na(res[,ncol.old+1]))>0){
-          if(verbose){
+          if(is.null(NA_autoRM)){
             cat(paste(sum(is.na(res[,ncol.old+1]))), " units in ",
                 names(datasets[i-1]), ifelse(i>2, " and in previous datasets", ""),
                 " are missing in ", names(datasets[i]), "\n")
@@ -775,7 +775,7 @@ Set_DB <- function( Year = 2023,
         ncol.old <- ncol(res)
         res <- res %>% dplyr::left_join(remaining[[i]], by = "Municipality_code")
         if(sum(is.na(res[,ncol.old+1]))>0){
-          if(verbose){
+          if(is.null(NA_autoRM)){
             message(paste(sum(is.na(res[,ncol.old+1]))), " units in previous datasets",
                     " are missing in ", names(remaining)[i], "\n")
           }
@@ -804,7 +804,7 @@ Set_DB <- function( Year = 2023,
       }
       notfound <- which(apply(res[-c(1:ncol.old)], MARGIN = 1, function(x) all(is.na(x))))
       if(length(notfound)>0){
-        if(verbose){
+        if(is.null(NA_autoRM)){
           cat(paste(length(notfound)), " units in ",
               names(datasets[i-1]), ifelse(i>2, " and in previous datasets", ""),
               " are missing in ", names(datasets[i]), "\n")
