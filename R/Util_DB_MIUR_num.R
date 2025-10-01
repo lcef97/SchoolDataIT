@@ -15,7 +15,7 @@
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. TRUE by default.
 #' @param track_deleted Logical. If \code{TRUE}, the function returns the names of the schools not included in the output dataframe. \code{TRUE} by default.
 #' @param unique_buildings Logical. Whether to remove records in which the building code is duplicated and all other fields are as well.
-#' As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+#' As rows are combinations of building ID and school ID, if a school is hosted by several buildings, and each field other than
 #' \code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default.
 #' @param flag_outliers Logical. Whether to assign NA to outliers in numeric variables. \code{TRUE} by default.
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.

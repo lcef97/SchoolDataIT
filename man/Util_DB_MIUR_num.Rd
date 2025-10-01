@@ -37,7 +37,7 @@ If a variable as a higher number of missing observations, then it is cut out. \c
 Warning: if the option \code{row_cutout} is active, please select a lower threshold (e.g. \code{1000})}
 
 \item{unique_buildings}{Logical. Whether to remove records in which the building code is duplicated and all other fields are as well.
-As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+As rows are combinations of building ID and school ID, if a school is hosted by several buildings, and each field other than
 \code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default.}
 
 \item{flag_outliers}{Logical. Whether to assign NA to outliers in numeric variables. \code{TRUE} by default.}
