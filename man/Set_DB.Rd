@@ -22,6 +22,7 @@ Set_DB(
   SchoolBuildings_include_numerics = TRUE,
   SchoolBuildings_include_qualitatives = FALSE,
   SchoolBuildings_row_cutout = FALSE,
+  SchoolBuildings_unique_buildings = TRUE,
   SchoolBuildings_col_cut_thresh = 20000,
   SchoolBuildings_flag_outliers = TRUE,
   SchoolBuildings_count_missing = FALSE,
@@ -88,6 +89,11 @@ Either \code{"LAU"}/\code{"Municipality"} or \code{"NUTS-3"}/\code{"Province"}. 
 \item{SchoolBuildings_include_qualitatives}{Logical. Whether to include qualitative variables alongside with Boolean ones in the school buildings database (see \code{\link{Util_DB_MIUR_num}}). \code{FALSE} by default.}
 
 \item{SchoolBuildings_row_cutout}{Logical. Whether to filter out rows including missing fields in the school buildings database (see \code{\link{Util_DB_MIUR_num}}). \code{FALSE} by default.}
+
+\item{SchoolBuildings_unique_buildings}{Logical. If school buildings DB is included at the building level,
+whether to remove records in which the building code is duplicated and all other fields are as well.
+As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+\code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default. See \code{\link{Util_DB_MIUR_num}}.}
 
 \item{SchoolBuildings_col_cut_thresh}{Numeric. The threshold of missing values allowed for each variable in the school buildings database (see \code{\link{Util_DB_MIUR_num}}).
 If a variable as a higher number of missing observations, then it is cut out. \code{20.000} by default.

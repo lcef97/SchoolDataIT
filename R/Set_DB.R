@@ -36,6 +36,10 @@
 #' @param SchoolBuildings_col_cut_thresh Numeric. The threshold of missing values allowed for each variable in the school buildings database (see \code{\link{Util_DB_MIUR_num}}).
 #' If a variable as a higher number of missing observations, then it is cut out. \code{20.000} by default.
 #' Warning: if the option \code{SchoolBuildings_row_cutout} is active, please select a lower threshold (e.g. \code{1000})
+#' @param SchoolBuildings_unique_buildings Logical. If school buildings DB is included at the building level,
+#' whether to remove records in which the building code is duplicated and all other fields are as well.
+#' As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+#' \code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default. See \code{\link{Util_DB_MIUR_num}}.
 #' @param SchoolBuildings_flag_outliers Logical. Whether to assign NA to outliers in numeric variables; see \code{\link{Util_DB_MIUR_num}} for more details. \code{TRUE} by default.
 #' @param SchoolBuildings_count_missing Logical. Whether the function should return the percentage of NAs in the input school buildings database (see also \code{\link{Group_DB_MIUR}}). \code{FALSE} by default.
 #' @param nstud_missing_to_1 Numeric. If \code{nstud == TRUE}, whether the number of classes should be imputed to 1 when it is missing and the number of students is below a threshold (argument \code{nstud_imputation_thresh}, see \code{\link{Util_nstud_wide}}). \code{FALSE} by default.
@@ -144,6 +148,7 @@ Set_DB <- function( Year = 2023,
                     SchoolBuildings_include_numerics = TRUE,
                     SchoolBuildings_include_qualitatives = FALSE,
                     SchoolBuildings_row_cutout = FALSE,
+                    SchoolBuildings_unique_buildings = TRUE,
                     SchoolBuildings_col_cut_thresh = 2e+4,
                     SchoolBuildings_flag_outliers = TRUE,
                     SchoolBuildings_count_missing = FALSE,
@@ -456,7 +461,7 @@ Set_DB <- function( Year = 2023,
           include_numerics = SchoolBuildings_include_numerics,
           include_qualitatives = SchoolBuildings_include_qualitatives,
           row_cutout = SchoolBuildings_row_cutout, flag_outliers = SchoolBuildings_flag_outliers,
-          track_deleted = FALSE,
+          track_deleted = FALSE, unique_buildings = SchoolBuildings_unique_buildings,
           col_cut_thresh = SchoolBuildings_col_cut_thresh,
           verbose = verbose)
       } else {

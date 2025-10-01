@@ -12,6 +12,7 @@ Util_DB_MIUR_num(
   track_deleted = TRUE,
   verbose = TRUE,
   col_cut_thresh = 20000,
+  unique_buildings = TRUE,
   flag_outliers = TRUE,
   autoAbort = FALSE,
   ...
@@ -27,13 +28,17 @@ If \code{NULL} it will be downloaded automatically with the appropriate argument
 
 \item{row_cutout}{Logical. Whether to filter out rows including missing fields. \code{FALSE} by default.}
 
-\item{track_deleted}{Logical. If \code{TRUE}, the function returns the names of the school not included in the output dataframe. \code{TRUE} by default.}
+\item{track_deleted}{Logical. If \code{TRUE}, the function returns the names of the schools not included in the output dataframe. \code{TRUE} by default.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. TRUE by default.}
 
 \item{col_cut_thresh}{Numeric. The threshold of missing values allowed for each variable.
 If a variable as a higher number of missing observations, then it is cut out. \code{20.000} by default.
 Warning: if the option \code{row_cutout} is active, please select a lower threshold (e.g. \code{1000})}
+
+\item{unique_buildings}{Logical. Whether to remove records in which the building code is duplicated and all other fields are as well.
+As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+\code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default.}
 
 \item{flag_outliers}{Logical. Whether to assign NA to outliers in numeric variables. \code{TRUE} by default.}
 

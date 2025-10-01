@@ -1,5 +1,7 @@
 # SchoolDataIT 0.2.8
 
+* Major changes: allowed to filter out duplicate building codes in 'Util_DB_MIUR_num'
+ 
 * Minor changes: fixed 'Get_Shapefile' for 2025 data
 
 # SchoolDataIT 0.2.7

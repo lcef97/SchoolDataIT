@@ -13,7 +13,10 @@
 #' If a variable as a higher number of missing observations, then it is cut out. \code{20.000} by default.
 #' Warning: if the option \code{row_cutout} is active, please select a lower threshold (e.g. \code{1000})
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. TRUE by default.
-#' @param track_deleted Logical. If \code{TRUE}, the function returns the names of the school not included in the output dataframe. \code{TRUE} by default.
+#' @param track_deleted Logical. If \code{TRUE}, the function returns the names of the schools not included in the output dataframe. \code{TRUE} by default.
+#' @param unique_buildings Logical. Whether to remove records in which the building code is duplicated and all other fields are as well.
+#' As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+#' \code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default.
 #' @param flag_outliers Logical. Whether to assign NA to outliers in numeric variables. \code{TRUE} by default.
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #' @param ... Additional arguments to the function \code{Get_DB_MIUR} if \code{data} is not provided.
@@ -51,7 +54,7 @@
 
 Util_DB_MIUR_num <- function(data = NULL, include_numerics = TRUE, include_qualitatives = FALSE,
          row_cutout = FALSE, track_deleted = TRUE, verbose = TRUE, col_cut_thresh = 2e+4,
-         flag_outliers = TRUE, autoAbort = FALSE, ...){
+         unique_buildings = TRUE, flag_outliers = TRUE, autoAbort = FALSE, ...){
 
   starttime <- Sys.time()
 
@@ -207,6 +210,12 @@ Util_DB_MIUR_num <- function(data = NULL, include_numerics = TRUE, include_quali
     dplyr::mutate(Province_code = as.numeric(substr(
       .data$Municipality_code, 1, nchar(.data$Municipality_code)-3)) ) %>%
     dplyr::relocate(.data$Province_code, .after = "Municipality_description")
+
+  if(unique_buildings){
+    DB <- DB %>%
+      dplyr::distinct(dplyr::across(
+        setdiff(names(DB), "School_code")))
+  }
 
 
   if(track_deleted & row_cutout){
