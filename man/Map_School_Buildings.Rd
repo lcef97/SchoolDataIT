@@ -83,7 +83,7 @@ It supports two kinds of map:
   library(magrittr)
 
   DB23_MIUR <- example_input_DB23_MIUR \%>\%
-    Util_DB_MIUR_num(track.deleted = FALSE) \%>\%
+    Util_DB_MIUR_num(track_deleted = FALSE) \%>\%
     Group_DB_MIUR(InnerAreas = FALSE, count_missing = FALSE)
 
   DB23_MIUR \%>\% Map_School_Buildings(field = "School_bus",

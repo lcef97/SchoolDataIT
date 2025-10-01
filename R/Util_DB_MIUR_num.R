@@ -214,7 +214,7 @@ Util_DB_MIUR_num <- function(data = NULL, include_numerics = TRUE, include_quali
   if(unique_buildings){
     DB <- DB %>%
       dplyr::distinct(dplyr::across(
-        setdiff(names(DB), "School_code")))
+        setdiff(names(DB), "School_code")), .keep_all = TRUE)
   }
 
 
