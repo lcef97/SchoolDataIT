@@ -38,7 +38,7 @@
 #' Warning: if the option \code{SchoolBuildings_row_cutout} is active, please select a lower threshold (e.g. \code{1000})
 #' @param SchoolBuildings_unique_buildings Logical. If school buildings DB is included at the building level,
 #' whether to remove records in which the building code is duplicated and all other fields are as well.
-#' As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+#' As rows are combinations of building ID and school ID, if a school is hosted by several buildings, and each field other than
 #' \code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default. See \code{\link{Util_DB_MIUR_num}}.
 #' @param SchoolBuildings_flag_outliers Logical. Whether to assign NA to outliers in numeric variables; see \code{\link{Util_DB_MIUR_num}} for more details. \code{TRUE} by default.
 #' @param SchoolBuildings_count_missing Logical. Whether the function should return the percentage of NAs in the input school buildings database (see also \code{\link{Group_DB_MIUR}}). \code{FALSE} by default.

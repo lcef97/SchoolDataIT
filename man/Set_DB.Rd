@@ -92,7 +92,7 @@ Either \code{"LAU"}/\code{"Municipality"} or \code{"NUTS-3"}/\code{"Province"}. 
 
 \item{SchoolBuildings_unique_buildings}{Logical. If school buildings DB is included at the building level,
 whether to remove records in which the building code is duplicated and all other fields are as well.
-As rows are combinations of building ID and school ID, if a school is hosted by \eqn{n} buildings, and each field other than
+As rows are combinations of building ID and school ID, if a school is hosted by several buildings, and each field other than
 \code{School_code} are duplicated, then only one row is retained. \code{TRUE} by default. See \code{\link{Util_DB_MIUR_num}}.}
 
 \item{SchoolBuildings_col_cut_thresh}{Numeric. The threshold of missing values allowed for each variable in the school buildings database (see \code{\link{Util_DB_MIUR_num}}).
