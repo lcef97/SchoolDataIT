@@ -53,8 +53,12 @@
 #'   \item \code{$Both}: object of class of class \code{tbl_df}, \code{tbl} and \code{data.frame}: the availability of the number of students in the schools listed in both sections.
 #' }
 #'
-#' @source  \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0101EDIANAGRAFESTA2021}{Buildings Registry};
-#' \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT}{Schools Registry}
+#' @source See \itemize{
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0101EDIANAGRAFESTA2021> For Buildings Registry;
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT> For Schools Registry.
+
+#' }
+#'
 #'
 #'
 #'

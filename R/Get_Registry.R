@@ -132,7 +132,7 @@ Get_Registry <- function(Year = 2023, filename = c("SCUANAGRAFESTAT", "SCUANAAUT
         return(NULL)
       } else {
 
-        dat <- readr::read_csv(rawToChar(response$content), show_col_types = show_col_types) %>%
+        dat <- readr::read_csv(content, show_col_types = show_col_types) %>%
           dplyr::mutate(CAPSCUOLA = as.character(.data$CAPSCUOLA))
         names(dat) <- names(dat) %>% stringr::str_replace_all("ANNOSCOLASTICO", "Year") %>%
           stringr::str_replace_all("AREAGEOGRAFICA", "Area") %>%

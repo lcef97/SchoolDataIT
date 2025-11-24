@@ -157,7 +157,7 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
         Please contact the maintainer, maybe it could help. \n")
         return(NULL)
       } else {
-        input_Registry1 <- readr::read_csv(rawToChar(response$content), show_col_types = FALSE)
+        input_Registry1 <- readr::read_csv(content, show_col_types = FALSE)
       }
     } else {
       message(paste("Wrong file type:", httr::http_type(response)) )

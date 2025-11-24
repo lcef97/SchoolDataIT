@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.11
+
+* Additional gentle failure routines.
+
 # SchoolDataIT 0.2.10
  
 * Allowed to force early abort in Get_nteachers_prov to speedup checks when provider website is off.

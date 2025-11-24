@@ -4,8 +4,10 @@
 \alias{Util_Check_nstud_availability}
 \title{Check how many schools in the school registries are included in the students count dataframe}
 \source{
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0101EDIANAGRAFESTA2021}{Buildings Registry};
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT}{Schools Registry}
+See \itemize{
+  \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0101EDIANAGRAFESTA2021> For Buildings Registry;
+  \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT> For Schools Registry.
+}
 }
 \usage{
 Util_Check_nstud_availability(

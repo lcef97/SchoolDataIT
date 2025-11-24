@@ -138,7 +138,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
         Please contact the maintainer, maybe it could help. \n")
           return(NULL)
         } else {
-          dat <- readr::read_csv(rawToChar(content), show_col_types = FALSE)
+          dat <- readr::read_csv(content, show_col_types = FALSE)
           cat("CSV file downloaded:", link, " ... ")
         }
       } else {
