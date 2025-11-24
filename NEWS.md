@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.9
+
+* Enforced security checks for provider-side issues through slightly more graceful failure.
+
 # SchoolDataIT 0.2.8
 
 * Major changes: allowed to filter out duplicate building codes in 'Util_DB_MIUR_num'

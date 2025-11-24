@@ -131,8 +131,16 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
 
     if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
       if(verbose){
-        dat <- readr::read_csv(rawToChar(response$content), show_col_types = FALSE)
-        cat("CSV file downloaded:", link, " ... ")
+        content <- rawToChar(response$content)
+        if(nchar(content)==0){
+          message("Empty file. Operation aborted.
+        There seems to be something wrong with the website.
+        Please contact the maintainer, maybe it could help. \n")
+          return(NULL)
+        } else {
+          dat <- readr::read_csv(rawToChar(content), show_col_types = FALSE)
+          cat("CSV file downloaded:", link, " ... ")
+        }
       } else {
         suppressMessages(dat <- readr::read_csv(rawToChar(response$content)))
       }

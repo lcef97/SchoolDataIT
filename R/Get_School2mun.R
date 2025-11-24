@@ -149,7 +149,15 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
     }
 
     if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
-      input_Registry1 <- readr::read_csv(rawToChar(response$content), show_col_types = FALSE)
+      content <- rawToChar(response$content)
+      if(nchar(content)==0){
+        message("Empty file. Operation aborted.
+        There seems to be something wrong with the website.
+        Please contact the maintainer, maybe it could help. \n")
+        return(NULL)
+      } else {
+        input_Registry1 <- readr::read_csv(rawToChar(response$content), show_col_types = FALSE)
+      }
     } else {
       message(paste("Wrong file type:", httr::http_type(response)) )
       message("Failed to download and process:", file_to_download, "\n")

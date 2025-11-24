@@ -123,29 +123,40 @@ Get_Registry <- function(Year = 2023, filename = c("SCUANAGRAFESTAT", "SCUANAAUT
     }
 
     if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
-      dat <- readr::read_csv(rawToChar(response$content), show_col_types = show_col_types) %>%
-        dplyr::mutate(CAPSCUOLA = as.character(.data$CAPSCUOLA))
-      names(dat) <- names(dat) %>% stringr::str_replace_all("ANNOSCOLASTICO", "Year") %>%
-        stringr::str_replace_all("AREAGEOGRAFICA", "Area") %>%
-        stringr::str_replace_all("REGIONE", "Region_description") %>%
-        stringr::str_replace_all("PROVINCIA", "Province_description") %>%
-        stringr::str_replace_all("CODICEISTITUTORIFERIMENTO", "Reference_institute_code") %>%
-        stringr::str_replace_all("DENOMINAZIONEISTITUTORIFERIMENTO", "Reference_institute_name") %>%
-        stringr::str_replace_all("CODICESCUOLA", "School_code") %>%
-        stringr::str_replace_all("DENOMINAZIONESCUOLA", "School_name") %>%
-        stringr::str_replace_all("INDIRIZZOSCUOLA", "School_address") %>%
-        stringr::str_replace_all("CAPSCUOLA", "Postal_code") %>%
-        stringr::str_replace_all("CODICECOMUNESCUOLA", "Cadastral_code") %>%
-        stringr::str_replace_all("DESCRIZIONECOMUNE", "Municipality_description") %>%
-        stringr::str_replace_all("DESCRIZIONECARATTERISTICASCUOLA", "School_feature_description") %>%
-        stringr::str_replace_all("DESCRIZIONETIPOLOGIAGRADOISTRUZIONESCUOLA", "Order_description") %>%
-        stringr::str_replace_all("INDICAZIONESEDEDIRETTIVO", "Headquarters_indication") %>%
-        stringr::str_replace_all("INDICAZIONESEDEOMNICOMPRENSIVO", "Comprehensive_institute_venue_information") %>%
-        stringr::str_replace_all("INDIRIZZOEMAILSCUOLA", "email_address") %>%
-        stringr::str_replace_all("INDIRIZZOPECSCUOLA", "Certified_email_address") %>%
-        stringr::str_replace_all("SITOWEBSCUOLA", "Website") %>%
-        stringr::str_replace_all("SEDESCOLASTICA", "Venue")
-      out[[obj]] <- dat
+
+      content <- rawToChar(response$content)
+      if(nchar(content)==0){
+        message("Empty file. Operation aborted.
+        There seems to be something wrong with the website.
+        Please contact the maintainer, maybe it could help. \n")
+        return(NULL)
+      } else {
+
+        dat <- readr::read_csv(rawToChar(response$content), show_col_types = show_col_types) %>%
+          dplyr::mutate(CAPSCUOLA = as.character(.data$CAPSCUOLA))
+        names(dat) <- names(dat) %>% stringr::str_replace_all("ANNOSCOLASTICO", "Year") %>%
+          stringr::str_replace_all("AREAGEOGRAFICA", "Area") %>%
+          stringr::str_replace_all("REGIONE", "Region_description") %>%
+          stringr::str_replace_all("PROVINCIA", "Province_description") %>%
+          stringr::str_replace_all("CODICEISTITUTORIFERIMENTO", "Reference_institute_code") %>%
+          stringr::str_replace_all("DENOMINAZIONEISTITUTORIFERIMENTO", "Reference_institute_name") %>%
+          stringr::str_replace_all("CODICESCUOLA", "School_code") %>%
+          stringr::str_replace_all("DENOMINAZIONESCUOLA", "School_name") %>%
+          stringr::str_replace_all("INDIRIZZOSCUOLA", "School_address") %>%
+          stringr::str_replace_all("CAPSCUOLA", "Postal_code") %>%
+          stringr::str_replace_all("CODICECOMUNESCUOLA", "Cadastral_code") %>%
+          stringr::str_replace_all("DESCRIZIONECOMUNE", "Municipality_description") %>%
+          stringr::str_replace_all("DESCRIZIONECARATTERISTICASCUOLA", "School_feature_description") %>%
+          stringr::str_replace_all("DESCRIZIONETIPOLOGIAGRADOISTRUZIONESCUOLA", "Order_description") %>%
+          stringr::str_replace_all("INDICAZIONESEDEDIRETTIVO", "Headquarters_indication") %>%
+          stringr::str_replace_all("INDICAZIONESEDEOMNICOMPRENSIVO", "Comprehensive_institute_venue_information") %>%
+          stringr::str_replace_all("INDIRIZZOEMAILSCUOLA", "email_address") %>%
+          stringr::str_replace_all("INDIRIZZOPECSCUOLA", "Certified_email_address") %>%
+          stringr::str_replace_all("SITOWEBSCUOLA", "Website") %>%
+          stringr::str_replace_all("SEDESCOLASTICA", "Venue")
+        out[[obj]] <- dat
+      }
+
     } else{
       message("Wrong file type:", httr::http_type(response))
     }

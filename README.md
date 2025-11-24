@@ -13,7 +13,7 @@ The functions are divided in four main modules, namely:
 More information can be found at [CRAN](https://CRAN.R-project.org/package=SchoolDataIT).
 
 Additionally, the use of this package is described extensively in [this paper](https://link.springer.com/article/10.1007/s10260-025-00805-0) 
-
+Even though the package does not include vignettes at the moment, the supplementary material of this paper serves similar purposes.
 
 ## Installation from GitHub
 

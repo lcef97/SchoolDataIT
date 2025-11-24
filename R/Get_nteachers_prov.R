@@ -28,7 +28,7 @@
 #' @examples
 #'
 #'
-#' nteachers23 <- Get_nteachers_prov(2023, filename = "DOCTIT", autoAbort = TRUE)
+#' nteachers23 <- Get_nteachers_prov(Year=2023, filename="DOCTIT", autoAbort=T)
 #' nteachers23[, c(3,4,5)]
 #'
 #'
@@ -94,7 +94,7 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
     while(status != 200){
       file.url <- file.path(base.url, link)
       response <- tryCatch({
-        httr::GET(file.url)
+        httr::GET(file.url, httr::timeout(15))
       }, error = function(e) {
         message("Error occurred during scraping, attempt repeated ... \n")
         NULL
@@ -115,14 +115,21 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
     }
 
     if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
-      dat <- readr::read_csv(rawToChar(response$content), show_col_types = show_col_types)
-      if(verbose) cat("CSV file downloaded:", link, " ... ")
-      link.1 <- gsub("AS1516", "", link)
-      element.name <- substr(link.1, 1, regexpr("[0-9]", link.1)-1)
-      input[[element.name]] <- dat
-      input[[element.name]] <- input[[element.name]][!duplicated(input[[element.name]]),]
-
-    } else {
+      content <- rawToChar(response$content)
+      if(nchar(content)==0){
+        message("Empty file. Operation aborted.
+        There seems to be something wrong with the website.
+        Please contact the maintainer, maybe it could help. \n")
+        return(NULL)
+      } else {
+        dat <- readr::read_csv(content, show_col_types = show_col_types)
+        if(verbose) cat("CSV file downloaded:", link, " ... ")
+        link.1 <- gsub("AS1516", "", link)
+        element.name <- substr(link.1, 1, regexpr("[0-9]", link.1)-1)
+        input[[element.name]] <- dat
+        input[[element.name]] <- input[[element.name]][!duplicated(input[[element.name]]),]
+      }
+     } else {
       message(paste("Wrong file type:", httr::http_type(response)) )
       cat("Failed to download and process:", link, "\n")
     }
