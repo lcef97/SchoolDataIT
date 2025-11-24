@@ -10,6 +10,7 @@
 #' @param filename Character. Which data to retrieve among the province counts of teachers/school personnel.
 #' By default it is \code{c("DOCTIT", "DOCSUP")}, which are the file names used so far for the number of tenured and temporary teachers respectively.
 #' Other file names are the following:
+#' @param t_out Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 3 seconds by default.
 #'
 #' \code{"ATATIT"} for the number of tenured non-teaching personnel
 #'
@@ -36,7 +37,8 @@
 #'
 #'
 Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FALSE,
-                               filename = c("DOCTIT", "DOCSUP"), autoAbort = FALSE){
+                               filename = c("DOCTIT", "DOCSUP"), t_out = 3,
+                               autoAbort = FALSE){
 
   if(!Check_connection(autoAbort)) return(NULL)
   options(dplyr.summarise.inform = FALSE)
@@ -48,7 +50,7 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
   attempt <- 0
   while(is.null(homepage) && attempt <= 10){
     homepage <- tryCatch({
-      xml2::read_html(home.url)
+      httr::content(httr::GET(home.url, httr::timeout(t_out)))
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
               " attempts left. If the problem persists, please contact the maintainer.\n")
@@ -94,7 +96,7 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
     while(status != 200){
       file.url <- file.path(base.url, link)
       response <- tryCatch({
-        httr::GET(file.url, httr::timeout(15))
+        httr::GET(file.url, httr::timeout(t_out))
       }, error = function(e) {
         message("Error occurred during scraping, attempt repeated ... \n")
         NULL

@@ -12,6 +12,7 @@ Get_nteachers_prov(
   verbose = TRUE,
   show_col_types = FALSE,
   filename = c("DOCTIT", "DOCSUP"),
+  t_out = 3,
   autoAbort = FALSE
 )
 }
@@ -25,7 +26,9 @@ Available in the formats: \code{2022}, \code{"2021/2022"}, \code{202122}, \code{
 
 \item{filename}{Character. Which data to retrieve among the province counts of teachers/school personnel.
 By default it is \code{c("DOCTIT", "DOCSUP")}, which are the file names used so far for the number of tenured and temporary teachers respectively.
-Other file names are the following:
+Other file names are the following:}
+
+\item{t_out}{Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 3 seconds by default.
 
 \code{"ATATIT"} for the number of tenured non-teaching personnel
 

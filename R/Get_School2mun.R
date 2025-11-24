@@ -86,8 +86,7 @@ Get_School2mun <- function(Year = 2023, show_col_types = FALSE, verbose = TRUE,
 
     if(is.null(homepage)){
       attempt <- attempt + 1
-      message("Operation exited with status: ", status, "; operation repeated (",
-              10 - attempt, " attempts left)")
+      message(10 - attempt, " attempts left)")
     }
     if(attempt >= 10) {
       message("Maximum attempts reached. Abort. We apologise for the inconvenience")

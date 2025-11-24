@@ -42,10 +42,16 @@ Util_BroadBand2mun <- function(data, input_School2mun = NULL, input_Registry = N
                                autoAbort = autoAbort)
   }
   broadband <- data
-  df.R <- input_School2mun$Registry_from_registry %>%
-    dplyr::select(.data$School_code, .data$Municipality_code)
-  res <- broadband %>% dplyr::left_join(df.R, by = "School_code") %>%
-    dplyr::filter(!is.na(.data$Municipality_code)) %>%
-    dplyr::relocate(.data$Municipality_code, .before = .data$Municipality_description)
+  if(is.null(broadband) || is.null(input_School2mun)) {
+    message("Something wrong occurred. Operation aborted")
+    res <- NULL
+  }else{
+    df.R <- input_School2mun$Registry_from_registry %>%
+      dplyr::select(.data$School_code, .data$Municipality_code)
+    res <- broadband %>% dplyr::left_join(df.R, by = "School_code") %>%
+      dplyr::filter(!is.na(.data$Municipality_code)) %>%
+      dplyr::relocate(.data$Municipality_code, .before = .data$Municipality_description)
+  }
+
   return(res)
 }
