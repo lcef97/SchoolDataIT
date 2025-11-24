@@ -48,7 +48,7 @@ the \code{filename} argument accordingly.
 \examples{
 
 
-nteachers23 <- Get_nteachers_prov(Year=2023, filename="DOCTIT", autoAbort=T)
+nteachers23 <- Get_nteachers_prov(Year=2023, filename="DOCTIT", autoAbort=TRUE)
 nteachers23[, c(3,4,5)]
 
 
