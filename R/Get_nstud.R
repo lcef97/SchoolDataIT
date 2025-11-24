@@ -129,17 +129,23 @@ Get_nstud <- function(Year = 2023, filename = c("ALUCORSOETASTA", "ALUCORSOINDCL
     }
 
     if (httr::http_type(response) %in% c("application/csv", "text/csv", "application/octet-stream")) {
-      dat <- readr::read_csv(rawToChar(response$content), show_col_types = show_col_types)
-      if(verbose) cat("CSV file downloaded: ", link, "...")
-      element.name <- substr(link,1, regexpr("[0-9]", link)-1)
-      input.nstud0[[element.name]] <- dat
-      input.nstud0[[element.name]] <- input.nstud0[[element.name]][!duplicated(input.nstud0[[element.name]]),]
-      endtime <- Sys.time()
-      if(verbose) {cat(round(difftime(endtime, starttime, units="secs") ,2),
-                       "seconds required \n ")}
-      starttime <- Sys.time()
-
-
+      content <- rawToChar(response$content)
+      if(nchar(content)==0){
+        message("Empty file. Operation aborted.
+        There seems to be something wrong with the website.
+        Please contact the maintainer, maybe it could help. \n")
+        return(NULL)
+      } else {
+        dat <- readr::read_csv(rawToChar(response$content), show_col_types = show_col_types)
+        if(verbose) cat("CSV file downloaded: ", link, "...")
+        element.name <- substr(link,1, regexpr("[0-9]", link)-1)
+        input.nstud0[[element.name]] <- dat
+        input.nstud0[[element.name]] <- input.nstud0[[element.name]][!duplicated(input.nstud0[[element.name]]),]
+        endtime <- Sys.time()
+        if(verbose) {cat(round(difftime(endtime, starttime, units="secs") ,2),
+                         "seconds required \n ")}
+        starttime <- Sys.time()
+      }
     } else {
       message(paste("Wrong file type:", httr::http_type(response)) )
       message("Failed to download and process:", link, "\n")
