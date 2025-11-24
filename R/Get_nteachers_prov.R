@@ -72,7 +72,7 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
   links <- homepage %>% rvest::html_nodes("a") %>% rvest::html_attr("href") %>% unique()
   links <- links[which(!is.na(links))]
   if (!any(stringr::str_detect(links, pattern))){
-    warning("No data available for this year. We apologise for the inconvenience")
+    message("No data available for this year. We apologise for the inconvenience")
     return(NULL)
   }
 
