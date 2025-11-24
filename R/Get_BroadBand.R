@@ -234,7 +234,7 @@ Get_BroadBand <- function(Date = as.Date(format(as.Date(format(Sys.Date(), "%Y-%
   }
 
   endtime <- Sys.time()
-  if (verbose) {
+  if (verbose && !is.null(broadband)) {
     cat(paste(round(difftime(endtime, starttime, units="secs") ,2),
               "seconds required to download ultra-broadband activation data \n") )
   }
