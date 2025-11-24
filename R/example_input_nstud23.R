@@ -16,6 +16,6 @@
 #'   \item \code{Male_students} Numeric; the count of male students in all classes of a given educational grade in each school
 #'   \item \code{Female_students} Numeric; the count of female students in all classes of a given educational grade in each school
 #' }
-#' @source \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Studenti&datasetId=DS0030ALUCORSOINDCLASTA}{Specific link}
+#' @source <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Studenti&datasetId=DS0030ALUCORSOINDCLASTA>
 #'
 "example_input_nstud23"

@@ -11,6 +11,10 @@
 #' By default it is \code{c("DOCTIT", "DOCSUP")}, which are the file names used so far for the number of tenured and temporary teachers respectively.
 #' Other file names are the following:
 #' @param t_out Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 3 seconds by default.
+#' @param forceAbort Logic. Whether to force a limited number of attempts to scrape the provider webpage.
+#' Not recommended to be switched to \code{TRUE}. Only insert to speedup function failure when
+#' there is certainty that the provider website is out. \code{FALSE} by default.
+#' Experimental, may be implemented in other \code{Get_} functions.
 #'
 #' \code{"ATATIT"} for the number of tenured non-teaching personnel
 #'
@@ -24,12 +28,13 @@
 #'
 #' @return An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 #'
-#' @source \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Personale+Scuola}{Homepage}
+#' @source <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Personale+Scuola>
 #'
 #' @examples
 #'
 #'
-#' nteachers23 <- Get_nteachers_prov(Year=2023, filename="DOCTIT", autoAbort=TRUE)
+#' nteachers23 <- Get_nteachers_prov(Year=2023, filename="DOCTIT",
+#'                autoAbort=TRUE, forceAbort = TRUE)
 #' nteachers23[, c(3,4,5)]
 #'
 #'
@@ -38,7 +43,7 @@
 #'
 Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FALSE,
                                filename = c("DOCTIT", "DOCSUP"), t_out = 3,
-                               autoAbort = FALSE){
+                               autoAbort = FALSE, forceAbort = FALSE){
 
   if(!Check_connection(autoAbort)) return(NULL)
   options(dplyr.summarise.inform = FALSE)
@@ -48,11 +53,12 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
   home.url <- "https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Personale%20Scuola"
   homepage <- NULL
   attempt <- 0
-  while(is.null(homepage) && attempt <= 10){
+  if(!forceAbort) max_attempt <- 10 else max_attempt <- 1
+  while(is.null(homepage) && attempt <= max_attempt){
     homepage <- tryCatch({
       httr::content(httr::GET(home.url, httr::timeout(t_out)))
     }, error = function(e){
-      message("Cannot read the html; ", 10 - attempt,
+      message("Cannot read the html; ", max_attempt - attempt,
               " attempts left. If the problem persists, please contact the maintainer.\n")
       return(NULL)
     })
@@ -108,9 +114,9 @@ Get_nteachers_prov <- function(Year = 2023, verbose = TRUE, show_col_types = FAL
       if(status != 200){
         attempt <- attempt + 1
         message("Operation exited with status: ", status, "; operation repeated (",
-                10 - attempt, " attempts left)")
+                max_attempt - attempt, " attempts left)")
       }
-      if(attempt >= 10) {
+      if(attempt >= max_attempt) {
         message("Maximum attempts reached. Abort. We apologise for the inconvenience")
         return(NULL)
       }

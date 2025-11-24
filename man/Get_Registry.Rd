@@ -4,7 +4,7 @@
 \alias{Get_Registry}
 \title{Download the registry of Italian public schools from the school registry section}
 \source{
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Scuole}{Homepage}
+<https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Scuole>
 }
 \usage{
 Get_Registry(

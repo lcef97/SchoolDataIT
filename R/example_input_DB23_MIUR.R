@@ -46,9 +46,15 @@
 #'   \item \code{Bicycle_lane} Character; whether the building is in proximity of a bicycle/bike lane.
 #'   \item \code{Other} Character; whether the building can be reached in any other specific way.
 #' }
-#' @source \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica}{Homepage}; more in detail, the dataset blocks are downloaded respectively from:
-#' \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0111EDIAMBIENTESTA2021}{cols 10-18};
-#' \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0121EDICOLLEGAMENTISTA2021}{cols 20-27};
-#' \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0121EDICOLLEGAMENTISTA2021}{cols 28-35}
+#' @source
 #'
+#'   <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica>. More in detail, the dataset blocks are downloaded respectively from
+#'   \itemize{
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0111EDIAMBIENTESTA2021> cols 10-18;
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0121EDICOLLEGAMENTISTA2021> cols 20-27;
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0121EDICOLLEGAMENTISTA2021> cols 28-35
+#' }
+#'
+#'
+#' #'
 "example_input_DB23_MIUR"

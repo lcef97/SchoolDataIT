@@ -22,7 +22,7 @@ A data frame with 5929 rows and 10 columns:
 }
 }
 \source{
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT}{Source link}
+<https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT>
 }
 \usage{
 example_input_Registry23

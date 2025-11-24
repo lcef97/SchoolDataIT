@@ -4,7 +4,7 @@
 \alias{Get_nstud}
 \title{Download students' number data}
 \source{
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Studenti}{Homepage}
+<https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Studenti>
 }
 \usage{
 Get_nstud(

@@ -4,7 +4,7 @@
 \alias{Get_DB_MIUR}
 \title{Download the database of Italian public schools buildings}
 \source{
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica}{Homepage}
+<https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica>
 }
 \usage{
 Get_DB_MIUR(

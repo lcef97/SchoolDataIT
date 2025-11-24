@@ -18,7 +18,7 @@ A data frame with 21208 rows and 7 columns:
 }
 }
 \source{
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Studenti&datasetId=DS0030ALUCORSOINDCLASTA}{Specific link}
+<https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Studenti&datasetId=DS0030ALUCORSOINDCLASTA>
 }
 \usage{
 example_input_nstud23

@@ -4,7 +4,7 @@
 \alias{Get_nteachers_prov}
 \title{Download the number of teachers in Italian schools by province}
 \source{
-\href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Personale+Scuola}{Homepage}
+<https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Personale+Scuola>
 }
 \usage{
 Get_nteachers_prov(
@@ -13,7 +13,8 @@ Get_nteachers_prov(
   show_col_types = FALSE,
   filename = c("DOCTIT", "DOCSUP"),
   t_out = 3,
-  autoAbort = FALSE
+  autoAbort = FALSE,
+  forceAbort = FALSE
 )
 }
 \arguments{
@@ -28,14 +29,19 @@ Available in the formats: \code{2022}, \code{"2021/2022"}, \code{202122}, \code{
 By default it is \code{c("DOCTIT", "DOCSUP")}, which are the file names used so far for the number of tenured and temporary teachers respectively.
 Other file names are the following:}
 
-\item{t_out}{Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 3 seconds by default.
+\item{t_out}{Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 3 seconds by default.}
+
+\item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
+
+\item{forceAbort}{Logic. Whether to force a limited number of attempts to scrape the provider webpage.
+Not recommended to be switched to \code{TRUE}. Only insert to speedup function failure when
+there is certainty that the provider website is out. \code{FALSE} by default.
+Experimental, may be implemented in other \code{Get_} functions.
 
 \code{"ATATIT"} for the number of tenured non-teaching personnel
 
 
 \code{"ATASUP"} for the number of temporary non-teaching personnel}
-
-\item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
 }
 \value{
 An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
@@ -51,7 +57,8 @@ the \code{filename} argument accordingly.
 \examples{
 
 
-nteachers23 <- Get_nteachers_prov(Year=2023, filename="DOCTIT", autoAbort=TRUE)
+nteachers23 <- Get_nteachers_prov(Year=2023, filename="DOCTIT",
+               autoAbort=TRUE, forceAbort = TRUE)
 nteachers23[, c(3,4,5)]
 
 

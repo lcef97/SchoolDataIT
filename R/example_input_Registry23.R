@@ -22,6 +22,6 @@
 #'   \item \code{Postal_code} Character; the ZIP code, slightly finer than municipality boundaries for big municipalities.
 
 #' }
-#' @source \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT}{Source link}
+#' @source <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Scuole&datasetId=DS0400SCUANAGRAFESTAT>
 #'
 "example_input_Registry23"

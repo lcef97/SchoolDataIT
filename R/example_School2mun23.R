@@ -23,9 +23,11 @@
 #' }
 #'
 #'
-#' @source
-#' \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0101EDIANAGRAFESTA2021}{Buildings registry (2021 onwards)};
-#'  \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0200EDIANAGRAFESTA}{Buindings registry(until 2019)};
-#'   \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Scuole}{Schools registry}
+#' @source See:
+#' \itemize{
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0101EDIANAGRAFESTA2021> For Buildings registry (2021 onwards);
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Edilizia+Scolastica&datasetId=DS0200EDIANAGRAFESTA> For Buindings registry(until 2019);
+#'   \item <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Scuole> For Schools registry
+#'  }
 #'
 "example_School2mun23"

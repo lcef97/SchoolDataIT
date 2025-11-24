@@ -31,7 +31,7 @@
 #' @param show_col_types Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #'
-#' @source \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Studenti}{Homepage}
+#' @source <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Studenti>
 #'
 #'
 #' @examples

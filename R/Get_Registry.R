@@ -24,7 +24,7 @@
 #'
 #' @details Schools different from primary, middle or high schools are classified as \code{"NR"}.
 #'
-#' @source \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Scuole}{Homepage}
+#' @source <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Scuole>
 #' @examples
 #'
 #' \donttest{

@@ -23,7 +23,7 @@
 #' @param show_col_types Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.
 #'
 #'
-#' @source  \href{https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica}{Homepage}
+#' @source  <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica>
 #'
 #' @details
 #' This function downloads the raw data; missing observations are not edited; all variables are characters.

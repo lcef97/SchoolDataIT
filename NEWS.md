@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.10
+ 
+* Allowed to force early abort in Get_nteachers_prov to speedup checks when provider website is off.
+
 # SchoolDataIT 0.2.9
 
 * Enforced security checks for provider-side issues through slightly more graceful failure.
