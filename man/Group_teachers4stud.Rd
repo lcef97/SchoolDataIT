@@ -22,7 +22,7 @@ Available in the formats: \code{2022}, \code{"2021/2022"}, \code{202122}, \code{
 \item{input_nteachers}{Object of class \code{tbl_df}, \code{tbl} and \code{data.frame}. The number of teachers by province, obtained as output of the function \code{\link{Get_nteachers_prov}}. If \code{NULL}, the function will download it automatically but it will not be saved in the global environment. \code{NULL} by default.}
 
 \item{nteachers_filename}{Character. If \code{input_nteachers} is not provided, which data to retrieve regarding the number of teachers/personnel; see \code{\link{Get_nteachers_prov}}
-\code{c("DOCTIT", "DOCSUP")} by default, i.e. tenured theachers and temporary teachers.}
+\code{c("DOCTIT", "DOCSUP")} by default, i.e. tenured teachers and temporary teachers.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. TRUE by default.}
 
