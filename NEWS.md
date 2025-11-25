@@ -1,7 +1,9 @@
 # SchoolDataIT 0.2.11
 
-* Additional gentle failure routines.
-
+* Additional gentle failure routines; switched to httr::GET() to scrape
+  data from Ministry - it turns out to be more stable than xml2::read_html() 
+  when provider side has issues.
+ 
 # SchoolDataIT 0.2.10
  
 * Allowed to force early abort in Get_nteachers_prov to speedup checks when provider website is off.

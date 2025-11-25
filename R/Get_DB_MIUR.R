@@ -21,7 +21,7 @@
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #' @param show_col_types Logical. If \code{TRUE}, if the \code{verbose} argument is also \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.
-#'
+#' @param t_out Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 900 seconds by default.
 #'
 #' @source  <https://dati.istruzione.it/opendata/opendata/catalogo/elements1/?area=Edilizia+Scolastica>
 #'
@@ -38,7 +38,7 @@
 #' @examples
 #'
 #' \donttest{
-#'   input_DB23_MIUR <- Get_DB_MIUR(2023, autoAbort = TRUE)
+#'   input_DB23_MIUR <- Get_DB_MIUR(2023, autoAbort = TRUE, t_out = 20)
 #'
 #'   input_DB23_MIUR[-c(1,4,6,9)]
 #'
@@ -50,7 +50,7 @@
 
 Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
                         input_AdmUnNames = NULL, show_col_types = FALSE,
-                        certifications = FALSE, autoAbort = FALSE){
+                        certifications = FALSE, autoAbort = FALSE, t_out = 900){
 
   start.zero <- Sys.time()
 
@@ -62,7 +62,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
   attempt <- 0
   while(is.null(homepage) && attempt <= 10){
     homepage <- tryCatch({
-      xml2::read_html(home.url)
+      httr::content(httr::GET(home.url))
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
               " attempts left. If the problem persists, please contact the maintainer.\n")
@@ -109,7 +109,7 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
     attempt <- 0
     while(status != 200){
       response <- tryCatch({
-        httr::GET(file.url)
+        httr::GET(file.url, httr::timeout(t_out))
       }, error = function(e) {
         message("Error occurred during scraping, attempt repeated ... \n")
         NULL
@@ -244,9 +244,25 @@ Get_DB_MIUR <- function(Year = 2023, verbose = TRUE, input_Registry = NULL,
       fixMun.manual(Year)
   }
 
-  if (is.null(input_Registry)) input_Registry <- Get_Registry(Year = Year, autoAbort = autoAbort)
+  ## !!!! TBD!!! CHECK MANUALLY
 
-  left <- input_Registry[,c(1,6,5)] %>% dplyr::filter(.data$School_code %in% DB_MIUR.R$School_code)
+  attempt.registry <- 0
+  left <- NULL
+  while (is.null(input_Registry) && attempt.registry == 0) {
+    input_Registry <- Get_Registry(Year = Year, autoAbort = autoAbort)
+    left <- input_Registry[,c(1,6,5)] %>% dplyr::filter(.data$School_code %in% DB_MIUR.R$School_code)
+    attempt.regitry <- 1
+  }
+  if(is.null(left)){
+    message("Warning: problem in downloading school registries data, called from
+    Get_DB_MIUR. Despite all the work done, at this stage we are forced to abort.
+    Please, try downloading & providing
+    schools registry separately with Get_Registry, then run Get_DB_MIUR again.
+    We apologise for the inconvenience. \n")
+    return(NULL)
+  }
+
+
 
   DB_MIUR <- dplyr::left_join(left, DB_MIUR.R, by = "School_code") %>%
     School.order() %>%

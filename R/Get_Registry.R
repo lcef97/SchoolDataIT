@@ -48,7 +48,7 @@ Get_Registry <- function(Year = 2023, filename = c("SCUANAGRAFESTAT", "SCUANAAUT
   attempt <- 0
   while(is.null(homepage) && attempt <= 10){
     homepage <- tryCatch({
-      xml2::read_html(home.url)
+      httr::content(httr::GET(home.url))
     }, error = function(e){
       message("Cannot read the html; ", 10 - attempt,
               " attempts left. If the problem persists, please contact the maintainer.\n")

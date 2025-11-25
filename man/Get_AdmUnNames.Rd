@@ -23,10 +23,11 @@ LAU code, LAU name (description) and cadastral code. All variables are character
 This function downloads a file provided by the Italian National Institute of Statistics including all the codes of administrative units in Italy. As of today, it is the easiest way to map directly cadastral codes to municipality codes.
 }
 \examples{
-\donttest{
-  Get_AdmUnNames("2025-01-01", autoAbort = TRUE)
 
-}
+  AdmUnNames25 <- Get_AdmUnNames("2025-01-01", autoAbort = TRUE)
+  # Codes for a randomly chosen province, say, Brindisi (Apulia)
+  AdmUnNames25[which(AdmUnNames25$Province_code==74),]
+
 
 
 

@@ -14,7 +14,8 @@ Get_DB_MIUR(
   input_AdmUnNames = NULL,
   show_col_types = FALSE,
   certifications = FALSE,
-  autoAbort = FALSE
+  autoAbort = FALSE,
+  t_out = 900
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ If \code{NULL} and required, it will be downloaded automatically but not saved i
 Given the particular level of definition of this file, it requires extra computational time (other than the downloading time). \code{FALSE} by default.}
 
 \item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
+
+\item{t_out}{Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 900 seconds by default.}
 }
 \value{
 An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
@@ -60,7 +63,7 @@ Schools different from primary, middle or high schools are classified as \code{"
 \examples{
 
 \donttest{
-  input_DB23_MIUR <- Get_DB_MIUR(2023, autoAbort = TRUE)
+  input_DB23_MIUR <- Get_DB_MIUR(2023, autoAbort = TRUE, t_out = 20)
 
   input_DB23_MIUR[-c(1,4,6,9)]
 
