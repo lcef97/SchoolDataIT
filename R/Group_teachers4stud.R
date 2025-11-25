@@ -12,7 +12,7 @@
 #' Not necessary if the argument \code{input_nstud_aggr} is provided. If \code{NULL}, the function will download it automatically but it will not be saved in the global environment. \code{NULL} by default.
 #' @param input_nstud_aggr Object of class \code{list}, including two objects of class \code{tbl_df}, \code{tbl} and \code{data.frame}, obtained as output of the function \code{\link{Group_nstud}}. If \code{NULL}, the function will compute it manually but it will not be saved in the global environment. \code{NULL} by default.
 #' @param nteachers_filename Character. If \code{input_nteachers} is not provided, which data to retrieve regarding the number of teachers/personnel; see \code{\link{Get_nteachers_prov}}
-#'  \code{c("DOCTIT", "DOCSUP")} by default, i.e. tenured theachers and temporary teachers.
+#'  \code{c("DOCTIT", "DOCSUP")} by default, i.e. tenured teachers and temporary teachers.
 #' @param verbose Logical. If \code{TRUE}, the user keeps track of the main underlying operations. TRUE by default.
 #' @param autoAbort Logical. In case any data must be retrieved, whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
 #' @param ... Arguments to \code{\link{Group_nstud}} if argument \code{input_nstud_aggr} is not provided
