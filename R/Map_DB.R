@@ -16,6 +16,8 @@
 #' @param field Character. The variable to display in the map.
 #' @param level Character. The administrative level of detailed at which the target variable must be displayed. Either \code{"LAU"}/\code{"Municipality"} or \code{"NUTS-3"}/\code{"Province"}. If the \code{"data"} argument is plugged in, please select the same level. \code{"LAU"} by default.
 #' @param plot Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.
+#'  !!! Warning. As \code{mapview} turns out to have been taken away from CRAN,
+#'  if it has not been previously installed by the user, \code{plot = "ggplot"} will be forced.
 #' @param popup_height Numeric. The height of the popup table in terms of pixels if the \code{"mapview"} mode is chosen. \code{200} by default.
 #' @param main_pos Character.Where the header should be placed if the \code{ggplot} mode is chosen.
 #' The header is located on the top if \code{"top"} is given as input, and above the legend scale otherwise. \code{"top"} by default.
@@ -204,6 +206,8 @@ Map_DB <- function(
   if(main == ""){
     layername <- paste0(field, ", year: ", Year, ", ", order, " schools")
   } else layername <- main
+
+  if(!"mapview" %in% rownames(utils::installed.packages())) plot <- "ggplot"
 
 
   if(plot == "ggplot"){

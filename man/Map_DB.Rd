@@ -33,7 +33,9 @@ Available in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{
 
 \item{level}{Character. The administrative level of detailed at which the target variable must be displayed. Either \code{"LAU"}/\code{"Municipality"} or \code{"NUTS-3"}/\code{"Province"}. If the \code{"data"} argument is plugged in, please select the same level. \code{"LAU"} by default.}
 
-\item{plot}{Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.}
+\item{plot}{Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.
+!!! Warning. As \code{mapview} turns out to have been taken away from CRAN,
+if it has not been previously installed by the user, \code{plot = "ggplot"} will be forced.}
 
 \item{popup_height}{Numeric. The height of the popup table in terms of pixels if the \code{"mapview"} mode is chosen. \code{200} by default.}
 

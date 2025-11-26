@@ -52,7 +52,9 @@ The header is located on the top if \code{"top"} is given as input, and above th
 If the level is set to \code{"LAU"}, choosing a limited number of regions is recommended.
 By default, \code{c(1,3,5:20)}, i.e. all Italian regions except the provinces of Aosta, Trento and Bozen which have data availability issues.}
 
-\item{plot}{Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.}
+\item{plot}{Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.
+!!! Warning. As \code{mapview} turns out to have been taken away from CRAN,
+if it has not been previously installed by the user, \code{plot = "ggplot"} will be forced.}
 
 \item{pal}{Character. The palette to use if the \code{"mapview"} mode is chose. \code{"viridis"} by default.}
 

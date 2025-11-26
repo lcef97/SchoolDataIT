@@ -20,6 +20,8 @@
 #' If the level is set to \code{"LAU"}, choosing a limited number of regions is recommended.
 #' By default, \code{c(1:20)}, i.e. all Italian regions.
 #' @param plot Character. The type of map to display; either \code{"mapview"} for interactive maps, or \code{"ggplot"} for static maps. \code{"mapview"} by default.
+#'  !!! Warning. As \code{mapview} turns out to have been taken away from CRAN,
+#'  if it has not been previously installed by the user, \code{plot = "ggplot"} will be forced.
 #' @param pal Character. The palette to use if the \code{"mapview"} mode is chose. \code{"viridis"} by default.
 #' @param col_rev Logical. Whether the scale of the colour palette should be reverted or not, if the \code{"mapview"} mode is chosen. \code{FALSE} by default
 #' @param popup_height Numeric. The height of the popup table in terms of pixels if the \code{"mapview"} mode is chosen. \code{200} by default.
@@ -234,6 +236,8 @@ Map_School_Buildings <- function (data = NULL, field, order = NULL,  level = "LA
 
   layername <- ifelse(main == "", paste(
     fieldname, ifelse(is.null(order),"",paste(order, "School"))), main)
+
+  if(!"mapview" %in% rownames(utils::installed.packages())) plot <- "ggplot"
 
   if(verbose) cat("Rendering:")
 

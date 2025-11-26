@@ -41,7 +41,6 @@ Imports:
     httr,
     leafpop,
     magrittr,
-    mapview,
     readr,
     rlang,
     rvest,
@@ -52,6 +51,7 @@ Imports:
     xml2
 Suggests: 
     knitr,
+    mapview,
     readxl,
     rmarkdown,
     testthat (>= 3.0.0),

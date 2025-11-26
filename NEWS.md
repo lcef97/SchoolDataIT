@@ -3,6 +3,7 @@
 * Additional gentle failure routines; switched to httr::GET() to scrape
   data from Ministry - it turns out to be more stable than xml2::read_html() 
   when provider side has issues.
+* Had to move 'mapview' to suggests, as unfortunately it turns out to have been removed from CRAN.
  
 # SchoolDataIT 0.2.10
  
