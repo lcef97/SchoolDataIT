@@ -29,4 +29,3 @@ If you want to force R not to upgrade the dependencies, which may take some time
 ``` r
 devtools::install_github("lcef97/SchoolDataIT", upgrade = "never")
 ```
-
