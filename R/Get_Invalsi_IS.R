@@ -126,7 +126,7 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
     if(nrow(content.csv) > 0L){
       csv.max <- which.max(zip.content$Length)
       filename <- zip.content$Name[csv.max]
-      con <- unz(temp1, csv_name)
+      con <- unz(temp1, filename)
       Invalsi_IS <- tryCatch({
         readr::read_delim( con, delim = ";", na = c("", " ", "N.A."),
                            locale = readr::locale(decimal_mark = ",",
