@@ -10,16 +10,19 @@
 #' @param filename Character. Which data to retrieve among the province counts of teachers/school personnel.
 #' By default it is \code{c("DOCTIT", "DOCSUP")}, which are the file names used so far for the number of tenured and temporary teachers respectively.
 #' Other file names are the following:
+#'
+#'
+#' \code{"ATATIT"} for the number of tenured non-teaching personnel
+#'
+#'
+#' \code{"ATASUP"} for the number of temporary non-teaching personnel
 #' @param t_out Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 3 seconds by default.
 #' @param forceAbort Logic. Whether to force a limited number of attempts to scrape the provider webpage.
 #' Not recommended to be switched to \code{TRUE}. Only insert to speedup function failure when
 #' there is certainty that the provider website is out. \code{FALSE} by default.
 #' Experimental, may be implemented in other \code{Get_} functions.
 #'
-#' \code{"ATATIT"} for the number of tenured non-teaching personnel
 #'
-#'
-#' \code{"ATASUP"} for the number of temporary non-teaching personnel
 #'
 #' @details Please notice that by default, the function returns the count of the number of tenured and temporary teachers.
 #' If either the count of non-teaching personnel or the count of a single category of teaching personnel is needed, please adapt

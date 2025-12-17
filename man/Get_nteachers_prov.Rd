@@ -27,7 +27,13 @@ Available in the formats: \code{2022}, \code{"2021/2022"}, \code{202122}, \code{
 
 \item{filename}{Character. Which data to retrieve among the province counts of teachers/school personnel.
 By default it is \code{c("DOCTIT", "DOCSUP")}, which are the file names used so far for the number of tenured and temporary teachers respectively.
-Other file names are the following:}
+Other file names are the following:
+
+
+\code{"ATATIT"} for the number of tenured non-teaching personnel
+
+
+\code{"ATASUP"} for the number of temporary non-teaching personnel}
 
 \item{t_out}{Numeric. !! EXPERIMENTAL !! session timeout for scraping and download, in seconds. 3 seconds by default.}
 
@@ -36,12 +42,7 @@ Other file names are the following:}
 \item{forceAbort}{Logic. Whether to force a limited number of attempts to scrape the provider webpage.
 Not recommended to be switched to \code{TRUE}. Only insert to speedup function failure when
 there is certainty that the provider website is out. \code{FALSE} by default.
-Experimental, may be implemented in other \code{Get_} functions.
-
-\code{"ATATIT"} for the number of tenured non-teaching personnel
-
-
-\code{"ATASUP"} for the number of temporary non-teaching personnel}
+Experimental, may be implemented in other \code{Get_} functions.}
 }
 \value{
 An object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.

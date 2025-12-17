@@ -9,7 +9,7 @@
 #'
 #'
 #'
-#' @param Year Numeric or character. Reference school year (last available is 2024).
+#' @param Year Numeric or character. Reference school year (last available is 2025).
 #' Available in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}. \code{2023} by default.
 #' @param show_col_types Logical. If \code{TRUE}, the columns of the raw dataset are shown during the download. \code{FALSE} by default.
 #' @param autoAbort Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.

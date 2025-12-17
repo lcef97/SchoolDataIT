@@ -1,5 +1,6 @@
 # SchoolDataIT 0.2.11
 
+* Adapted 'Get_Invalsi_IS' to new website architecture
 * Additional gentle failure routines; switched to httr::GET() to scrape
   data from Ministry - it turns out to be more stable than xml2::read_html() 
   when provider side has issues.

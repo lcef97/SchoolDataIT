@@ -15,7 +15,7 @@ Get_Registry(
 )
 }
 \arguments{
-\item{Year}{Numeric or character. Reference school year (last available is 2024).
+\item{Year}{Numeric or character. Reference school year (last available is 2025).
 Available in the formats: \code{2023}, \code{"2022/2023"}, \code{202223}, \code{20222023}. \code{2023} by default.}
 
 \item{filename}{Character. A string included in the name of the file to download, identifying the schools included.

@@ -17,7 +17,8 @@ Get_Invalsi_IS(
 )
 }
 \arguments{
-\item{level}{Character. The level of aggregation of Invalsi census data. Either \code{"NUTS-3"}, \code{"Province"}, \code{"LAU"}, \code{"Municipality"}. \code{"LAU"} by default.}
+\item{level}{Character. The level of aggregation of Invalsi census data, such as \code{"NUTS-3"}, \code{"Province"} for provinces; or \code{"LAU"}, \code{"Municipality"} for muncipalities.
+Only useful when \code{multiple_out == FALSE}. \code{"LAU"} by default.}
 
 \item{verbose}{Logical. If \code{TRUE}, the user keeps track of the main underlying operations. \code{TRUE} by default.}
 
@@ -25,14 +26,15 @@ Get_Invalsi_IS(
 
 \item{multiple_out}{Logical. Wheter keeping
 multiple dataframes as outputs (thus overriding the \code{level} argument) or not.
-\code{TRUE} by default.}
+We advise to keep this option active in order not to lose information. \code{TRUE} by default.}
 
-\item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.}
+\item{autoAbort}{Logical. Whether to automatically abort the operation and return NULL in case of missing internet connection or server response errors. \code{FALSE} by default.
+\code{TRUE} by default.}
 
 \item{category}{Logical. Whether to focus on a specific category of students participating to the census survey. Warning: experimental. \code{FALSE} by default.}
 }
 \value{
-Unless \code{multiple_out == TRUE}, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
+If \code{multiple_out == FALSE}, an object of class \code{tbl_df}, \code{tbl} and \code{data.frame}.
 Otherwise, a list including objects of the aforementioned classes
 }
 \description{
@@ -69,7 +71,8 @@ If \code{multiple_out == TRUE}, provides the following datasets:
 }
 \examples{
 \donttest{
-Get_Invalsi_IS(level = "NUTS-3", autoAbort = TRUE, verbose = FALSE)
+Data_Invalsi <- Get_Invalsi_IS(level = "NUTS-3", autoAbort = TRUE, verbose = FALSE)
+Data_Invalsi$Province_data
 }
 
 
