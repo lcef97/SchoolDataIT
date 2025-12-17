@@ -10,11 +10,11 @@
 #' LAU code, LAU name (description) and cadastral code. All variables are characters except for the NUTS-3 code.
 #'
 #' @examples
-#'
+#'  \donttest{
 #'   AdmUnNames25 <- Get_AdmUnNames("2025-01-01", autoAbort = TRUE)
 #'   # Codes for a randomly chosen province, say, Brindisi (Apulia)
 #'   AdmUnNames25[which(AdmUnNames25$Province_code==74),]
-#'
+#'  }
 #'
 #'
 #'

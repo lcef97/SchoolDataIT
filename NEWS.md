@@ -1,3 +1,7 @@
+# SchoolDataIT 0.2.12
+
+* Moved 'Get_AdmUnNames' in donttest area due to excess computational time
+
 # SchoolDataIT 0.2.11
 
 * Adapted 'Get_Invalsi_IS' to new website architecture

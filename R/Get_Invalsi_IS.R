@@ -144,6 +144,8 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
     if(attempt >= 10) {
       message("Impossible to read Invalsi file; max attempts reached. Abort. \n",
       "Please contact the maintainer and ask him to fix. \n")
+      unlink(temp1, recursive = TRUE, force = TRUE)
+
       return(NULL)
     }
   }
@@ -283,7 +285,6 @@ Get_Invalsi_IS <- function(level = "LAU", verbose = TRUE, show_col_types = FALSE
         Invalsi_IS <- dd_mun
       }
   }
-
 
 
   unlink(temp1, recursive = TRUE, force = TRUE)
